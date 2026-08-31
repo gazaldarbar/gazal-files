@@ -12,6 +12,7 @@ function onUnlocked() {
   renderHome();
   renderNav();
   renderSyncStatus();
+  setupAddStudentFeature();
 }
 
 function renderHome() {
@@ -88,3 +89,66 @@ function selectTab(key, btnEl) {
   );
   panel.querySelector(".placeholder-note").textContent = t("comingSoon");
 }
+
+/* ==========================================================================
+   ADD STUDENT FEATURE START
+   Reversible: remove this entire block to remove Add Student navigation.
+   ========================================================================== */
+
+function setupAddStudentFeature() {
+  const addButton = document.getElementById("btn-new-student");
+  const cancelButton = document.getElementById("btn-cancel-student");
+  const form = document.getElementById("add-student-form");
+
+  if (addButton) {
+    addButton.addEventListener("click", openAddStudentForm);
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener("click", closeAddStudentForm);
+  }
+
+  if (form) {
+    form.addEventListener("submit", handleStudentFormSubmit);
+  }
+}
+
+function openAddStudentForm() {
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "block";
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach((button) => button.classList.remove("active"));
+
+  document.getElementById("main-content").scrollTop = 0;
+}
+
+function closeAddStudentForm() {
+  document.getElementById("add-student-panel").style.display = "none";
+  document.getElementById("home-panel").style.display = "block";
+
+  const homeNavButton = document.querySelector(".nav-item");
+
+  if (homeNavButton) {
+    document
+      .querySelectorAll(".nav-item")
+      .forEach((button) => button.classList.remove("active"));
+
+    homeNavButton.classList.add("active");
+  }
+}
+
+function handleStudentFormSubmit(event) {
+  event.preventDefault();
+
+  /*
+   * Saving student data will be added in the next step.
+   * For now this confirms that the form itself works.
+   */
+
+  alert("Student form is ready. Saving will be added next.");
+}
+
+/* ADD STUDENT FEATURE END */
