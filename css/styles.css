@@ -194,3 +194,99 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
   .topbar { max-width: 480px; margin: 0 auto; width: 100%; }
   .bottom-nav { max-width: 480px; margin: 0 auto; }
 }
+
+/* ==========================================================================
+   ADD STUDENT FEATURE START
+   Reversible: remove this entire block to remove Add Student form styling.
+   ========================================================================== */
+
+#add-student-panel {
+  padding-bottom: var(--space-5);
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 var(--space-4);
+}
+
+.form-header h2 {
+  font-size: 24px;
+  color: var(--color-primary);
+}
+
+.form-back-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-round);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+}
+
+.form-back-btn:active {
+  transform: scale(0.97);
+}
+
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group label {
+  color: var(--color-ink);
+  font-size: 14px;
+  font-weight: 600;
+  padding-left: var(--space-1);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.15);
+}
+
+.save-student-btn {
+  width: 100%;
+  min-height: 56px;
+  margin-top: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-canvas);
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(107, 37, 69, 0.25);
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.save-student-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* ADD STUDENT FEATURE END */
