@@ -100,6 +100,95 @@
       <h3 class="section-title"></h3>
       <p class="placeholder-note"></p>
     </div>
+
+<!-- ADD STUDENT FEATURE START -->
+<div id="add-student-panel" style="display:none;">
+
+  <div class="form-header">
+    <button id="btn-cancel-student" class="form-back-btn" type="button">
+      ← Cancel
+    </button>
+
+    <h2>Add Student</h2>
+  </div>
+
+  <form id="add-student-form" class="student-form">
+
+    <div class="form-group">
+      <label for="student-name">വിദ്യാർത്ഥിയുടെ പേര്</label>
+      <input
+        id="student-name"
+        type="text"
+        autocomplete="name"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="parent-name">രക്ഷിതാവിൻ്റെ പേര്</label>
+      <input
+        id="parent-name"
+        type="text"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="student-place">സ്ഥലം</label>
+      <input
+        id="student-place"
+        type="text"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="student-phone">ഫോൺ നമ്പർ</label>
+      <input
+        id="student-phone"
+        type="tel"
+        inputmode="numeric"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="backup-phone">2nd ഫോൺ നമ്പർ</label>
+      <input
+        id="backup-phone"
+        type="tel"
+        inputmode="numeric"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="student-course">കോഴ്സ്</label>
+      <select id="student-course" required>
+        <option value="">Select Course</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="admission-date">അഡ്മിഷൻ ഡേറ്റ്</label>
+      <input
+        id="admission-date"
+        type="date"
+        required
+      />
+    </div>
+
+    <button
+      id="btn-save-student"
+      class="save-student-btn"
+      type="submit"
+    >
+      Upload / Save
+    </button>
+
+  </form>
+
+</div>
+<!-- ADD STUDENT FEATURE END -->
+    
   </main>
 
   <nav id="bottom-nav" class="bottom-nav"></nav>
