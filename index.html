@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#6B2545" />
+<title>Gazal Files</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/icon.svg" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============ PIN LOCK SCREEN ============ -->
+<section id="pin-screen" class="screen active">
+  <div class="pin-brand">
+    <img src="icons/icon.svg" alt="" />
+    <h1>Gazal Files</h1>
+  </div>
+  <h2 id="pin-title" style="color:#F7F2E7; font-size:16px; font-weight:400; margin-bottom:16px;">Enter PIN</h2>
+  <div id="pin-dots" class="pin-dots"></div>
+  <div id="pin-message" class="pin-message"></div>
+  <div class="pin-keypad">
+    <button class="pin-key" data-digit="1">1</button>
+    <button class="pin-key" data-digit="2">2</button>
+    <button class="pin-key" data-digit="3">3</button>
+    <button class="pin-key" data-digit="4">4</button>
+    <button class="pin-key" data-digit="5">5</button>
+    <button class="pin-key" data-digit="6">6</button>
+    <button class="pin-key" data-digit="7">7</button>
+    <button class="pin-key" data-digit="8">8</button>
+    <button class="pin-key" data-digit="9">9</button>
+    <div class="pin-key ghost"></div>
+    <button class="pin-key" data-digit="0">0</button>
+    <button class="pin-key" id="pin-delete">⌫</button>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<section id="app-shell" class="screen">
+  <div class="topbar">
+    <div id="greeting" class="greeting"></div>
+    <div class="search-box" id="search-box">
+      <input id="search-input" type="text" />
+    </div>
+  </div>
+
+  <main id="main-content">
+    <div class="sync-strip">
+      <span id="sync-dot" class="sync-dot"></span>
+      <span id="sync-label"></span>
+    </div>
+
+    <!-- HOME PANEL -->
+    <div id="home-panel">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div id="stat-students" class="stat-value"></div>
+          <div class="stat-label" data-key="statStudents"></div>
+        </div>
+        <div class="stat-card">
+          <div id="stat-classes" class="stat-value"></div>
+          <div class="stat-label" data-key="statClassesToday"></div>
+        </div>
+        <div class="stat-card">
+          <div id="stat-attendance" class="stat-value"></div>
+          <div class="stat-label" data-key="statAttendanceToday"></div>
+        </div>
+        <div class="stat-card">
+          <div id="stat-fees" class="stat-value"></div>
+          <div class="stat-label" data-key="statPendingFees"></div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="btn-new-student" class="action-btn">
+          <span class="icon-badge"></span><span class="label"></span>
+        </button>
+        <button id="btn-students" class="action-btn">
+          <span class="icon-badge"></span><span class="label"></span>
+        </button>
+        <button id="btn-attendance-home" class="action-btn">
+          <span class="icon-badge"></span><span class="label"></span>
+        </button>
+        <button id="btn-fee-balance" class="action-btn">
+          <span class="icon-badge"></span><span class="label"></span>
+        </button>
+        <button id="btn-pay" class="action-btn primary">
+          <span class="icon-badge"></span><span class="label"></span>
+        </button>
+      </div>
+
+      <h3 id="todays-classes-title" class="section-title"></h3>
+      <p id="todays-classes-empty" class="placeholder-note"></p>
+    </div>
+
+    <!-- PLACEHOLDER PANEL for Students / Attendance / Fees / More -->
+    <div id="placeholder-panel" style="display:none;">
+      <h3 class="section-title"></h3>
+      <p class="placeholder-note"></p>
+    </div>
+  </main>
+
+  <nav id="bottom-nav" class="bottom-nav"></nav>
+</section>
+
+<script src="js/lang.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/pin.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Fill labels that live directly in HTML via data-key
+  document.querySelectorAll("[data-key]").forEach((el) => {
+    el.textContent = t(el.dataset.key);
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

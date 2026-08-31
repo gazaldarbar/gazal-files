@@ -1,0 +1,14 @@
+{
+  "name": "Gazal Files",
+  "short_name": "Gazal Files",
+  "description": "Private office management for Gazal Darbar",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F2E7",
+  "theme_color": "#6B2545",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
