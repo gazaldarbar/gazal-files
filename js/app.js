@@ -111,6 +111,7 @@ function setupAddStudentFeature() {
   if (form) {
     form.addEventListener("submit", handleStudentFormSubmit);
   }
+  loadCourseOptions();
 }
 
 function openAddStudentForm() {
@@ -152,3 +153,42 @@ function handleStudentFormSubmit(event) {
 }
 
 /* ADD STUDENT FEATURE END */
+
+/* ==========================================================================
+   COURSE LIST FEATURE START
+   Reversible: remove this entire block to remove the course dropdown list.
+   ========================================================================== */
+
+const GAZAL_COURSES = [
+  "ഹിന്ദുസ്ഥാനി സംഗീതം",
+  "കർണാടക സംഗീതം",
+  "മാപ്പിളപ്പാട്ട്",
+  "ശാസ്ത്രീയ നൃത്തം",
+  "സിനിമാറ്റിക് ഡാൻസ്",
+  "തബല",
+  "ഗിറ്റാർ",
+  "കീബോർഡ്",
+  "ഹാർമോണിയം",
+  "ഫ്ലൂട്ട്",
+  "വയലിൻ",
+  "ട്രിപ്പിൾ ഡ്രംസ്",
+  "ഡ്രോയിംഗ്"
+];
+
+function loadCourseOptions() {
+  const courseSelect = document.getElementById("student-course");
+
+  if (!courseSelect) return;
+
+  // Keep the first placeholder option.
+  courseSelect.innerHTML = `<option value="">Select Course</option>`;
+
+  GAZAL_COURSES.forEach((course) => {
+    const option = document.createElement("option");
+    option.value = course;
+    option.textContent = course;
+    courseSelect.appendChild(option);
+  });
+}
+
+/* COURSE LIST FEATURE END */
