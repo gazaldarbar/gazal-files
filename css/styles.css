@@ -668,3 +668,122 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 /* ==========================================================================
    GAZAL DARBAR GREEN + YELLOW THEME END
    ========================================================================== */
+
+/* ==========================================================================
+   ADD / EDIT STUDENT FORM — GREEN + YELLOW CONTRAST FIX
+   Visual-only. No functionality changes.
+   ========================================================================== */
+
+#add-student-panel {
+  background: var(--gd-white);
+  color: var(--gd-green-deep);
+
+  border-radius: var(--radius-lg);
+
+  padding: 20px;
+  margin-bottom: 24px;
+
+  box-shadow: var(--shadow-card);
+}
+
+/* Form header */
+#add-student-panel .form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+#add-student-panel .form-header h2 {
+  color: var(--gd-green-deep);
+}
+
+/* Cancel / back button */
+#add-student-panel .form-back-btn {
+  background: transparent;
+  color: var(--gd-green);
+
+  border: 1px solid rgba(4, 69, 45, 0.22);
+  border-radius: 10px;
+
+  padding: 10px 14px;
+  font-weight: 700;
+}
+
+/* Form labels */
+#add-student-panel label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--gd-green-deep);
+
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Inputs and dropdown */
+#add-student-panel input,
+#add-student-panel select {
+  width: 100%;
+
+  background: #FFFFFF;
+  color: #111111;
+
+  border: 1px solid #C9D8D0;
+  border-radius: 12px;
+
+  padding: 14px 15px;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  outline: none;
+}
+
+/* Text typed inside the fields */
+#add-student-panel input::placeholder {
+  color: #7A8B82;
+  opacity: 1;
+}
+
+/* Form field spacing */
+#add-student-panel .form-group {
+  margin-bottom: 18px;
+}
+
+/* Focus state */
+#add-student-panel input:focus,
+#add-student-panel select:focus {
+  border-color: var(--gd-green);
+
+  box-shadow:
+    0 0 0 3px rgba(4, 69, 45, 0.12);
+}
+
+/* Save button */
+#add-student-panel .save-student-btn {
+  width: 100%;
+
+  background: var(--gd-yellow);
+  color: var(--gd-green-deep);
+
+  border: none;
+  border-radius: 14px;
+
+  padding: 16px;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+/* Active feedback */
+#add-student-panel .save-student-btn:active {
+  transform: scale(0.98);
+}
+
+/* ADD / EDIT STUDENT FORM CONTRAST FIX END */
