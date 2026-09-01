@@ -1640,18 +1640,21 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 }
 
 
+.fingerprint-icon {
+  color: #123d32;
+}
+
 .fingerprint-icon svg {
   width: 100%;
   height: 100%;
 
   fill: none;
 
-  stroke: #123d32;
+  stroke: currentColor;
 
-  stroke-width: 2.5;
+  stroke-width: 2.6;
 
   stroke-linecap: round;
-
   stroke-linejoin: round;
 }
 
