@@ -338,19 +338,45 @@ const GAZAL_COURSES = [
 ];
 
 function loadCourseOptions() {
-  const courseSelect = document.getElementById("student-course");
+  const studentCourseSelect =
+    document.getElementById("student-course");
 
-  if (!courseSelect) return;
+  const attendanceCourseSelect =
+    document.getElementById("attendance-course");
 
-  // Keep the first placeholder option.
-  courseSelect.innerHTML = `<option value="">Select Course</option>`;
+  // ------------------------------------------------
+  // ADD STUDENT COURSE DROPDOWN
+  // ------------------------------------------------
+  if (studentCourseSelect) {
+    studentCourseSelect.innerHTML =
+      `<option value="">Select Course</option>`;
 
-  GAZAL_COURSES.forEach((course) => {
-    const option = document.createElement("option");
-    option.value = course;
-    option.textContent = course;
-    courseSelect.appendChild(option);
-  });
+    GAZAL_COURSES.forEach((course) => {
+      const option = document.createElement("option");
+
+      option.value = course;
+      option.textContent = course;
+
+      studentCourseSelect.appendChild(option);
+    });
+  }
+
+  // ------------------------------------------------
+  // ATTENDANCE COURSE DROPDOWN
+  // ------------------------------------------------
+  if (attendanceCourseSelect) {
+    attendanceCourseSelect.innerHTML =
+      `<option value="">Select Course</option>`;
+
+    GAZAL_COURSES.forEach((course) => {
+      const option = document.createElement("option");
+
+      option.value = course;
+      option.textContent = course;
+
+      attendanceCourseSelect.appendChild(option);
+    });
+  }
 }
 
 /* COURSE LIST FEATURE END */
