@@ -134,6 +134,7 @@ function selectTab(key, btnEl) {
   document.getElementById("placeholder-panel").style.display = "none";
 
   document.getElementById("fees-panel").style.display = "block";
+    renderFeesStudents();
 
   return;
   }
@@ -1903,3 +1904,66 @@ function setupFingerprintAttendanceControls() {
 
 
 /* FINGERPRINT ATTENDANCE FEATURE END */
+
+/* ==========================================================================
+   FEES STUDENT LIST START
+   ========================================================================== */
+
+function renderFeesStudents() {
+  const list = document.getElementById(
+    "fees-students-list"
+  );
+
+  if (!list) return;
+
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  list.innerHTML = "";
+
+  if (students.length === 0) {
+    list.innerHTML = `
+      <div class="fees-empty-message">
+        No students found.
+      </div>
+    `;
+    return;
+  }
+
+  students.forEach((student) => {
+    const card = document.createElement("div");
+
+    card.className = "fees-student-card";
+
+    card.innerHTML = `
+      <div class="fees-student-info">
+
+        <strong>
+          ${student.studentName}
+        </strong>
+
+        <span>
+          ${student.id}
+        </span>
+
+      </div>
+
+      <div class="fees-student-status">
+
+        <span class="fees-status-label">
+          ഫീസ്
+        </span>
+
+        <span class="fees-status-value not-paid">
+          അടച്ചില്ല
+        </span>
+
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+}
+
+/* FEES STUDENT LIST END */
