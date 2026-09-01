@@ -76,11 +76,24 @@ function selectTab(key, btnEl) {
   btnEl.classList.add("active");
 
   const main = document.getElementById("main-content");
-  if (key === "home") {
-    document.getElementById("home-panel").style.display = "block";
-    document.getElementById("placeholder-panel").style.display = "none";
-    return;
-  }
+
+if (key === "home") {
+  document.getElementById("home-panel").style.display = "block";
+  document.getElementById("placeholder-panel").style.display = "none";
+  document.getElementById("students-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "none";
+  return;
+}
+
+if (key === "students") {
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "none";
+  document.getElementById("students-panel").style.display = "block";
+
+  renderStudentsList();
+  return;
+}
   document.getElementById("home-panel").style.display = "none";
   const panel = document.getElementById("placeholder-panel");
   panel.style.display = "block";
@@ -237,3 +250,50 @@ function loadCourseOptions() {
 }
 
 /* COURSE LIST FEATURE END */
+
+/* ==========================================================================
+   STUDENT LIST FEATURE START
+   Reversible: remove this block to remove student list rendering.
+   ========================================================================== */
+
+function renderStudentsList() {
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  const list = document.getElementById("students-list");
+  const empty = document.getElementById("students-empty");
+  const count = document.getElementById("students-count");
+
+  list.innerHTML = "";
+
+  count.textContent = students.length;
+
+  if (students.length === 0) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  students.forEach((student) => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+
+    card.innerHTML = `
+      <div class="student-card-main">
+        <h3>${student.studentName}</h3>
+        <p>${student.course}</p>
+        <p>${student.phone}</p>
+      </div>
+
+      <div class="student-card-id">
+        ${student.id}
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+}
+
+/* STUDENT LIST FEATURE END */
