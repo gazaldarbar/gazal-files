@@ -2021,7 +2021,8 @@ function isFeeMonthPaid(
 
 function markFeeMonthPaid(
   studentId,
-  monthNumber
+  monthNumber,
+  feeMonthInfo
 ) {
   const payments = getFeePayments();
 
@@ -2033,15 +2034,38 @@ function markFeeMonthPaid(
 
   if (existingPayment) {
     existingPayment.status = "paid";
+
     existingPayment.paidDate =
       new Date().toISOString();
+
+    existingPayment.feeMonth =
+      feeMonthInfo?.month ?? null;
+
+    existingPayment.feeYear =
+      feeMonthInfo?.year ?? null;
+
+    existingPayment.feeMonthMalayalam =
+      feeMonthInfo?.monthNameMalayalam ?? "";
+
   } else {
     payments.push({
       studentId: studentId,
+
       monthNumber: monthNumber,
+
       status: "paid",
+
       paidDate:
-        new Date().toISOString()
+        new Date().toISOString(),
+
+      feeMonth:
+        feeMonthInfo?.month ?? null,
+
+      feeYear:
+        feeMonthInfo?.year ?? null,
+
+      feeMonthMalayalam:
+        feeMonthInfo?.monthNameMalayalam ?? ""
     });
   }
 
