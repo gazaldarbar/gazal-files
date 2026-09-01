@@ -1955,20 +1955,30 @@ function renderFeesStudents() {
 
   <div class="fees-card-divider"></div>
 
-  <div class="fees-card-footer">
+  <button
+  type="button"
+  class="fees-details-button"
+>
+  <span>
+    നിലവിലെ ഫീസ് വിവരങ്ങൾ
+  </span>
 
-    <span>
-      നിലവിലെ ഫീസ് വിവരങ്ങൾ
-    </span>
-
-    <span class="fees-arrow">
-      ›
-    </span>
-
-  </div>
+  <span class="fees-arrow">
+    ›
+  </span>
+</button>
 `;
 
     list.appendChild(card);
+    const detailsButton = card.querySelector(
+  ".fees-details-button"
+);
+
+if (detailsButton) {
+  detailsButton.addEventListener("click", () => {
+    openStudentFeeDetails(student);
+  });
+}
   });
 }
 
