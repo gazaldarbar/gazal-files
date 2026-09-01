@@ -1983,3 +1983,212 @@ if (detailsButton) {
 }
 
 /* FEES STUDENT LIST END */
+
+// ================================================================
+// STUDENT FEE DETAILS
+// ================================================================
+
+function openStudentFeeDetails(student) {
+
+  const attendanceRecords = JSON.parse(
+    localStorage.getItem("gazal_attendance") || "[]"
+  );
+
+  const presentClasses = [];
+
+  attendanceRecords.forEach((record) => {
+
+    record.students.forEach((attendanceStudent) => {
+
+      if (
+        attendanceStudent.id === student.id &&
+        attendanceStudent.status === "present"
+      ) {
+        presentClasses.push({
+          date: record.date
+        });
+      }
+
+    });
+
+  });
+
+  // Sort newest first
+  presentClasses.sort(
+    (a, b) =>
+      new Date(b.date) - new Date(a.date)
+  );
+
+  const currentClasses =
+    presentClasses.slice(0, 4);
+
+  const overlay = document.createElement("div");
+
+  overlay.className =
+    "student-fee-details-overlay";
+
+  overlay.innerHTML = `
+
+    <div class="student-fee-details-modal">
+
+      <div class="student-fee-details-header">
+
+        <div>
+          <h2>${student.studentName}</h2>
+
+          <p>
+            ${student.id}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="student-fee-details-close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="student-fee-details-progress">
+
+        <div class="student-fee-details-progress-top">
+
+          <span>
+            ഈ മാസത്തെ ക്ലാസുകൾ
+          </span>
+
+          <strong>
+            ${currentClasses.length} / 4
+          </strong>
+
+        </div>
+
+
+        <div class="student-fee-details-dots">
+
+          ${[0, 1, 2, 3]
+            .map(
+              (index) => `
+                <span
+                  class="
+                    fee-class-dot
+                    ${
+                      index < currentClasses.length
+                        ? "completed"
+                        : ""
+                    }
+                  "
+                ></span>
+              `
+            )
+            .join("")}
+
+        </div>
+
+      </div>
+
+
+      <div class="student-fee-details-classes">
+
+        <h3>
+          കഴിഞ്ഞ ക്ലാസുകൾ
+        </h3>
+
+        ${
+          currentClasses.length === 0
+            ? `
+              <p class="fee-no-classes">
+                ഹാജർ രേഖകൾ ലഭ്യമല്ല.
+              </p>
+            `
+            : currentClasses
+                .map(
+                  (classItem, index) => `
+                    <div
+                      class="student-fee-class-row"
+                    >
+
+                      <span>
+                        ക്ലാസ് ${index + 1}
+                      </span>
+
+                      <span>
+                        ${classItem.date}
+                      </span>
+
+                      <span
+                        class="
+                          student-fee-class-present
+                        "
+                      >
+                        ഹാജർ
+                      </span>
+
+                    </div>
+                  `
+                )
+                .join("")
+        }
+
+      </div>
+
+
+      <div class="student-fee-details-status">
+
+        <span>
+          ഫീസ്
+        </span>
+
+        <strong
+          class="
+            ${
+              currentClasses.length >= 4
+                ? "fee-not-paid"
+                : "fee-not-due"
+            }
+          "
+        >
+          ${
+            currentClasses.length >= 4
+              ? "അടച്ചില്ല"
+              : "ഇപ്പോൾ അടക്കേണ്ടതില്ല"
+          }
+        </strong>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(overlay);
+
+
+  const closeButton =
+    overlay.querySelector(
+      ".student-fee-details-close"
+    );
+
+  closeButton.addEventListener(
+    "click",
+    () => {
+      overlay.remove();
+    }
+  );
+
+
+  overlay.addEventListener(
+    "click",
+    (event) => {
+
+      if (event.target === overlay) {
+        overlay.remove();
+      }
+
+    }
+  );
+
+}
