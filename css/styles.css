@@ -1755,3 +1755,109 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 /* ==========================================================================
    PREMIUM FINGERPRINT ATTENDANCE DESIGN END
    ========================================================================== */
+
+
+/* ================================================================
+   FINGERPRINT ACTIVE SCANNING EFFECT
+   ================================================================ */
+
+.fingerprint-scan-button {
+  overflow: hidden;
+}
+
+.fingerprint-scan-line {
+  position: absolute;
+
+  left: 12%;
+  right: 12%;
+
+  height: 3px;
+
+  top: -10%;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.9),
+    0 0 18px rgba(255, 255, 255, 0.65);
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+
+/* Scanning starts */
+
+.fingerprint-scan-button.scanning
+.fingerprint-scan-line {
+  opacity: 1;
+
+  animation:
+    fingerprintScanLine 0.7s ease-in-out infinite;
+}
+
+
+/* Fingerprint animation while scanning */
+
+.fingerprint-scan-button.scanning
+.fingerprint-icon {
+  animation:
+    fingerprintScanGlow 0.7s ease-in-out infinite alternate;
+}
+
+
+/* Scan line movement */
+
+@keyframes fingerprintScanLine {
+
+  0% {
+    top: -10%;
+  }
+
+  100% {
+    top: 110%;
+  }
+}
+
+
+/* Fingerprint glow */
+
+@keyframes fingerprintScanGlow {
+
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+
+/* Success effect */
+
+.fingerprint-scan-button.scan-success {
+  animation:
+    fingerprintSuccess 0.5s ease;
+}
+
+
+@keyframes fingerprintSuccess {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
