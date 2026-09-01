@@ -2329,6 +2329,16 @@ const latestMonthPaid =
       )
     : false;
 
+  const feePayments =
+  getFeePayments();
+
+const latestPaymentRecord =
+  feePayments.find(
+    (payment) =>
+      payment.studentId === student.id &&
+      payment.monthNumber === latestCompletedMonth
+  );
+
 
 /*
   A fee is currently due when at least one
@@ -2482,6 +2492,26 @@ const feeDue =
 </div>
 
 ${
+  latestPaymentRecord &&
+  latestPaymentRecord.feeMonthMalayalam
+    ? `
+      <div class="student-fee-month-info">
+
+        <span class="student-fee-month-label">
+          ഫീസ് മാസം
+        </span>
+
+        <strong class="student-fee-month-value">
+          ${latestPaymentRecord.feeMonthMalayalam}
+          ${latestPaymentRecord.feeYear}
+        </strong>
+
+      </div>
+    `
+    : ""
+}
+
+${
   feeDue
     ? `
       <button
@@ -2515,10 +2545,40 @@ if (markPaidButton) {
     "click",
     () => {
 
-      markFeeMonthPaid(
-        student.id,
-        latestCompletedMonth
-      );
+      /*
+  Create an oldest-first copy because
+  getFeeMonthFromCycle() expects that order.
+*/
+
+const presentClassesOldestFirst =
+  [...presentClasses].sort(
+    (a, b) =>
+      new Date(a.date) - new Date(b.date)
+  );
+
+
+/*
+  Get the month of the final class that
+  completed this 4-class fee cycle.
+*/
+
+const feeMonthInfo =
+  getFeeMonthFromCycle(
+    presentClassesOldestFirst,
+    latestCompletedMonth
+  );
+
+
+/*
+  Save payment together with the
+  actual fee month.
+*/
+
+markFeeMonthPaid(
+  student.id,
+  latestCompletedMonth,
+  feeMonthInfo
+);
 
       overlay.remove();
 
