@@ -1905,6 +1905,79 @@ function setupFingerprintAttendanceControls() {
 
 /* FINGERPRINT ATTENDANCE FEATURE END */
 
+/* ================================================================
+   FEE PAYMENT STORAGE
+   ================================================================ */
+
+function getFeePayments() {
+  return JSON.parse(
+    localStorage.getItem("gazal_fee_payments") || "[]"
+  );
+}
+
+
+function saveFeePayments(payments) {
+  localStorage.setItem(
+    "gazal_fee_payments",
+    JSON.stringify(payments)
+  );
+}
+
+
+/*
+  Check whether a specific student's
+  4-class month has already been paid.
+*/
+
+function isFeeMonthPaid(
+  studentId,
+  monthNumber
+) {
+  const payments = getFeePayments();
+
+  return payments.some(
+    (payment) =>
+      payment.studentId === studentId &&
+      payment.monthNumber === monthNumber &&
+      payment.status === "paid"
+  );
+}
+
+
+/*
+  Mark a student's specific 4-class month
+  as paid.
+*/
+
+function markFeeMonthPaid(
+  studentId,
+  monthNumber
+) {
+  const payments = getFeePayments();
+
+  const existingPayment = payments.find(
+    (payment) =>
+      payment.studentId === studentId &&
+      payment.monthNumber === monthNumber
+  );
+
+  if (existingPayment) {
+    existingPayment.status = "paid";
+    existingPayment.paidDate =
+      new Date().toISOString();
+  } else {
+    payments.push({
+      studentId: studentId,
+      monthNumber: monthNumber,
+      status: "paid",
+      paidDate:
+        new Date().toISOString()
+    });
+  }
+
+  saveFeePayments(payments);
+}
+
 /* ==========================================================================
    FEES STUDENT LIST START
    ========================================================================== */
@@ -2019,9 +2092,90 @@ function openStudentFeeDetails(student) {
       new Date(b.date) - new Date(a.date)
   );
 
-  const currentClasses =
-    presentClasses.slice(0, 4);
+  const totalPresentClasses =
+  presentClasses.length;
 
+
+/*
+  Each 4 Present classes = one month.
+*/
+
+const completedMonths =
+  Math.floor(totalPresentClasses / 4);
+
+
+/*
+  Current active month number.
+
+  Example:
+  0–3 classes → Month 1
+  4–7 classes → Month 2
+  8–11 classes → Month 3
+*/
+
+const currentMonthNumber =
+  completedMonths + 1;
+
+
+/*
+  Number of classes in the current
+  unfinished month.
+*/
+
+const currentMonthClasses =
+  totalPresentClasses % 4;
+
+
+/*
+  Get the classes belonging to the
+  current unfinished month.
+
+  Because the array is sorted newest first,
+  we take only the remaining classes.
+*/
+
+const currentClasses =
+  presentClasses.slice(
+    0,
+    currentMonthClasses
+  );
+
+/* ================================================================
+   CURRENT FEE PAYMENT STATUS
+   ================================================================ */
+
+/*
+  The latest completed 4-class month.
+*/
+
+const latestCompletedMonth =
+  completedMonths;
+
+
+/*
+  Check whether the latest completed month
+  has already been paid.
+*/
+
+const latestMonthPaid =
+  latestCompletedMonth > 0
+    ? isFeeMonthPaid(
+        student.id,
+        latestCompletedMonth
+      )
+    : false;
+
+
+/*
+  A fee is currently due when at least one
+  completed month exists and the latest
+  completed month has not been paid.
+*/
+
+const feeDue =
+  latestCompletedMonth > 0 &&
+  !latestMonthPaid;
+  
   const overlay = document.createElement("div");
 
   overlay.className =
@@ -2137,27 +2291,44 @@ function openStudentFeeDetails(student) {
 
       <div class="student-fee-details-status">
 
-        <span>
-          ഫീസ്
-        </span>
+  <span>
+    ഫീസ്
+  </span>
 
-        <strong
-          class="
-            ${
-              currentClasses.length >= 4
-                ? "fee-not-paid"
-                : "fee-not-due"
-            }
-          "
-        >
-          ${
-            currentClasses.length >= 4
-              ? "അടച്ചില്ല"
-              : "ഇപ്പോൾ അടക്കേണ്ടതില്ല"
-          }
-        </strong>
+  <strong
+    class="
+      ${
+        latestMonthPaid
+          ? "fee-paid"
+          : feeDue
+            ? "fee-not-paid"
+            : "fee-not-due"
+      }
+    "
+  >
+    ${
+      latestMonthPaid
+        ? "അടച്ചു"
+        : feeDue
+          ? "അടച്ചില്ല"
+          : "ഇപ്പോൾ അടക്കേണ്ടതില്ല"
+    }
+  </strong>
 
-      </div>
+</div>
+
+${
+  feeDue
+    ? `
+      <button
+        type="button"
+        class="mark-fee-paid-button"
+      >
+        ✓ ഫീസ് അടച്ചു
+      </button>
+    `
+    : ""
+}
 
     </div>
 
@@ -2165,6 +2336,30 @@ function openStudentFeeDetails(student) {
 
 
   document.body.appendChild(overlay);
+
+  const markPaidButton =
+  overlay.querySelector(
+    ".mark-fee-paid-button"
+  );
+
+if (markPaidButton) {
+  markPaidButton.addEventListener(
+    "click",
+    () => {
+
+      markFeeMonthPaid(
+        student.id,
+        latestCompletedMonth
+      );
+
+      overlay.remove();
+
+      openStudentFeeDetails(student);
+
+      renderFeesStudents();
+    }
+  );
+}
 
 
   const closeButton =
