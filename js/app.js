@@ -73,49 +73,71 @@ function renderNav() {
 }
 
 function selectTab(key, btnEl) {
-  document.querySelectorAll(".nav-item").forEach((b) => b.classList.remove("active"));
+  document
+    .querySelectorAll(".nav-item")
+    .forEach((b) => b.classList.remove("active"));
+
   btnEl.classList.add("active");
 
-  const main = document.getElementById("main-content");
+  // ================================================================
+  // HIDE ALL MAIN PANELS FIRST
+  // This prevents multiple sections appearing on screen together.
+  // ================================================================
+  const panels = [
+    "home-panel",
+    "students-panel",
+    "add-student-panel",
+    "attendance-panel",
+    "placeholder-panel"
+  ];
 
-if (key === "home") {
-  document.getElementById("home-panel").style.display = "block";
-  document.getElementById("placeholder-panel").style.display = "none";
-  document.getElementById("students-panel").style.display = "none";
-  document.getElementById("add-student-panel").style.display = "none";
-  return;
-}
+  panels.forEach((id) => {
+    const panel = document.getElementById(id);
 
-if (key === "students") {
-  document.getElementById("home-panel").style.display = "none";
-  document.getElementById("placeholder-panel").style.display = "none";
-  document.getElementById("add-student-panel").style.display = "none";
-  document.getElementById("students-panel").style.display = "block";
+    if (panel) {
+      panel.style.display = "none";
+    }
+  });
 
-  renderStudentsList();
-  return;
-}
-
-  if (key === "attendance") {
-  document.getElementById("home-panel").style.display = "none";
-  document.getElementById("students-panel").style.display = "none";
-  document.getElementById("add-student-panel").style.display = "none";
-  document.getElementById("placeholder-panel").style.display = "none";
-
-  document.getElementById("attendance-panel").style.display = "block";
-
-  return;
+  // ================================================================
+  // HOME
+  // ================================================================
+  if (key === "home") {
+    document.getElementById("home-panel").style.display = "block";
+    return;
   }
-  
-  document.getElementById("home-panel").style.display = "none";
+
+  // ================================================================
+  // STUDENTS
+  // ================================================================
+  if (key === "students") {
+    document.getElementById("students-panel").style.display = "block";
+
+    renderStudentsList();
+    return;
+  }
+
+  // ================================================================
+  // ATTENDANCE
+  // ================================================================
+  if (key === "attendance") {
+    document.getElementById("attendance-panel").style.display = "block";
+    return;
+  }
+
+  // ================================================================
+  // OTHER SECTIONS — PLACEHOLDER
+  // ================================================================
   const panel = document.getElementById("placeholder-panel");
+
   panel.style.display = "block";
+
   panel.querySelector(".section-title").textContent = t(
     NAV_ITEMS.find((n) => n.key === key).labelKey
   );
+
   panel.querySelector(".placeholder-note").textContent = t("comingSoon");
 }
-
 /* ==========================================================================
    ADD STUDENT FEATURE START
    Reversible: remove this entire block to remove Add Student navigation.
