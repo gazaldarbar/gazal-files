@@ -887,3 +887,78 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 }
 
 /* STUDENT CARDS THEME END */
+
+/* ================================================================
+   PREMIUM ATTENDANCE CONTROLS START
+   Reversible: remove this block to restore default controls.
+   ================================================================ */
+
+.attendance-controls {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.attendance-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attendance-field label {
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.attendance-field select,
+.attendance-field input[type="date"] {
+  width: 100%;
+  min-height: 52px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+
+  background: #FFFFFF;
+  color: #0A0A0A;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  outline: none;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.12);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Premium dropdown arrow area */
+.attendance-field select {
+  cursor: pointer;
+}
+
+/* Premium focus state */
+.attendance-field select:focus,
+.attendance-field input[type="date"]:focus {
+  border-color: #FEC700;
+
+  box-shadow:
+    0 0 0 3px rgba(254, 199, 0, 0.22),
+    0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* Slight interaction feedback */
+.attendance-field select:active,
+.attendance-field input[type="date"]:active {
+  transform: scale(0.99);
+}
+
+/* ================================================================
+   PREMIUM ATTENDANCE CONTROLS END
+   ================================================================ */
