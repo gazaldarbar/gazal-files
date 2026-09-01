@@ -1106,11 +1106,109 @@ function setupFingerprintAttendanceControls() {
 
 
   if (scanButton) {
-    scanButton.addEventListener(
-      "click",
-      confirmFingerprintAttendance
+
+  let scanHoldTimer = null;
+  let isScanning = false;
+
+  function startFingerprintScan(event) {
+    event.preventDefault();
+
+    if (isScanning) return;
+
+    isScanning = true;
+
+    scanButton.classList.remove("scan-success");
+    scanButton.classList.add("scanning");
+
+    const scanTitle = document.getElementById(
+      "fingerprint-scan-title"
     );
+
+    const scanMessage = document.getElementById(
+      "fingerprint-scan-message"
+    );
+
+    if (scanTitle) {
+      scanTitle.textContent = "Scanning...";
+    }
+
+    if (scanMessage) {
+      scanMessage.textContent =
+        "Keep your finger on the scanner.";
+    }
+
+    playFingerprintSound("scan");
+
+    scanHoldTimer = setTimeout(() => {
+      scanHoldTimer = null;
+      confirmFingerprintAttendance();
+    }, 1200);
   }
+
+  function cancelFingerprintScan(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!isScanning) return;
+
+    /* If scan already completed, don't cancel it */
+    if (!scanHoldTimer) return;
+
+    clearTimeout(scanHoldTimer);
+    scanHoldTimer = null;
+
+    isScanning = false;
+
+    scanButton.classList.remove("scanning");
+
+    const scanTitle = document.getElementById(
+      "fingerprint-scan-title"
+    );
+
+    const scanMessage = document.getElementById(
+      "fingerprint-scan-message"
+    );
+
+    if (scanTitle) {
+      scanTitle.textContent = "Hold to Mark Present";
+    }
+
+    if (scanMessage) {
+      scanMessage.textContent =
+        "Keep your finger on the fingerprint.";
+    }
+  }
+
+  /* Touch devices */
+  scanButton.addEventListener(
+    "pointerdown",
+    startFingerprintScan
+  );
+
+  scanButton.addEventListener(
+    "pointerup",
+    cancelFingerprintScan
+  );
+
+  scanButton.addEventListener(
+    "pointerleave",
+    cancelFingerprintScan
+  );
+
+  scanButton.addEventListener(
+    "pointercancel",
+    cancelFingerprintScan
+  );
+
+  /* Prevent long-press browser menu */
+  scanButton.addEventListener(
+    "contextmenu",
+    (event) => {
+      event.preventDefault();
+    }
+  );
+}
 
 
   if (cancelButton) {
