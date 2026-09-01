@@ -2007,9 +2007,63 @@ function renderFeesStudents() {
   students.forEach((student) => {
     const card = document.createElement("div");
 
-    card.className = "fees-student-card";
+card.className = "fees-student-card";
 
-    card.innerHTML = `
+
+/* ================================================================
+   FEE STATUS CALCULATION
+   ================================================================ */
+
+const attendanceRecords = JSON.parse(
+  localStorage.getItem("gazal_attendance") || "[]"
+);
+
+const presentClasses = [];
+
+
+attendanceRecords.forEach((record) => {
+
+  record.students.forEach((attendanceStudent) => {
+
+    if (
+      attendanceStudent.id === student.id &&
+      attendanceStudent.status === "present"
+    ) {
+      presentClasses.push(record.date);
+    }
+
+  });
+
+});
+
+
+const totalPresentClasses =
+  presentClasses.length;
+
+
+const completedMonths =
+  Math.floor(totalPresentClasses / 4);
+
+
+const latestCompletedMonth =
+  completedMonths;
+
+
+const latestMonthPaid =
+  latestCompletedMonth > 0
+    ? isFeeMonthPaid(
+        student.id,
+        latestCompletedMonth
+      )
+    : false;
+
+
+const feeDue =
+  latestCompletedMonth > 0 &&
+  !latestMonthPaid;
+
+
+card.innerHTML = `
   <div class="fees-card-top">
 
     <div class="fees-student-info">
@@ -2020,9 +2074,26 @@ function renderFeesStudents() {
       </span>
     </div>
 
-    <div class="fees-status-badge not-paid">
-      ഫീസ് : അടച്ചില്ല
-    </div>
+    <div
+  class="
+    fees-status-badge
+    ${
+      latestMonthPaid
+        ? "paid"
+        : feeDue
+          ? "not-paid"
+          : "not-due"
+    }
+  "
+>
+  ${
+    latestMonthPaid
+      ? "ഫീസ് : അടച്ചു"
+      : feeDue
+        ? "ഫീസ് : അടച്ചില്ല"
+        : "ഫീസ് : ഇപ്പോൾ അടക്കേണ്ടതില്ല"
+  }
+</div>
 
   </div>
 
