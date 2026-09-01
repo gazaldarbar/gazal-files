@@ -2193,22 +2193,21 @@ const currentMonthNumber =
   unfinished month.
 */
 
-const currentMonthClasses =
+const remainingClasses =
   totalPresentClasses % 4;
 
 
-/*
-  Get the classes belonging to the
-  current unfinished month.
+const displayClassesCount =
+  remainingClasses === 0 &&
+  totalPresentClasses > 0
+    ? 4
+    : remainingClasses;
 
-  Because the array is sorted newest first,
-  we take only the remaining classes.
-*/
 
 const currentClasses =
   presentClasses.slice(
     0,
-    currentMonthClasses
+    displayClassesCount
   );
 
 /* ================================================================
