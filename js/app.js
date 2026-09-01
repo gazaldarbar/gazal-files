@@ -95,6 +95,18 @@ if (key === "students") {
   renderStudentsList();
   return;
 }
+
+  if (key === "attendance") {
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("students-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+
+  document.getElementById("attendance-panel").style.display = "block";
+
+  return;
+  }
+  
   document.getElementById("home-panel").style.display = "none";
   const panel = document.getElementById("placeholder-panel");
   panel.style.display = "block";
