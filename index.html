@@ -350,5 +350,83 @@
     });
   }
 </script>
+
+  <!-- ================================================================
+     FINGERPRINT ATTENDANCE MODAL START
+     ================================================================ -->
+
+<div
+  id="fingerprint-attendance-modal"
+  class="fingerprint-attendance-modal"
+  style="display: none;"
+>
+  <div class="fingerprint-attendance-backdrop"></div>
+
+  <div class="fingerprint-attendance-window">
+
+    <div class="fingerprint-attendance-header">
+      <div>
+        <span class="fingerprint-status">ATTENDANCE CHECK-IN</span>
+
+        <h2 id="fingerprint-student-name">
+          Student Name
+        </h2>
+
+        <p id="fingerprint-student-id">
+          GZ-000
+        </p>
+      </div>
+
+      <button
+        type="button"
+        id="fingerprint-cancel-top"
+        class="fingerprint-close-button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="fingerprint-scanner-area">
+
+      <div class="fingerprint-rings">
+        <div class="fingerprint-ring ring-one"></div>
+        <div class="fingerprint-ring ring-two"></div>
+        <div class="fingerprint-ring ring-three"></div>
+
+        <button
+          type="button"
+          id="fingerprint-scan-button"
+          class="fingerprint-scan-button"
+        >
+          <span class="fingerprint-icon">☝</span>
+        </button>
+      </div>
+
+      <h3 id="fingerprint-scan-title">
+        Touch to Mark Present
+      </h3>
+
+      <p id="fingerprint-scan-message">
+        Tap the fingerprint to confirm your attendance.
+      </p>
+
+    </div>
+
+    <div class="fingerprint-attendance-footer">
+      <button
+        type="button"
+        id="fingerprint-cancel-button"
+        class="fingerprint-cancel-button"
+      >
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- FINGERPRINT ATTENDANCE MODAL END -->
+  
 </body>
 </html>
