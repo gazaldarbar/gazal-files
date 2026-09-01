@@ -2392,11 +2392,15 @@ ${
   feeDue
     ? `
       <button
-        type="button"
-        class="mark-fee-paid-button"
-      >
-        ✓ ഫീസ് അടച്ചു
-      </button>
+  type="button"
+  class="mark-fee-paid-button"
+>
+  <span class="mark-fee-paid-icon">✓</span>
+
+  <span class="mark-fee-paid-text">
+    ഫീസ് അടച്ചാൽ ഇവിടെ ക്ലിക്ക് ചെയ്യുക
+  </span>
+</button>
     `
     : ""
 }
