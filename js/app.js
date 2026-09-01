@@ -1319,6 +1319,18 @@ const monthComplete =
 
   </div>
 
+  <div class="student-fee-status">
+
+  <span class="student-fee-status-label">
+    ഫീസ്
+  </span>
+
+  <span class="student-fee-status-value not-paid">
+    അടച്ചില്ല
+  </span>
+
+</div>
+
 
   <div class="student-fee-status">
 
