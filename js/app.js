@@ -281,17 +281,80 @@ function renderStudentsList() {
     card.className = "student-card";
 
     card.innerHTML = `
-      <div class="student-card-main">
-        <h3>${student.studentName}</h3>
-        <p>${student.course}</p>
-        <p>${student.phone}</p>
-      </div>
+  <div class="student-card-top">
+    <div>
+      <h3>${student.studentName}</h3>
+      <p class="student-card-id">${student.id}</p>
+    </div>
 
-      <div class="student-card-id">
-        ${student.id}
-      </div>
-    `;
+    <span class="student-course-badge">${student.course}</span>
+  </div>
 
+  <div class="student-details">
+
+    <div class="student-detail-row">
+      <span class="student-detail-label">രക്ഷിതാവിൻ്റെ പേര്</span>
+      <span class="student-detail-value">
+        ${student.parentName || "-"}
+      </span>
+    </div>
+
+    <div class="student-detail-row">
+      <span class="student-detail-label">സ്ഥലം</span>
+      <span class="student-detail-value">
+        ${student.place || "-"}
+      </span>
+    </div>
+
+    <div class="student-detail-row">
+      <span class="student-detail-label">ഫോൺ നമ്പർ</span>
+
+      <a
+        class="student-phone-link"
+        href="tel:${student.phone}"
+      >
+        📞 ${student.phone}
+      </a>
+    </div>
+
+    ${
+      student.backupPhone
+        ? `
+        <div class="student-detail-row">
+          <span class="student-detail-label">
+            2nd ഫോൺ നമ്പർ
+          </span>
+
+          <a
+            class="student-phone-link"
+            href="tel:${student.backupPhone}"
+          >
+            📞 ${student.backupPhone}
+          </a>
+        </div>
+        `
+        : ""
+    }
+
+    <div class="student-detail-row">
+      <span class="student-detail-label">കോഴ്സ്</span>
+      <span class="student-detail-value">
+        ${student.course}
+      </span>
+    </div>
+
+    <div class="student-detail-row">
+      <span class="student-detail-label">
+        അഡ്മിഷൻ ഡേറ്റ്
+      </span>
+
+      <span class="student-detail-value">
+        ${student.admissionDate || "-"}
+      </span>
+    </div>
+
+  </div>
+`;
     list.appendChild(card);
   });
 }
