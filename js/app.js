@@ -141,7 +141,36 @@ function openAddStudentForm() {
 }
 
 function closeAddStudentForm() {
+  // Hide the form.
   document.getElementById("add-student-panel").style.display = "none";
+
+  // Clear any typed or edited information.
+  const form = document.getElementById("add-student-form");
+
+  if (form) {
+    form.reset();
+  }
+
+  // Exit Edit mode.
+  editingStudentId = null;
+
+  // Restore normal Add Student title.
+  const formTitle = document.querySelector(
+    "#add-student-panel .form-header h2"
+  );
+
+  if (formTitle) {
+    formTitle.textContent = "Add Student";
+  }
+
+  // Keep the button label consistent.
+  const saveButton = document.getElementById("btn-save-student");
+
+  if (saveButton) {
+    saveButton.textContent = "Save";
+  }
+
+  // Return to Home.
   document.getElementById("home-panel").style.display = "block";
 
   const homeNavButton = document.querySelector(".nav-item");
