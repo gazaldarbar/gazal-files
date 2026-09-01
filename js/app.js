@@ -173,6 +173,7 @@ if (attendanceCourse) {
 }
   setupAttendanceModalControls();
   setupFingerprintAttendanceControls();
+  setupAttendanceHistoryControls();
   
 }
 
@@ -717,6 +718,191 @@ function saveAttendance() {
 }
 
 /* ATTENDANCE SAVE FEATURE END */
+
+/* ==========================================================================
+   ATTENDANCE HISTORY FEATURE START
+   ========================================================================== */
+
+function openAttendanceHistory() {
+  const modal = document.getElementById(
+    "attendance-history-modal"
+  );
+
+  const list = document.getElementById(
+    "attendance-history-list"
+  );
+
+  if (!modal || !list) return;
+
+  const attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+  // Clear previous records.
+  list.innerHTML = "";
+
+  // No records found.
+  if (attendanceRecords.length === 0) {
+    list.innerHTML = `
+      <div class="attendance-history-empty">
+        No attendance records have been saved yet.
+      </div>
+    `;
+  } else {
+
+    // Show newest records first.
+    attendanceRecords
+      .slice()
+      .sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      })
+      .forEach((record) => {
+
+        const presentCount =
+          record.students.filter(
+            (student) =>
+              student.status === "present"
+          ).length;
+
+        const absentCount =
+          record.students.filter(
+            (student) =>
+              student.status === "absent"
+          ).length;
+
+        const totalStudents =
+          record.students.length;
+
+        const attendancePercent =
+          totalStudents > 0
+            ? Math.round(
+                (presentCount / totalStudents) * 100
+              )
+            : 0;
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "attendance-history-card";
+
+        card.innerHTML = `
+          <div class="attendance-history-card-top">
+
+            <div>
+              <h3 class="attendance-history-course">
+                ${record.course}
+              </h3>
+
+              <span class="attendance-history-date">
+                ${record.date}
+              </span>
+            </div>
+
+          </div>
+
+          <div class="attendance-history-stats">
+
+            <div class="
+              attendance-history-stat
+              present
+            ">
+              <strong>${presentCount}</strong>
+              <span>Present</span>
+            </div>
+
+            <div class="
+              attendance-history-stat
+              absent
+            ">
+              <strong>${absentCount}</strong>
+              <span>Absent</span>
+            </div>
+
+            <div class="
+              attendance-history-stat
+              percent
+            ">
+              <strong>${attendancePercent}%</strong>
+              <span>Attendance</span>
+            </div>
+
+          </div>
+        `;
+
+        list.appendChild(card);
+      });
+  }
+
+  modal.style.display = "flex";
+}
+
+
+function closeAttendanceHistory() {
+  const modal = document.getElementById(
+    "attendance-history-modal"
+  );
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+function setupAttendanceHistoryControls() {
+
+  const openButton = document.getElementById(
+    "btn-view-attendance-history"
+  );
+
+  const closeButton = document.getElementById(
+    "btn-close-attendance-history"
+  );
+
+  const footerCloseButton = document.getElementById(
+    "btn-close-attendance-history-footer"
+  );
+
+  const backdrop = document.querySelector(
+    ".attendance-history-backdrop"
+  );
+
+
+  if (openButton) {
+    openButton.addEventListener(
+      "click",
+      openAttendanceHistory
+    );
+  }
+
+
+  if (closeButton) {
+    closeButton.addEventListener(
+      "click",
+      closeAttendanceHistory
+    );
+  }
+
+
+  if (footerCloseButton) {
+    footerCloseButton.addEventListener(
+      "click",
+      closeAttendanceHistory
+    );
+  }
+
+
+  if (backdrop) {
+    backdrop.addEventListener(
+      "click",
+      closeAttendanceHistory
+    );
+  }
+}
+
+/* ATTENDANCE HISTORY FEATURE END */
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
