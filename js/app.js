@@ -159,7 +159,6 @@ function closeAddStudentForm() {
    STUDENT LOCAL MEMORY FEATURE START
    Reversible: this section saves students in this device's localStorage.
    ========================================================================== */
-
 function handleStudentFormSubmit(event) {
   event.preventDefault();
 
@@ -177,22 +176,26 @@ function handleStudentFormSubmit(event) {
     admissionDate: document.getElementById("admission-date").value,
   };
 
-  let savedStudent;
+  let savedStudent = null;
 
   if (editingStudentId) {
     const studentIndex = students.findIndex(
       (student) => student.id === editingStudentId
     );
 
-    if (studentIndex !== -1) {
-      students[studentIndex] = {
-        ...students[studentIndex],
-        ...studentData,
-        updatedAt: new Date().toISOString(),
-      };
-
-      savedStudent = students[studentIndex];
+    if (studentIndex === -1) {
+      alert("Student could not be found. Please try again.");
+      editingStudentId = null;
+      return;
     }
+
+    students[studentIndex] = {
+      ...students[studentIndex],
+      ...studentData,
+      updatedAt: new Date().toISOString(),
+    };
+
+    savedStudent = students[studentIndex];
   } else {
     savedStudent = {
       id: generateStudentId(),
@@ -208,10 +211,8 @@ function handleStudentFormSubmit(event) {
     JSON.stringify(students)
   );
 
-  // Reset the form.
   event.target.reset();
 
-  // Restore Add Student mode.
   editingStudentId = null;
 
   const formTitle = document.querySelector(
@@ -225,7 +226,6 @@ function handleStudentFormSubmit(event) {
   document.getElementById("btn-save-student").textContent =
     "Upload / Save";
 
-  // Return to Home.
   closeAddStudentForm();
 
   alert(
@@ -233,6 +233,7 @@ function handleStudentFormSubmit(event) {
     savedStudent.id
   );
 }
+
 
 /* STUDENT LOCAL MEMORY FEATURE END */
 
