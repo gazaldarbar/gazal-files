@@ -174,6 +174,7 @@ if (attendanceCourse) {
   setupAttendanceModalControls();
   setupFingerprintAttendanceControls();
   setupAttendanceHistoryControls();
+  setupAttendanceRecordDetailsControls();
   
 }
 
@@ -786,7 +787,7 @@ function openAttendanceHistory() {
           document.createElement("div");
 
         card.className =
-          "attendance-history-card";
+  "attendance-history-card attendance-history-card-clickable";
 
         card.innerHTML = `
           <div class="attendance-history-card-top">
@@ -831,6 +832,13 @@ function openAttendanceHistory() {
 
           </div>
         `;
+
+        card.addEventListener(
+  "click",
+  () => {
+    openAttendanceRecordDetails(record);
+  }
+);
 
         list.appendChild(card);
       });
@@ -903,6 +911,163 @@ function setupAttendanceHistoryControls() {
 }
 
 /* ATTENDANCE HISTORY FEATURE END */
+
+/* ==========================================================================
+   ATTENDANCE RECORD DETAILS FEATURE START
+   ========================================================================== */
+
+function openAttendanceRecordDetails(record) {
+  const modal = document.getElementById(
+    "attendance-record-details-modal"
+  );
+
+  const course = document.getElementById(
+    "attendance-record-details-course"
+  );
+
+  const date = document.getElementById(
+    "attendance-record-details-date"
+  );
+
+  const summary = document.getElementById(
+    "attendance-record-details-summary"
+  );
+
+  const studentsList = document.getElementById(
+    "attendance-record-details-students"
+  );
+
+  if (
+    !modal ||
+    !course ||
+    !date ||
+    !summary ||
+    !studentsList
+  ) {
+    return;
+  }
+
+  course.textContent = record.course;
+  date.textContent = record.date;
+
+  const presentCount =
+    record.students.filter(
+      (student) =>
+        student.status === "present"
+    ).length;
+
+  const absentCount =
+    record.students.filter(
+      (student) =>
+        student.status === "absent"
+    ).length;
+
+  summary.innerHTML = `
+    <div class="
+      attendance-record-summary-stat
+      present
+    ">
+      <strong>${presentCount}</strong>
+      <span>Present</span>
+    </div>
+
+    <div class="
+      attendance-record-summary-stat
+      absent
+    ">
+      <strong>${absentCount}</strong>
+      <span>Absent</span>
+    </div>
+  `;
+
+  studentsList.innerHTML = "";
+
+  record.students.forEach((student) => {
+    const studentCard =
+      document.createElement("div");
+
+    studentCard.className =
+      "attendance-record-student";
+
+    const isPresent =
+      student.status === "present";
+
+    studentCard.innerHTML = `
+      <div class="
+        attendance-record-student-info
+      ">
+        <strong>
+          ${student.studentName}
+        </strong>
+
+        <span>
+          ${student.id}
+        </span>
+      </div>
+
+      <span class="
+        attendance-record-status
+        ${isPresent ? "present" : "absent"}
+      ">
+        ${isPresent ? "Present" : "Absent"}
+      </span>
+    `;
+
+    studentsList.appendChild(studentCard);
+  });
+
+  modal.style.display = "flex";
+}
+
+
+function closeAttendanceRecordDetails() {
+  const modal = document.getElementById(
+    "attendance-record-details-modal"
+  );
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+function setupAttendanceRecordDetailsControls() {
+
+  const closeButton = document.getElementById(
+    "btn-close-attendance-record-details"
+  );
+
+  const footerButton = document.getElementById(
+    "btn-close-attendance-record-details-footer"
+  );
+
+  const backdrop = document.querySelector(
+    ".attendance-record-details-backdrop"
+  );
+
+  if (closeButton) {
+    closeButton.addEventListener(
+      "click",
+      closeAttendanceRecordDetails
+    );
+  }
+
+  if (footerButton) {
+    footerButton.addEventListener(
+      "click",
+      closeAttendanceRecordDetails
+    );
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener(
+      "click",
+      closeAttendanceRecordDetails
+    );
+  }
+}
+
+/* ATTENDANCE RECORD DETAILS FEATURE END */
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
