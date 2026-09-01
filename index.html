@@ -145,6 +145,78 @@
 </section>
 
 <!-- ATTENDANCE PANEL END -->
+
+    <!-- ================================================================
+     ATTENDANCE MODAL START
+     Reversible: remove this entire block to remove attendance popup.
+     ================================================================ -->
+
+<div
+  id="attendance-modal"
+  class="attendance-modal"
+  style="display: none;"
+>
+  <div class="attendance-modal-backdrop"></div>
+
+  <div
+    class="attendance-modal-window"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="attendance-modal-header">
+
+      <div>
+        <h2 id="attendance-modal-title">
+          Attendance
+        </h2>
+
+        <p id="attendance-modal-course"></p>
+
+        <p id="attendance-modal-date"></p>
+      </div>
+
+      <button
+        type="button"
+        id="btn-close-attendance-modal"
+        class="attendance-modal-close"
+        aria-label="Close attendance"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div
+      id="attendance-modal-students"
+      class="attendance-modal-students"
+    >
+      <!-- Students will appear here -->
+    </div>
+
+    <div class="attendance-modal-footer">
+
+      <button
+        type="button"
+        id="btn-cancel-attendance"
+        class="attendance-cancel-button"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="btn-save-attendance"
+        class="attendance-save-button"
+      >
+        Save
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ATTENDANCE MODAL END -->
     
     <!-- PLACEHOLDER PANEL for Students / Attendance / Fees / More -->
     <div id="placeholder-panel" style="display:none;">
