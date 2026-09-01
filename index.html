@@ -142,6 +142,32 @@
     </p>
   </div>
 
+  <!-- ================================================================
+     ATTENDANCE HISTORY START
+     ================================================================ -->
+
+<div class="attendance-history-entry">
+  <div class="attendance-history-entry-info">
+    <span class="attendance-history-entry-label">
+      Attendance Records
+    </span>
+
+    <span class="attendance-history-entry-text">
+      View previously saved attendance.
+    </span>
+  </div>
+
+  <button
+    type="button"
+    id="btn-view-attendance-history"
+    class="attendance-history-button"
+  >
+    View History
+  </button>
+</div>
+
+<!-- ATTENDANCE HISTORY END -->
+
 </section>
 
 <!-- ATTENDANCE PANEL END -->
@@ -217,6 +243,7 @@
 </div>
 
 <!-- ATTENDANCE MODAL END -->
+
     
     <!-- PLACEHOLDER PANEL for Students / Attendance / Fees / More -->
     <div id="placeholder-panel" style="display:none;">
@@ -459,6 +486,77 @@
 </div>
 
 <!-- FINGERPRINT ATTENDANCE MODAL END -->
+
+  <!-- ================================================================
+     ATTENDANCE HISTORY MODAL START
+     ================================================================ -->
+
+<div
+  id="attendance-history-modal"
+  class="attendance-history-modal"
+  style="display: none;"
+>
+  <div
+    class="attendance-history-backdrop"
+  ></div>
+
+  <div class="attendance-history-window">
+
+    <!-- Header -->
+    <div class="attendance-history-header">
+
+      <div>
+        <span class="attendance-history-eyebrow">
+          ATTENDANCE RECORDS
+        </span>
+
+        <h2>
+          Attendance History
+        </h2>
+
+        <p>
+          View previously saved attendance records.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        id="btn-close-attendance-history"
+        class="attendance-history-close"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- Records -->
+    <div
+      id="attendance-history-list"
+      class="attendance-history-list"
+    >
+      <!-- Attendance records will appear here -->
+    </div>
+
+
+    <!-- Footer -->
+    <div class="attendance-history-footer">
+
+      <button
+        type="button"
+        id="btn-close-attendance-history-footer"
+        class="attendance-history-footer-button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ATTENDANCE HISTORY MODAL END -->
   
 </body>
 </html>
