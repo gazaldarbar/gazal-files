@@ -2798,3 +2798,200 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 
 /* STUDENT ATTENDANCE SUMMARY END */
+
+/* ==========================================================================
+   STUDENT 4 CLASS MONTH PROGRESS
+   ========================================================================== */
+
+.student-attendance-summary {
+  margin-top: 20px;
+  padding: 16px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(13, 73, 56, 0.08),
+      rgba(13, 73, 56, 0.03)
+    );
+
+  border: 1px solid rgba(13, 73, 56, 0.10);
+}
+
+
+/* Header */
+
+.student-attendance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+.student-attendance-title {
+  display: block;
+
+  color: #173f34;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+.student-attendance-subtitle {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #71817b;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* 3 / 4 badge */
+
+.student-attendance-percent {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background: #0d4938;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.student-attendance-percent.month-complete {
+  background: #c99500;
+}
+
+
+/* ================================================================
+   FOUR CLASS PROGRESS DOTS
+   ================================================================ */
+
+.student-class-progress-dots {
+  display: flex;
+
+  gap: 9px;
+
+  margin-top: 16px;
+}
+
+
+.student-class-dot {
+  flex: 1;
+
+  height: 8px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(13, 73, 56, 0.12);
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.student-class-dot.completed {
+  background:
+    linear-gradient(
+      90deg,
+      #0d4938,
+      #1f7a5b
+    );
+
+  box-shadow:
+    0 3px 10px
+    rgba(13, 73, 56, 0.18);
+}
+
+
+/* ================================================================
+   PROGRESS MESSAGE
+   ================================================================ */
+
+.student-attendance-cycle-message {
+  margin-top: 12px;
+
+  color: #49655b;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ================================================================
+   FEE STATUS
+   ================================================================ */
+
+.student-fee-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 14px;
+  padding-top: 13px;
+
+  border-top:
+    1px solid rgba(13, 73, 56, 0.10);
+}
+
+
+.student-fee-status-label {
+  color: #71817b;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.student-fee-status-value {
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* Pending */
+
+.student-fee-status-value.pending {
+  background: rgba(200, 150, 0, 0.14);
+
+  color: #8a6500;
+}
+
+
+/* Paid — for future Fee section */
+
+.student-fee-status-value.paid {
+  background: rgba(13, 73, 56, 0.12);
+
+  color: #0d4938;
+}
+
+
+/* ================================================================
+   ACTION AREA CLEANUP
+   ================================================================ */
+
+.student-card-actions {
+  margin-top: 14px;
+
+  border-top: none;
+}
