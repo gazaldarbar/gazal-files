@@ -171,6 +171,7 @@ if (attendanceCourse) {
     renderAttendanceStudents
   );
 }
+  setupAttendanceModalControls();
   
 }
 
@@ -421,74 +422,153 @@ function setAttendanceDateDefault() {
 
 
 /* ==========================================================================
-   ATTENDANCE STUDENT LIST START
-   Shows students enrolled in the selected course.
+   ATTENDANCE MODAL STUDENT LIST START
+   Shows selected course students inside the attendance popup.
    ========================================================================== */
 
 function renderAttendanceStudents() {
   const courseSelect =
     document.getElementById("attendance-course");
 
-  const studentsList =
-    document.getElementById("attendance-students-list");
+  const dateInput =
+    document.getElementById("attendance-date");
 
-  if (!courseSelect || !studentsList) return;
+  const modal =
+    document.getElementById("attendance-modal");
 
-  const selectedCourse = courseSelect.value;
+  const modalCourse =
+    document.getElementById("attendance-modal-course");
 
-  // No course selected yet.
-  if (!selectedCourse) {
-    studentsList.innerHTML = `
-      <p class="attendance-empty-message">
-        Select a course to view students.
-      </p>
-    `;
+  const modalDate =
+    document.getElementById("attendance-modal-date");
 
+  const modalStudents =
+    document.getElementById("attendance-modal-students");
+
+  if (
+    !courseSelect ||
+    !dateInput ||
+    !modal ||
+    !modalStudents
+  ) {
     return;
   }
 
-  // Load all saved students.
+  const selectedCourse = courseSelect.value;
+
+  // Don't open the popup until a course is selected.
+  if (!selectedCourse) {
+    return;
+  }
+
+  // Load saved students.
   const students = JSON.parse(
     localStorage.getItem("gazal_students") || "[]"
   );
 
-  // Find students in the selected course.
+  // Find students belonging to the selected course.
   const courseStudents = students.filter(
     (student) => student.course === selectedCourse
   );
 
-  // No students found.
-  if (courseStudents.length === 0) {
-    studentsList.innerHTML = `
-      <p class="attendance-empty-message">
-        No students found in this course.
-      </p>
-    `;
-
-    return;
+  // Update popup details.
+  if (modalCourse) {
+    modalCourse.textContent = selectedCourse;
   }
 
-  // Build student list.
-  studentsList.innerHTML = "";
+  if (modalDate) {
+    modalDate.textContent =
+      dateInput.value || "";
+  }
 
-  courseStudents.forEach((student) => {
-    const card = document.createElement("div");
+  // Clear previous students.
+  modalStudents.innerHTML = "";
 
-    card.className = "attendance-student-card";
-
-    card.innerHTML = `
-      <div class="attendance-student-info">
-        <strong>${student.studentName}</strong>
-
-        <span>${student.id}</span>
+  // No students found.
+  if (courseStudents.length === 0) {
+    modalStudents.innerHTML = `
+      <div class="attendance-modal-empty">
+        No students found in this course.
       </div>
     `;
+  } else {
+    courseStudents.forEach((student) => {
+      const card = document.createElement("div");
 
-    studentsList.appendChild(card);
-  });
+      card.className = "attendance-modal-student-card";
+
+      card.innerHTML = `
+        <div class="attendance-modal-student-info">
+          <strong>${student.studentName}</strong>
+          <span>${student.id}</span>
+        </div>
+
+        <div class="attendance-student-checkbox">
+          <input
+            type="checkbox"
+            data-student-id="${student.id}"
+          >
+        </div>
+      `;
+
+      modalStudents.appendChild(card);
+    });
+  }
+
+  // Open attendance modal.
+  modal.style.display = "flex";
 }
 
-/* ATTENDANCE STUDENT LIST END */
+/* ATTENDANCE MODAL STUDENT LIST END */
+
+/* ==========================================================================
+   ATTENDANCE MODAL CONTROLS START
+   ========================================================================== */
+
+function closeAttendanceModal() {
+  const modal =
+    document.getElementById("attendance-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function setupAttendanceModalControls() {
+  const closeButton =
+    document.getElementById("btn-close-attendance-modal");
+
+  const cancelButton =
+    document.getElementById("btn-cancel-attendance");
+
+  const backdrop =
+    document.querySelector(
+      "#attendance-modal .attendance-modal-backdrop"
+    );
+
+  if (closeButton) {
+    closeButton.addEventListener(
+      "click",
+      closeAttendanceModal
+    );
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      closeAttendanceModal
+    );
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener(
+      "click",
+      closeAttendanceModal
+    );
+  }
+}
+
+/* ATTENDANCE MODAL CONTROLS END */
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
