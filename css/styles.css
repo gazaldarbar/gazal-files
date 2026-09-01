@@ -3462,3 +3462,8 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 .mark-fee-paid-text {
   letter-spacing: 0.1px;
 }
+
+.fees-status-badge.not-due{
+  background:rgba(13,115,56,.10);
+  color:#0d7338;
+}
