@@ -581,7 +581,7 @@ function editStudent(studentId) {
 
   // Change Save button text.
   document.getElementById("btn-save-student").textContent =
-    "Save Changes";
+    "Save";
 
   document.getElementById("main-content").scrollTop = 0;
 }
