@@ -808,12 +808,13 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 /* Student name */
 .student-card h3 {
-  color: var(--gd-green-deep);
+  color: #0A0A0A;
 }
 
 /* Student ID */
 .student-card-id {
-  color: var(--gd-green-light);
+  color: #022F20;
+  font-weight: 700;
 }
 
 /* Course badge */
@@ -841,21 +842,20 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 /* Malayalam / detail labels */
 .student-detail-label {
-  color: var(--gd-green-light);
+  color: #04452D;
   font-weight: 700;
 }
 
 /* Detail values */
 .student-detail-value {
-  color: #111111;
-  font-weight: 600;
+  color: #0A0A0A;
+  font-weight: 650;
 }
 
 /* Phone numbers */
 .student-phone-link {
-  color: var(--gd-green);
+  color: #022F20;
   font-weight: 800;
-
   text-decoration: none;
 }
 
