@@ -78,6 +78,7 @@ function selectTab(key, btnEl) {
     .forEach((b) => b.classList.remove("active"));
 
   btnEl.classList.add("active");
+  document.getElementById("fees-panel").style.display = "none";
 
   // ================================================================
   // HIDE ALL MAIN PANELS FIRST
