@@ -962,3 +962,224 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 /* ================================================================
    PREMIUM ATTENDANCE CONTROLS END
    ================================================================ */
+
+/* ===================================================================
+   PREMIUM ATTENDANCE MODAL START
+   Reversible: remove this entire block to remove modal styling.
+   =================================================================== */
+
+.attendance-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 16px;
+}
+
+/* Dark background behind popup */
+.attendance-modal-backdrop {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+/* Main popup */
+.attendance-modal-window {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border-radius: 28px;
+
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+.attendance-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 24px;
+
+  background: #04452d;
+  color: #ffffff;
+}
+
+.attendance-modal-header h2 {
+  margin: 0 0 10px;
+
+  color: #fec700;
+
+  font-size: 1.6rem;
+}
+
+.attendance-modal-header p {
+  margin: 4px 0;
+
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Close button */
+.attendance-modal-close {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+
+  font-size: 1.2rem;
+
+  cursor: pointer;
+}
+
+/* Student scroll area */
+.attendance-modal-students {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 18px;
+
+  background: #f5f6f4;
+}
+
+/* Individual student card */
+.attendance-modal-student-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 18px;
+  margin-bottom: 12px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(4, 69, 45, 0.12);
+  border-radius: 18px;
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Student name */
+.attendance-modal-student-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.attendance-modal-student-info strong {
+  color: #0a0a0a;
+  font-size: 1.05rem;
+}
+
+.attendance-modal-student-info span {
+  color: #66706b;
+  font-size: 0.85rem;
+}
+
+/* Premium checkbox */
+.attendance-student-checkbox input {
+  width: 24px;
+  height: 24px;
+
+  accent-color: #fec700;
+
+  cursor: pointer;
+}
+
+/* Footer */
+.attendance-modal-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons */
+.attendance-cancel-button,
+.attendance-save-button {
+  min-height: 52px;
+
+  border-radius: 14px;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* Cancel */
+.attendance-cancel-button {
+  background: #ffffff;
+  color: #04452d;
+
+  border: 1px solid rgba(4, 69, 45, 0.25);
+}
+
+/* Save */
+.attendance-save-button {
+  background: #fec700;
+  color: #04452d;
+
+  border: none;
+
+  box-shadow:
+    0 8px 18px rgba(254, 199, 0, 0.3);
+}
+
+/* Empty message */
+.attendance-modal-empty {
+  padding: 30px;
+
+  text-align: center;
+
+  color: #66706b;
+}
+
+/* Mobile refinement */
+@media (max-width: 600px) {
+  .attendance-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .attendance-modal-window {
+    max-width: none;
+    max-height: 92vh;
+
+    border-radius: 28px 28px 0 0;
+  }
+}
+
+/* PREMIUM ATTENDANCE MODAL END */
