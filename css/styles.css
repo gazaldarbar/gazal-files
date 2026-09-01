@@ -3392,3 +3392,73 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
       scale(1);
   }
 }
+
+/* ==========================================================================
+   PREMIUM FEE PAID BUTTON
+   ========================================================================== */
+
+.mark-fee-paid-button {
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+
+  padding: 17px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f6b4f,
+      #0a4f3b
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(0, 73, 56, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.mark-fee-paid-button:active {
+  transform: scale(0.97);
+
+  box-shadow:
+    0 4px 10px rgba(0, 73, 56, 0.2);
+}
+
+
+.mark-fee-paid-icon {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.18);
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+
+.mark-fee-paid-text {
+  letter-spacing: 0.1px;
+}
