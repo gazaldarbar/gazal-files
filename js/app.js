@@ -125,6 +125,18 @@ function selectTab(key, btnEl) {
     return;
   }
 
+  if (key === "fees") {
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("students-panel").style.display = "none";
+  document.getElementById("attendance-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+
+  document.getElementById("fees-panel").style.display = "block";
+
+  return;
+  }
+
   // ================================================================
   // OTHER SECTIONS — PLACEHOLDER
   // ================================================================
