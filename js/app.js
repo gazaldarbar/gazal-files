@@ -163,8 +163,11 @@ function closeAddStudentForm() {
 function handleStudentFormSubmit(event) {
   event.preventDefault();
 
-  const student = {
-    id: generateStudentId(),
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  const studentData = {
     studentName: document.getElementById("student-name").value.trim(),
     parentName: document.getElementById("parent-name").value.trim(),
     place: document.getElementById("student-place").value.trim(),
@@ -172,20 +175,34 @@ function handleStudentFormSubmit(event) {
     backupPhone: document.getElementById("backup-phone").value.trim(),
     course: document.getElementById("student-course").value,
     admissionDate: document.getElementById("admission-date").value,
-
-    // Automatically recorded when the student is saved.
-    createdAt: new Date().toISOString(),
   };
 
-  // Get previously saved students.
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
+  let savedStudent;
 
-  // Add the new student.
-  students.push(student);
+  if (editingStudentId) {
+    const studentIndex = students.findIndex(
+      (student) => student.id === editingStudentId
+    );
 
-  // Save the updated list.
+    if (studentIndex !== -1) {
+      students[studentIndex] = {
+        ...students[studentIndex],
+        ...studentData,
+        updatedAt: new Date().toISOString(),
+      };
+
+      savedStudent = students[studentIndex];
+    }
+  } else {
+    savedStudent = {
+      id: generateStudentId(),
+      ...studentData,
+      createdAt: new Date().toISOString(),
+    };
+
+    students.push(savedStudent);
+  }
+
   localStorage.setItem(
     "gazal_students",
     JSON.stringify(students)
@@ -194,21 +211,27 @@ function handleStudentFormSubmit(event) {
   // Reset the form.
   event.target.reset();
 
+  // Restore Add Student mode.
+  editingStudentId = null;
+
+  const formTitle = document.querySelector(
+    "#add-student-panel .form-header h2"
+  );
+
+  if (formTitle) {
+    formTitle.textContent = "Add Student";
+  }
+
+  document.getElementById("btn-save-student").textContent =
+    "Upload / Save";
+
   // Return to Home.
   closeAddStudentForm();
 
-  // Temporary success message.
   alert(
     "Student saved successfully!\n\nID: " +
-    student.id
+    savedStudent.id
   );
-}
-
-function generateStudentId() {
-  const timestamp = Date.now().toString().slice(-6);
-  const random = Math.floor(Math.random() * 900 + 100);
-
-  return "GD-" + timestamp + random;
 }
 
 /* STUDENT LOCAL MEMORY FEATURE END */
@@ -381,6 +404,15 @@ function renderStudentsList(searchQuery = "") {
 </div>
 `;
     list.appendChild(card);
+
+const editButton = card.querySelector(".student-edit-btn");
+
+if (editButton) {
+  editButton.addEventListener("click", () => {
+    editStudent(student.id);
+  });
+}
+    
     const deleteButton = card.querySelector(".student-delete-btn");
 
 if (deleteButton) {
@@ -488,3 +520,69 @@ function deleteStudent(studentId) {
 }
 
 /* STUDENT DELETE FEATURE END */
+
+/* ==========================================================================
+   STUDENT EDIT FEATURE START
+   Reversible: remove this block to remove student editing.
+   ========================================================================== */
+
+let editingStudentId = null;
+
+function editStudent(studentId) {
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  const student = students.find(
+    (item) => item.id === studentId
+  );
+
+  if (!student) return;
+
+  editingStudentId = studentId;
+
+  // Open the existing student form.
+  document.getElementById("students-panel").style.display = "none";
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "block";
+
+  // Change form title.
+  const formTitle = document.querySelector(
+    "#add-student-panel .form-header h2"
+  );
+
+  if (formTitle) {
+    formTitle.textContent = "Edit Student";
+  }
+
+  // Fill existing student data.
+  document.getElementById("student-name").value =
+    student.studentName || "";
+
+  document.getElementById("parent-name").value =
+    student.parentName || "";
+
+  document.getElementById("student-place").value =
+    student.place || "";
+
+  document.getElementById("student-phone").value =
+    student.phone || "";
+
+  document.getElementById("backup-phone").value =
+    student.backupPhone || "";
+
+  document.getElementById("student-course").value =
+    student.course || "";
+
+  document.getElementById("admission-date").value =
+    student.admissionDate || "";
+
+  // Change Save button text.
+  document.getElementById("btn-save-student").textContent =
+    "Save Changes";
+
+  document.getElementById("main-content").scrollTop = 0;
+}
+
+/* STUDENT EDIT FEATURE END */
