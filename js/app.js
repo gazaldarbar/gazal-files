@@ -1168,11 +1168,31 @@ presentClasses.sort(
 
 const cycleSize = 4;
 
-const currentCycleClasses =
-  presentClasses.slice(0, cycleSize);
+const totalPresentClasses =
+  presentClasses.length;
+
+const completedMonths =
+  Math.floor(
+    totalPresentClasses / cycleSize
+  );
+
+const remainingInCurrentCycle =
+  totalPresentClasses % cycleSize;
+
+
+/*
+  If exactly 4, 8, 12... classes are completed,
+  show the completed cycle as 4 / 4.
+
+  Otherwise show the progress of the new cycle.
+*/
 
 const completedClasses =
-  currentCycleClasses.length;
+  remainingInCurrentCycle === 0 &&
+  totalPresentClasses > 0
+    ? cycleSize
+    : remainingInCurrentCycle;
+
 
 const remainingClasses =
   Math.max(
@@ -1180,8 +1200,26 @@ const remainingClasses =
     cycleSize - completedClasses
   );
 
+
 const monthComplete =
-  completedClasses >= cycleSize;
+  completedClasses === cycleSize;
+
+    const latestCompletedMonth =
+  completedMonths;
+
+
+const latestMonthPaid =
+  latestCompletedMonth > 0
+    ? isFeeMonthPaid(
+        student.id,
+        latestCompletedMonth
+      )
+    : false;
+
+
+const feeDue =
+  latestCompletedMonth > 0 &&
+  !latestMonthPaid;
 
     card.innerHTML = `
   <div class="student-card-top">
@@ -1339,25 +1377,57 @@ const monthComplete =
     ഫീസ്
   </span>
 
-  <span class="student-fee-status-value not-paid">
-    അടച്ചില്ല
+  <span
+    class="
+      student-fee-status-value
+      ${
+        latestMonthPaid
+          ? "paid"
+          : feeDue
+            ? "not-paid"
+            : "not-due"
+      }
+    "
+  >
+    ${
+      latestMonthPaid
+        ? "അടച്ചു"
+        : feeDue
+          ? "അടച്ചില്ല"
+          : "ഇപ്പോൾ അടക്കേണ്ടതില്ല"
+    }
   </span>
 
 </div>
 
-
   <div class="student-fee-status">
 
-    <span class="student-fee-status-label">
-      Fee Status
-    </span>
+  <span class="student-fee-status-label">
+    Fee Status
+  </span>
 
-    <span class="student-fee-status-value pending">
-      Pending
-    </span>
+  <span
+    class="
+      student-fee-status-value
+      ${
+        latestMonthPaid
+          ? "paid"
+          : feeDue
+            ? "not-paid"
+            : "not-due"
+      }
+    "
+  >
+    ${
+      latestMonthPaid
+        ? "Paid"
+        : feeDue
+          ? "Pending"
+          : "Not Due"
+    }
+  </span>
 
-  </div>
-
+</div>
 </div>
 
 <div class="student-card-actions">
