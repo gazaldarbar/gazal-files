@@ -1277,4 +1277,478 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 
-  font-size:
+  font-size: 1.7rem;
+
+  cursor: pointer;
+}
+
+/* Scanner area */
+.fingerprint-scanner-area {
+  padding: 34px 24px 28px;
+
+  text-align: center;
+}
+
+/* Temporary scanner circle */
+.fingerprint-rings {
+  position: relative;
+
+  width: 170px;
+  height: 170px;
+
+  margin: 0 auto 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fingerprint-ring {
+  position: absolute;
+
+  border: 1px solid rgba(4, 69, 45, 0.18);
+  border-radius: 50%;
+}
+
+.ring-one {
+  width: 90px;
+  height: 90px;
+}
+
+.ring-two {
+  width: 130px;
+  height: 130px;
+}
+
+.ring-three {
+  width: 170px;
+  height: 170px;
+}
+
+/* Scanner button */
+.fingerprint-scan-button {
+  position: relative;
+  z-index: 2;
+
+  width: 86px;
+  height: 86px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #fec700;
+
+  color: #04452d;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 28px rgba(254, 199, 0, 0.38);
+}
+
+.fingerprint-icon {
+  font-size: 2.4rem;
+}
+
+.fingerprint-scanner-area h3 {
+  margin: 0 0 10px;
+
+  color: #04452d;
+
+  font-size: 1.25rem;
+}
+
+.fingerprint-scanner-area p {
+  margin: 0;
+
+  color: #66706b;
+}
+
+/* Footer */
+.fingerprint-attendance-footer {
+  padding: 16px 24px 24px;
+}
+
+.fingerprint-cancel-button {
+  width: 100%;
+  min-height: 52px;
+
+  border: 1px solid rgba(4, 69, 45, 0.22);
+  border-radius: 14px;
+
+  background: #ffffff;
+  color: #04452d;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .fingerprint-attendance-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .fingerprint-attendance-window {
+    border-radius: 28px 28px 0 0;
+  }
+}
+
+/* PREMIUM FINGERPRINT ATTENDANCE MODAL END */
+
+/* ==========================================================================
+   PREMIUM FINGERPRINT ATTENDANCE DESIGN START
+   ========================================================================== */
+
+.fingerprint-attendance-window {
+  width: min(92vw, 620px);
+  overflow: hidden;
+  border-radius: 28px;
+
+  background: #f4f5f2;
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================
+   HEADER
+   ========================= */
+
+.fingerprint-attendance-header {
+  position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 28px 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0d4938,
+      #063527
+    );
+
+  color: white;
+}
+
+
+.fingerprint-status {
+  display: block;
+
+  margin-bottom: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  color: #ffc400;
+}
+
+
+.fingerprint-attendance-header h2 {
+  margin: 0;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  color: #ffffff;
+}
+
+
+.fingerprint-attendance-header p {
+  margin: 8px 0 0;
+
+  font-size: 16px;
+
+  color: rgba(255, 255, 255, 0.65);
+}
+
+
+/* =========================
+   CLOSE BUTTON
+   ========================= */
+
+.fingerprint-close-button {
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: white;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.fingerprint-close-button:active {
+  transform: scale(0.92);
+}
+
+
+.fingerprint-close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* =========================
+   SCANNER AREA
+   ========================= */
+
+.fingerprint-scanner-area {
+  padding: 40px 25px 28px;
+
+  text-align: center;
+
+  background:
+    radial-gradient(
+      circle at center top,
+      rgba(255, 196, 0, 0.12),
+      transparent 45%
+    ),
+    #f4f5f2;
+}
+
+
+/* =========================
+   FINGERPRINT RINGS
+   ========================= */
+
+.fingerprint-rings {
+  position: relative;
+
+  width: 190px;
+  height: 190px;
+
+  margin: 0 auto 28px;
+
+  display: grid;
+  place-items: center;
+}
+
+
+.fingerprint-ring {
+  position: absolute;
+
+  border-radius: 50%;
+
+  border:
+    1px solid rgba(255, 196, 0, 0.35);
+
+  animation:
+    fingerprintPulse 2.8s infinite ease-out;
+}
+
+
+.ring-one {
+  width: 100%;
+  height: 100%;
+}
+
+
+.ring-two {
+  width: 72%;
+  height: 72%;
+
+  animation-delay: 0.45s;
+}
+
+
+.ring-three {
+  width: 48%;
+  height: 48%;
+
+  animation-delay: 0.9s;
+}
+
+
+/* =========================
+   SCAN BUTTON
+   ========================= */
+
+.fingerprint-scan-button {
+  position: relative;
+  z-index: 5;
+
+  width: 112px;
+  height: 112px;
+
+  border: none;
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffd84d,
+      #f5ad00
+    );
+
+  box-shadow:
+    0 14px 30px rgba(245, 173, 0, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.55);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.fingerprint-scan-button:hover {
+  transform: scale(1.05);
+}
+
+
+.fingerprint-scan-button:active {
+  transform: scale(0.94);
+}
+
+
+/* =========================
+   SVG FINGERPRINT
+   ========================= */
+
+.fingerprint-icon {
+  display: grid;
+  place-items: center;
+
+  width: 54px;
+  height: 54px;
+}
+
+
+.fingerprint-icon svg {
+  width: 100%;
+  height: 100%;
+
+  fill: none;
+
+  stroke: #123d32;
+
+  stroke-width: 2.5;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+}
+
+
+/* =========================
+   TEXT
+   ========================= */
+
+.fingerprint-scanner-area h3 {
+  margin: 0 0 12px;
+
+  font-size: 25px;
+
+  color: #173f34;
+}
+
+
+.fingerprint-scanner-area p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  color: #61736d;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.fingerprint-attendance-footer {
+  padding: 20px 25px 25px;
+
+  background: #f4f5f2;
+
+  display: flex;
+  justify-content: center;
+}
+
+
+.fingerprint-cancel-button {
+  width: 100%;
+  min-height: 54px;
+
+  border-radius: 16px;
+
+  border:
+    1px solid rgba(18, 61, 50, 0.2);
+
+  background: transparent;
+
+  color: #173f34;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.fingerprint-cancel-button:hover {
+  background: rgba(18, 61, 50, 0.06);
+}
+
+
+.fingerprint-cancel-button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================
+   PREMIUM PULSE ANIMATION
+   ========================= */
+
+@keyframes fingerprintPulse {
+
+  0% {
+    opacity: 0.25;
+    transform: scale(0.82);
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+
+/* ==========================================================================
+   PREMIUM FINGERPRINT ATTENDANCE DESIGN END
+   ========================================================================== */
