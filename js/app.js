@@ -141,18 +141,63 @@ function closeAddStudentForm() {
   }
 }
 
+/* ==========================================================================
+   STUDENT LOCAL MEMORY FEATURE START
+   Reversible: this section saves students in this device's localStorage.
+   ========================================================================== */
+
 function handleStudentFormSubmit(event) {
   event.preventDefault();
 
-  /*
-   * Saving student data will be added in the next step.
-   * For now this confirms that the form itself works.
-   */
+  const student = {
+    id: generateStudentId(),
+    studentName: document.getElementById("student-name").value.trim(),
+    parentName: document.getElementById("parent-name").value.trim(),
+    place: document.getElementById("student-place").value.trim(),
+    phone: document.getElementById("student-phone").value.trim(),
+    backupPhone: document.getElementById("backup-phone").value.trim(),
+    course: document.getElementById("student-course").value,
+    admissionDate: document.getElementById("admission-date").value,
 
-  alert("Student form is ready. Saving will be added next.");
+    // Automatically recorded when the student is saved.
+    createdAt: new Date().toISOString(),
+  };
+
+  // Get previously saved students.
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  // Add the new student.
+  students.push(student);
+
+  // Save the updated list.
+  localStorage.setItem(
+    "gazal_students",
+    JSON.stringify(students)
+  );
+
+  // Reset the form.
+  event.target.reset();
+
+  // Return to Home.
+  closeAddStudentForm();
+
+  // Temporary success message.
+  alert(
+    "Student saved successfully!\n\nID: " +
+    student.id
+  );
 }
 
-/* ADD STUDENT FEATURE END */
+function generateStudentId() {
+  const timestamp = Date.now().toString().slice(-6);
+  const random = Math.floor(Math.random() * 900 + 100);
+
+  return "GD-" + timestamp + random;
+}
+
+/* STUDENT LOCAL MEMORY FEATURE END */
 
 /* ==========================================================================
    COURSE LIST FEATURE START
