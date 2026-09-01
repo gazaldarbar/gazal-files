@@ -95,6 +95,57 @@
       <p id="todays-classes-empty" class="placeholder-note"></p>
     </div>
 
+<!-- ================================================================
+     ATTENDANCE PANEL START
+     ================================================================= -->
+
+<section
+  id="attendance-panel"
+  class="app-panel"
+  style="display: none;"
+>
+  <div class="attendance-header">
+    <h2>Attendance</h2>
+    <p>Select a course and mark today's attendance.</p>
+  </div>
+
+  <div class="attendance-controls">
+
+    <div class="attendance-field">
+      <label for="attendance-course">
+        Course
+      </label>
+
+      <select id="attendance-course">
+        <option value="">
+          Select Course
+        </option>
+      </select>
+    </div>
+
+    <div class="attendance-field">
+      <label for="attendance-date">
+        Date
+      </label>
+
+      <input
+        id="attendance-date"
+        type="date"
+      />
+    </div>
+
+  </div>
+
+  <div id="attendance-students-list">
+    <p class="attendance-empty-message">
+      Select a course to view students.
+    </p>
+  </div>
+
+</section>
+
+<!-- ATTENDANCE PANEL END -->
+    
     <!-- PLACEHOLDER PANEL for Students / Attendance / Fees / More -->
     <div id="placeholder-panel" style="display:none;">
       <h3 class="section-title"></h3>
