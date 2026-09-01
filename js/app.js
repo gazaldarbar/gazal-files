@@ -34,6 +34,7 @@ function renderHome() {
 
   document.getElementById("todays-classes-title").textContent = t("todaysClasses");
   document.getElementById("todays-classes-empty").textContent = t("noClassesToday");
+  setupStudentSearch();
 }
 
 function setActionButton(id, iconName, label) {
@@ -256,10 +257,12 @@ function loadCourseOptions() {
    Reversible: remove this block to remove student list rendering.
    ========================================================================== */
 
-function renderStudentsList() {
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
+function renderStudentsList(searchQuery = "") {
+  const students = searchQuery
+  ? getStudentSearchMatches(searchQuery)
+  : JSON.parse(
+      localStorage.getItem("gazal_students") || "[]"
+    );
 
   const list = document.getElementById("students-list");
   const empty = document.getElementById("students-empty");
@@ -360,3 +363,63 @@ function renderStudentsList() {
 }
 
 /* STUDENT LIST FEATURE END */
+
+/* ==========================================================================
+   STUDENT SEARCH FEATURE START
+   Reversible: remove this block to remove student search.
+   ========================================================================== */
+
+function setupStudentSearch() {
+  const searchInput = document.getElementById("search-input");
+
+  if (!searchInput) return;
+
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim();
+
+    if (!query) return;
+
+    showStudentSearchResults(query);
+  });
+}
+
+function showStudentSearchResults(query) {
+  document.getElementById("home-panel").style.display = "none";
+  document.getElementById("placeholder-panel").style.display = "none";
+  document.getElementById("add-student-panel").style.display = "none";
+  document.getElementById("students-panel").style.display = "block";
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach((button) => button.classList.remove("active"));
+
+  renderStudentsList(query);
+}
+
+function getStudentSearchMatches(query) {
+  const normalizedQuery = query.toLowerCase();
+
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  return students.filter((student) => {
+    const searchableFields = [
+      student.studentName,
+      student.parentName,
+      student.place,
+      student.phone,
+      student.backupPhone,
+      student.course,
+      student.id
+    ];
+
+    return searchableFields.some((field) =>
+      String(field || "")
+        .toLowerCase()
+        .includes(normalizedQuery)
+    );
+  });
+}
+
+/* STUDENT SEARCH FEATURE END */
