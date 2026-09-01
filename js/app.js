@@ -2531,3 +2531,70 @@ if (markPaidButton) {
   );
 
 }
+
+/* ================================================================
+   GET FEE MONTH FROM COMPLETED 4-CLASS CYCLE
+   ================================================================ */
+
+function getFeeMonthFromCycle(
+  presentClasses,
+  monthNumber
+) {
+
+  /*
+    Each fee month contains 4 present classes.
+
+    Example:
+    Month 1 → classes 1–4
+    Month 2 → classes 5–8
+  */
+
+  const cycleSize = 4;
+
+  const cycleEndIndex =
+    monthNumber * cycleSize - 1;
+
+
+  /*
+    presentClasses must be sorted oldest first
+    before calling this function.
+  */
+
+  const cycleEndClass =
+    presentClasses[cycleEndIndex];
+
+
+  if (!cycleEndClass) {
+    return null;
+  }
+
+
+  const classDate =
+    new Date(cycleEndClass.date);
+
+
+  return {
+    month:
+      classDate.getMonth(),
+
+    year:
+      classDate.getFullYear(),
+
+    monthNameMalayalam:
+      [
+        "ജനുവരി",
+        "ഫെബ്രുവരി",
+        "മാർച്ച്",
+        "ഏപ്രിൽ",
+        "മേയ്",
+        "ജൂൺ",
+        "ജൂലൈ",
+        "ഓഗസ്റ്റ്",
+        "സെപ്റ്റംബർ",
+        "ഒക്ടോബർ",
+        "നവംബർ",
+        "ഡിസംബർ"
+      ][classDate.getMonth()]
+  };
+
+}
