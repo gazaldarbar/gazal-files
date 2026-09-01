@@ -1100,12 +1100,21 @@ function renderStudentsList(searchQuery = "") {
     const card = document.createElement("div");
     card.className = "student-card";
 
-    const attendanceRecords = JSON.parse(
+    /* ================================================================
+   4 CLASS ATTENDANCE CYCLE
+   ================================================================ */
+
+const attendanceRecords = JSON.parse(
   localStorage.getItem("gazal_attendance") || "[]"
 );
 
-let totalPresent = 0;
-let totalAbsent = 0;
+/*
+  Get every class where this student was actually present.
+
+  Absences do NOT count toward the 4-class cycle.
+*/
+
+const presentClasses = [];
 
 attendanceRecords.forEach((record) => {
   const studentAttendance = record.students.find(
@@ -1113,26 +1122,52 @@ attendanceRecords.forEach((record) => {
       attendanceStudent.id === student.id
   );
 
-  if (!studentAttendance) return;
-
-  if (studentAttendance.status === "present") {
-    totalPresent++;
-  } else if (
-    studentAttendance.status === "absent"
+  if (
+    studentAttendance &&
+    studentAttendance.status === "present"
   ) {
-    totalAbsent++;
+    presentClasses.push({
+      date: record.date,
+      course: record.course
+    });
   }
 });
 
-const totalClasses =
-  totalPresent + totalAbsent;
 
-const attendancePercentage =
-  totalClasses > 0
-    ? Math.round(
-        (totalPresent / totalClasses) * 100
-      )
-    : 0;
+/*
+  Sort newest attendance first.
+*/
+
+presentClasses.sort(
+  (a, b) =>
+    new Date(b.date) - new Date(a.date)
+);
+
+
+/*
+  Temporary current cycle calculation.
+
+  We will connect this to the Fees section later,
+  so this currently shows the student's latest
+  progress toward a 4-class cycle.
+*/
+
+const cycleSize = 4;
+
+const currentCycleClasses =
+  presentClasses.slice(0, cycleSize);
+
+const completedClasses =
+  currentCycleClasses.length;
+
+const remainingClasses =
+  Math.max(
+    0,
+    cycleSize - completedClasses
+  );
+
+const monthComplete =
+  completedClasses >= cycleSize;
 
     card.innerHTML = `
   <div class="student-card-top">
@@ -1211,42 +1246,89 @@ const attendancePercentage =
 
   </div>
 
-<!-- Student Attendance Summary -->
+<!-- ================================================================
+     STUDENT 4 CLASS MONTH PROGRESS
+     ================================================================ -->
+
 <div class="student-attendance-summary">
 
   <div class="student-attendance-header">
-    <span class="student-attendance-title">
-      Attendance
+
+    <div>
+      <span class="student-attendance-title">
+        Class Progress
+      </span>
+
+      <span class="student-attendance-subtitle">
+        ${monthComplete
+          ? "Month completed"
+          : `${remainingClasses} class${
+              remainingClasses === 1 ? "" : "es"
+            } remaining`}
+      </span>
+    </div>
+
+    <span class="
+      student-attendance-percent
+      ${monthComplete
+        ? "month-complete"
+        : ""
+      }
+    ">
+      ${completedClasses} / 4
     </span>
 
-    <span class="student-attendance-percent">
-      ${attendancePercentage}%
+  </div>
+
+
+  <!-- Four class indicators -->
+
+  <div class="student-class-progress-dots">
+
+    ${[0, 1, 2, 3]
+      .map(
+        (index) => `
+          <span
+            class="
+              student-class-dot
+              ${
+                index < completedClasses
+                  ? "completed"
+                  : ""
+              }
+            "
+          ></span>
+        `
+      )
+      .join("")}
+
+  </div>
+
+
+  <div class="student-attendance-cycle-message">
+
+    ${
+      monthComplete
+        ? "✓ 4 classes completed — Fee due"
+        : `${remainingClasses} more class${
+            remainingClasses === 1
+              ? ""
+              : "es"
+          } to complete this month`
+    }
+
+  </div>
+
+
+  <div class="student-fee-status">
+
+    <span class="student-fee-status-label">
+      Fee Status
     </span>
-  </div>
 
-  <div class="student-attendance-progress">
-    <div
-      class="student-attendance-progress-fill"
-      style="width: ${attendancePercentage}%"
-    ></div>
-  </div>
-
-  <div class="student-attendance-stats">
-
-    <div class="student-attendance-stat present">
-      <strong>${totalPresent}</strong>
-      <span>Present</span>
-    </div>
-
-    <div class="student-attendance-stat absent">
-      <strong>${totalAbsent}</strong>
-      <span>Absent</span>
-    </div>
-
-    <div class="student-attendance-stat total">
-      <strong>${totalClasses}</strong>
-      <span>Total Classes</span>
-    </div>
+    <span class="student-fee-status-value pending">
+      Pending
+    </span>
 
   </div>
 
