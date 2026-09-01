@@ -1100,6 +1100,40 @@ function renderStudentsList(searchQuery = "") {
     const card = document.createElement("div");
     card.className = "student-card";
 
+    const attendanceRecords = JSON.parse(
+  localStorage.getItem("gazal_attendance") || "[]"
+);
+
+let totalPresent = 0;
+let totalAbsent = 0;
+
+attendanceRecords.forEach((record) => {
+  const studentAttendance = record.students.find(
+    (attendanceStudent) =>
+      attendanceStudent.id === student.id
+  );
+
+  if (!studentAttendance) return;
+
+  if (studentAttendance.status === "present") {
+    totalPresent++;
+  } else if (
+    studentAttendance.status === "absent"
+  ) {
+    totalAbsent++;
+  }
+});
+
+const totalClasses =
+  totalPresent + totalAbsent;
+
+const attendancePercentage =
+  totalClasses > 0
+    ? Math.round(
+        (totalPresent / totalClasses) * 100
+      )
+    : 0;
+
     card.innerHTML = `
   <div class="student-card-top">
     <div>
