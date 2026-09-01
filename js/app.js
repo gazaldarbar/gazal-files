@@ -472,6 +472,16 @@ function renderAttendanceStudents() {
     (student) => student.course === selectedCourse
   );
 
+  const attendanceRecords = JSON.parse(
+  localStorage.getItem("gazal_attendance") || "[]"
+);
+
+const savedAttendance = attendanceRecords.find(
+  (record) =>
+    record.course === selectedCourse &&
+    record.date === dateInput.value
+);
+
   // Update popup details.
   if (modalCourse) {
     modalCourse.textContent = selectedCourse;
@@ -512,9 +522,19 @@ function renderAttendanceStudents() {
 
     <label class="attendance-student-checkbox">
       <input
-        type="checkbox"
-        data-student-id="${student.id}"
-      >
+  type="checkbox"
+  data-student-id="${student.id}"
+  ${
+    savedAttendance &&
+    savedAttendance.students.some(
+      (recordStudent) =>
+        recordStudent.id === student.id &&
+        recordStudent.status === "present"
+    )
+      ? "checked"
+      : ""
+  }
+>
     </label>
 
   </div>
