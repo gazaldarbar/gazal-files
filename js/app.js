@@ -160,6 +160,7 @@ function setupAddStudentFeature() {
     form.addEventListener("submit", handleStudentFormSubmit);
   }
   loadCourseOptions();
+  setAttendanceDateDefault();
 }
 
 function openAddStudentForm() {
@@ -380,6 +381,32 @@ function loadCourseOptions() {
 }
 
 /* COURSE LIST FEATURE END */
+
+/* ==========================================================================
+   ATTENDANCE DATE DEFAULT START
+   ========================================================================== */
+
+function setAttendanceDateDefault() {
+  const dateInput = document.getElementById("attendance-date");
+
+  if (!dateInput) return;
+
+  // Only set today's date if the user has not already selected one.
+  if (!dateInput.value) {
+    const today = new Date();
+
+    const localDate =
+      today.getFullYear() +
+      "-" +
+      String(today.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(today.getDate()).padStart(2, "0");
+
+    dateInput.value = localDate;
+  }
+}
+
+/* ATTENDANCE DATE DEFAULT END */
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
