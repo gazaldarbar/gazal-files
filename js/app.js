@@ -161,6 +161,17 @@ function setupAddStudentFeature() {
   }
   loadCourseOptions();
   setAttendanceDateDefault();
+
+  const attendanceCourse =
+  document.getElementById("attendance-course");
+
+if (attendanceCourse) {
+  attendanceCourse.addEventListener(
+    "change",
+    renderAttendanceStudents
+  );
+}
+  
 }
 
 function openAddStudentForm() {
@@ -407,6 +418,77 @@ function setAttendanceDateDefault() {
 }
 
 /* ATTENDANCE DATE DEFAULT END */
+
+
+/* ==========================================================================
+   ATTENDANCE STUDENT LIST START
+   Shows students enrolled in the selected course.
+   ========================================================================== */
+
+function renderAttendanceStudents() {
+  const courseSelect =
+    document.getElementById("attendance-course");
+
+  const studentsList =
+    document.getElementById("attendance-students-list");
+
+  if (!courseSelect || !studentsList) return;
+
+  const selectedCourse = courseSelect.value;
+
+  // No course selected yet.
+  if (!selectedCourse) {
+    studentsList.innerHTML = `
+      <p class="attendance-empty-message">
+        Select a course to view students.
+      </p>
+    `;
+
+    return;
+  }
+
+  // Load all saved students.
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  // Find students in the selected course.
+  const courseStudents = students.filter(
+    (student) => student.course === selectedCourse
+  );
+
+  // No students found.
+  if (courseStudents.length === 0) {
+    studentsList.innerHTML = `
+      <p class="attendance-empty-message">
+        No students found in this course.
+      </p>
+    `;
+
+    return;
+  }
+
+  // Build student list.
+  studentsList.innerHTML = "";
+
+  courseStudents.forEach((student) => {
+    const card = document.createElement("div");
+
+    card.className = "attendance-student-card";
+
+    card.innerHTML = `
+      <div class="attendance-student-info">
+        <strong>${student.studentName}</strong>
+
+        <span>${student.id}</span>
+      </div>
+    `;
+
+    studentsList.appendChild(card);
+  });
+}
+
+/* ATTENDANCE STUDENT LIST END */
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
