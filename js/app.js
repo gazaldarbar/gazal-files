@@ -1937,30 +1937,36 @@ function renderFeesStudents() {
     card.className = "fees-student-card";
 
     card.innerHTML = `
-      <div class="fees-student-info">
+  <div class="fees-card-top">
 
-        <strong>
-          ${student.studentName}
-        </strong>
+    <div class="fees-student-info">
+      <strong>${student.studentName}</strong>
 
-        <span>
-          ${student.id}
-        </span>
+      <span class="fees-student-id">
+        ${student.id}
+      </span>
+    </div>
 
-      </div>
+    <div class="fees-status-badge not-paid">
+      ഫീസ് : അടച്ചില്ല
+    </div>
 
-      <div class="fees-student-status">
+  </div>
 
-        <span class="fees-status-label">
-          ഫീസ്
-        </span>
+  <div class="fees-card-divider"></div>
 
-        <span class="fees-status-value not-paid">
-          അടച്ചില്ല
-        </span>
+  <div class="fees-card-footer">
 
-      </div>
-    `;
+    <span>
+      നിലവിലെ ഫീസ് വിവരങ്ങൾ
+    </span>
+
+    <span class="fees-arrow">
+      ›
+    </span>
+
+  </div>
+`;
 
     list.appendChild(card);
   });
