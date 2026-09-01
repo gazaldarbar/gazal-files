@@ -6,29 +6,71 @@
    ========================================================================== */
 
 :root {
-  --color-canvas: #F6F1E4;
+  /* ================================================================
+     GAZAL DARBAR BRAND PALETTE
+     Primary identity: Deep Green + Vibrant Yellow
+     ================================================================= */
+
+  --color-canvas: #F8F6EF;
   --color-surface: #FFFFFF;
-  --color-ink: #241B2F;
-  --color-ink-soft: #6B6274;
-  --color-primary: #6B2545;
-  --color-primary-dark: #3D1530;
-  --color-gold: #C9A24B;
-  --color-gold-soft: #E4D3A6;
-  --color-success: #3F7D58;
-  --color-success-bg: #E7F1EA;
-  --color-alert: #B94A3C;
-  --color-alert-bg: #F6E7E4;
-  --color-border: #E9E0CB;
 
-  --font-display: Georgia, 'Noto Serif Malayalam', 'Iowan Old Style', serif;
-  --font-body: -apple-system, 'Segoe UI', 'Noto Sans Malayalam', Roboto, sans-serif;
+  /* Main text */
+  --color-ink: #063D2B;
+  --color-ink-soft: #587066;
 
-  --space-1: 4px; --space-2: 8px; --space-3: 16px; --space-4: 24px; --space-5: 32px; --space-6: 48px;
-  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px; --radius-round: 999px;
+  /* Gazal Darbar primary deep green */
+  --color-primary: #04452D;
+  --color-primary-dark: #022F20;
+
+  /* Gazal Darbar signature yellow */
+  --color-gold: #FFC809;
+  --color-gold-soft: #FFE9A0;
+
+  /* Functional colours */
+  --color-success: #2F9E64;
+  --color-success-bg: #E5F4EB;
+
+  --color-alert: #B93A3A;
+  --color-alert-bg: #F9E7E7;
+
+  --color-border: #D8E3DC;
+
+  /* Extra brand utility colours */
+  --gd-yellow: #FFC809;
+  --gd-green: #04452D;
+  --gd-green-light: #0A5C3C;
+  --gd-green-deep: #022F20;
+
+  --gd-white: #FFFFFF;
+  --gd-black: #111111;
+
+  --font-display: Georgia, 'Noto Serif Malayalam',
+    'Iowan Old Style', serif;
+
+  --font-body: -apple-system, 'Segoe UI',
+    'Noto Sans Malayalam', Roboto, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-round: 999px;
+
   --touch-target: 56px;
 
-  --shadow-card: 0 1px 2px rgba(36,27,47,0.04), 0 6px 18px rgba(36,27,47,0.06);
-  --shadow-nav: 0 4px 20px rgba(36,27,47,0.10);
+  /* Green-tinted shadows */
+  --shadow-card:
+    0 2px 4px rgba(2, 47, 32, 0.08),
+    0 10px 24px rgba(2, 47, 32, 0.10);
+
+  --shadow-nav:
+    0 6px 24px rgba(2, 47, 32, 0.16);
 }
 
 * { box-sizing: border-box; }
@@ -529,3 +571,100 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 }
 
 /* STUDENT CARD ACTIONS END */
+
+/* ==========================================================================
+   GAZAL DARBAR GREEN + YELLOW THEME START
+   Visual-only override.
+   No functionality is changed.
+   ========================================================================== */
+
+/* Main application identity */
+#app-shell {
+  background: var(--gd-green);
+  color: var(--gd-white);
+}
+
+/* Top section */
+.topbar {
+  background: var(--gd-green);
+  color: var(--gd-white);
+}
+
+/* Search */
+.search-box {
+  background: var(--gd-white);
+}
+
+.search-box input {
+  color: var(--gd-green-deep);
+}
+
+/* Dashboard statistic cards */
+.stat-card {
+  background: var(--gd-white);
+}
+
+.stat-card .stat-value {
+  color: var(--gd-green);
+}
+
+.stat-card .stat-label {
+  color: #4E6259;
+}
+
+/* Normal action cards */
+.action-btn {
+  background: var(--gd-white);
+  color: var(--gd-green-deep);
+}
+
+/* Primary action becomes signature yellow */
+.action-btn.primary {
+  background: var(--gd-yellow);
+  color: var(--gd-green-deep);
+  box-shadow:
+    0 8px 22px rgba(255, 200, 9, 0.28);
+}
+
+.action-btn.primary .icon-badge {
+  background: rgba(4, 69, 45, 0.12);
+  color: var(--gd-green);
+}
+
+/* Icon badges */
+.icon-badge {
+  background: rgba(4, 69, 45, 0.10);
+  color: var(--gd-green);
+}
+
+/* List cards */
+.list-card {
+  background: var(--gd-white);
+  color: var(--gd-green-deep);
+}
+
+/* Bottom navigation */
+.bottom-nav {
+  background: var(--gd-white);
+}
+
+.nav-item {
+  color: #63766C;
+}
+
+.nav-item.active {
+  color: var(--gd-green);
+}
+
+.nav-item.active .nav-icon-wrap {
+  background: var(--gd-yellow);
+}
+
+/* Section titles on the green app background */
+.section-title {
+  color: var(--gd-white);
+}
+
+/* ==========================================================================
+   GAZAL DARBAR GREEN + YELLOW THEME END
+   ========================================================================== */
