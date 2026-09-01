@@ -357,8 +357,33 @@ function renderStudentsList(searchQuery = "") {
     </div>
 
   </div>
+
+  <div class="student-card-actions">
+    <button
+      class="student-edit-btn"
+      type="button"
+      data-student-id="${student.id}"
+    >
+      ✏️ Edit
+    </button>
+
+    <button
+      class="student-delete-btn"
+      type="button"
+      data-student-id="${student.id}"
+    >
+      🗑️ Delete
+    </button>
+  </div>
 `;
     list.appendChild(card);
+    const deleteButton = card.querySelector(".student-delete-btn");
+
+if (deleteButton) {
+  deleteButton.addEventListener("click", () => {
+    deleteStudent(student.id);
+  });
+}
   });
 }
 
@@ -423,3 +448,39 @@ function getStudentSearchMatches(query) {
 }
 
 /* STUDENT SEARCH FEATURE END */
+
+/* ==========================================================================
+   STUDENT DELETE FEATURE START
+   Reversible: remove this block to remove student deletion.
+   ========================================================================== */
+
+function deleteStudent(studentId) {
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  const student = students.find(
+    (item) => item.id === studentId
+  );
+
+  if (!student) return;
+
+  const confirmed = confirm(
+    `Delete ${student.studentName}?\n\nThis action cannot be undone.`
+  );
+
+  if (!confirmed) return;
+
+  const updatedStudents = students.filter(
+    (item) => item.id !== studentId
+  );
+
+  localStorage.setItem(
+    "gazal_students",
+    JSON.stringify(updatedStudents)
+  );
+
+  renderStudentsList();
+}
+
+/* STUDENT DELETE FEATURE END */
