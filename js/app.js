@@ -172,6 +172,7 @@ if (attendanceCourse) {
   );
 }
   setupAttendanceModalControls();
+  setupFingerprintAttendanceControls();
   
 }
 
@@ -518,6 +519,16 @@ function renderAttendanceStudents() {
 
   </div>
 `;
+
+      const studentNameButton = card.querySelector(
+  ".attendance-student-name"
+);
+
+if (studentNameButton) {
+  studentNameButton.addEventListener("click", () => {
+    openFingerprintAttendance(student);
+  });
+}
 
       modalStudents.appendChild(card);
     });
