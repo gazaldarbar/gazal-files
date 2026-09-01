@@ -359,22 +359,26 @@ function renderStudentsList(searchQuery = "") {
   </div>
 
   <div class="student-card-actions">
-    <button
-      class="student-edit-btn"
-      type="button"
-      data-student-id="${student.id}"
-    >
-      ✏️ Edit
-    </button>
 
-    <button
-      class="student-delete-btn"
-      type="button"
-      data-student-id="${student.id}"
-    >
-      🗑️ Delete
-    </button>
-  </div>
+  <button
+    class="student-edit-btn"
+    type="button"
+    data-student-id="${student.id}"
+  >
+    <span class="student-action-icon">✎</span>
+    <span>Edit</span>
+  </button>
+
+  <button
+    class="student-delete-btn"
+    type="button"
+    data-student-id="${student.id}"
+  >
+    <span class="student-action-icon">×</span>
+    <span>Delete</span>
+  </button>
+
+</div>
 `;
     list.appendChild(card);
     const deleteButton = card.querySelector(".student-delete-btn");
