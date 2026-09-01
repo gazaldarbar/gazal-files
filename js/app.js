@@ -498,18 +498,26 @@ function renderAttendanceStudents() {
       card.className = "attendance-modal-student-card";
 
       card.innerHTML = `
-        <div class="attendance-modal-student-info">
-          <strong>${student.studentName}</strong>
-          <span>${student.id}</span>
-        </div>
+  <div class="attendance-student-main">
 
-        <div class="attendance-student-checkbox">
-          <input
-            type="checkbox"
-            data-student-id="${student.id}"
-          >
-        </div>
-      `;
+    <button
+      type="button"
+      class="attendance-student-name"
+      data-student-id="${student.id}"
+    >
+      <strong>${student.studentName}</strong>
+      <span>${student.id}</span>
+    </button>
+
+    <label class="attendance-student-checkbox">
+      <input
+        type="checkbox"
+        data-student-id="${student.id}"
+      >
+    </label>
+
+  </div>
+`;
 
       modalStudents.appendChild(card);
     });
