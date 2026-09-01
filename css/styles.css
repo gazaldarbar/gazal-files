@@ -1879,3 +1879,306 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 .fingerprint-scan-button {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ==========================================================================
+   ATTENDANCE HISTORY MODAL START
+   ========================================================================== */
+
+.attendance-history-modal {
+  position: fixed;
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 16px;
+}
+
+
+/* Backdrop */
+
+.attendance-history-backdrop {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  backdrop-filter: blur(10px);
+}
+
+
+/* Main window */
+
+.attendance-history-window {
+  position: relative;
+  z-index: 1;
+
+  width: min(94vw, 680px);
+  max-height: 88vh;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  background: #f4f5f2;
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+
+/* Header */
+
+.attendance-history-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 26px 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0d4938,
+      #063527
+    );
+}
+
+
+.attendance-history-eyebrow {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #ffc400;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+
+.attendance-history-header h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 28px;
+}
+
+
+.attendance-history-header p {
+  margin: 8px 0 0;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  line-height: 1.5;
+}
+
+
+/* Close button */
+
+.attendance-history-close {
+  width: 44px;
+  height: 44px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  cursor: pointer;
+}
+
+
+/* Records area */
+
+.attendance-history-list {
+  max-height: 48vh;
+
+  overflow-y: auto;
+
+  padding: 20px;
+}
+
+
+/* Individual record */
+
+.attendance-history-card {
+  padding: 18px;
+
+  margin-bottom: 14px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(13, 73, 56, 0.1);
+
+  box-shadow:
+    0 8px 24px rgba(13, 73, 56, 0.08);
+}
+
+
+.attendance-history-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+
+.attendance-history-course {
+  margin: 0;
+
+  color: #123d32;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+
+.attendance-history-date {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #71817b;
+
+  font-size: 13px;
+}
+
+
+/* Statistics */
+
+.attendance-history-stats {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 16px;
+}
+
+
+.attendance-history-stat {
+  flex: 1;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  text-align: center;
+}
+
+
+.attendance-history-stat.present {
+  background: rgba(13, 73, 56, 0.1);
+
+  color: #0d4938;
+}
+
+
+.attendance-history-stat.absent {
+  background: rgba(200, 70, 70, 0.1);
+
+  color: #a33a3a;
+}
+
+
+.attendance-history-stat.percent {
+  background: rgba(255, 196, 0, 0.15);
+
+  color: #8a6500;
+}
+
+
+.attendance-history-stat strong {
+  display: block;
+
+  font-size: 18px;
+}
+
+
+.attendance-history-stat span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* Empty state */
+
+.attendance-history-empty {
+  padding: 50px 20px;
+
+  text-align: center;
+
+  color: #71817b;
+}
+
+
+/* Footer */
+
+.attendance-history-footer {
+  padding: 18px 22px 22px;
+
+  border-top: 1px solid rgba(13, 73, 56, 0.1);
+
+  background: #f4f5f2;
+}
+
+
+.attendance-history-footer-button {
+  width: 100%;
+  min-height: 52px;
+
+  border: none;
+  border-radius: 15px;
+
+  background: #0d4938;
+
+  color: #ffffff;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .attendance-history-modal {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+
+  .attendance-history-window {
+    width: 100%;
+    max-height: 90vh;
+
+    border-radius: 28px 28px 0 0;
+  }
+
+
+  .attendance-history-list {
+    max-height: 55vh;
+  }
+}
+
+/* ATTENDANCE HISTORY MODAL END */
