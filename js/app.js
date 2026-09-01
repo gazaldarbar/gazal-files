@@ -889,3 +889,242 @@ function editStudent(studentId) {
 }
 
 /* STUDENT EDIT FEATURE END */
+
+
+/* ==========================================================================
+   FINGERPRINT ATTENDANCE FEATURE START
+   Premium biometric-style attendance confirmation.
+   ========================================================================== */
+
+let selectedFingerprintStudentId = null;
+
+
+/* ------------------------------------------------
+   Open fingerprint popup
+------------------------------------------------ */
+
+function openFingerprintAttendance(student) {
+  const modal = document.getElementById(
+    "fingerprint-attendance-modal"
+  );
+
+  if (!modal) return;
+
+  selectedFingerprintStudentId = student.id;
+
+  document.getElementById(
+    "fingerprint-student-name"
+  ).textContent = student.studentName;
+
+  document.getElementById(
+    "fingerprint-student-id"
+  ).textContent = student.id;
+
+  modal.style.display = "flex";
+}
+
+
+/* ------------------------------------------------
+   Close fingerprint popup
+------------------------------------------------ */
+
+function closeFingerprintAttendance() {
+  const modal = document.getElementById(
+    "fingerprint-attendance-modal"
+  );
+
+  if (!modal) return;
+
+  modal.style.display = "none";
+
+  selectedFingerprintStudentId = null;
+}
+
+
+/* ------------------------------------------------
+   Premium scanner sound
+   Uses Web Audio API — no audio file required.
+------------------------------------------------ */
+
+function playFingerprintSound(type = "scan") {
+  const AudioContextClass =
+    window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) return;
+
+  const audioContext = new AudioContextClass();
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  const now = audioContext.currentTime;
+
+  if (type === "success") {
+    oscillator.frequency.setValueAtTime(620, now);
+    oscillator.frequency.setValueAtTime(880, now + 0.12);
+
+    gainNode.gain.setValueAtTime(0.05, now);
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + 0.35
+    );
+
+    oscillator.start(now);
+    oscillator.stop(now + 0.35);
+
+  } else {
+
+    oscillator.frequency.setValueAtTime(360, now);
+
+    gainNode.gain.setValueAtTime(0.04, now);
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + 0.18
+    );
+
+    oscillator.start(now);
+    oscillator.stop(now + 0.18);
+  }
+}
+
+
+/* ------------------------------------------------
+   Confirm fingerprint attendance
+------------------------------------------------ */
+
+function confirmFingerprintAttendance() {
+  if (!selectedFingerprintStudentId) return;
+
+  const scanButton = document.getElementById(
+    "fingerprint-scan-button"
+  );
+
+  const scanTitle = document.getElementById(
+    "fingerprint-scan-title"
+  );
+
+  const scanMessage = document.getElementById(
+    "fingerprint-scan-message"
+  );
+
+  if (scanButton) {
+    scanButton.classList.add("scanning");
+  }
+
+  if (scanTitle) {
+    scanTitle.textContent = "Scanning...";
+  }
+
+  if (scanMessage) {
+    scanMessage.textContent =
+      "Verifying attendance...";
+  }
+
+  playFingerprintSound("scan");
+
+
+  /* Simulated biometric scan */
+  setTimeout(() => {
+
+    if (scanButton) {
+      scanButton.classList.remove("scanning");
+      scanButton.classList.add("scan-success");
+    }
+
+    if (scanTitle) {
+      scanTitle.textContent = "Attendance Confirmed";
+    }
+
+    if (scanMessage) {
+      scanMessage.textContent =
+        "Present successfully marked.";
+    }
+
+    playFingerprintSound("success");
+
+
+    /* Automatically tick matching checkbox */
+    const checkbox = document.querySelector(
+      `.attendance-student-checkbox input[data-student-id="${selectedFingerprintStudentId}"]`
+    );
+
+    if (checkbox) {
+      checkbox.checked = true;
+    }
+
+
+    /* Close popup after success */
+    setTimeout(() => {
+
+      closeFingerprintAttendance();
+
+      if (scanButton) {
+        scanButton.classList.remove("scan-success");
+      }
+
+    }, 900);
+
+  }, 700);
+}
+
+
+/* ------------------------------------------------
+   Setup fingerprint controls
+------------------------------------------------ */
+
+function setupFingerprintAttendanceControls() {
+
+  const scanButton = document.getElementById(
+    "fingerprint-scan-button"
+  );
+
+  const cancelButton = document.getElementById(
+    "fingerprint-cancel-button"
+  );
+
+  const cancelTopButton = document.getElementById(
+    "fingerprint-cancel-top"
+  );
+
+  const backdrop = document.querySelector(
+    ".fingerprint-attendance-backdrop"
+  );
+
+
+  if (scanButton) {
+    scanButton.addEventListener(
+      "click",
+      confirmFingerprintAttendance
+    );
+  }
+
+
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      closeFingerprintAttendance
+    );
+  }
+
+
+  if (cancelTopButton) {
+    cancelTopButton.addEventListener(
+      "click",
+      closeFingerprintAttendance
+    );
+  }
+
+
+  if (backdrop) {
+    backdrop.addEventListener(
+      "click",
+      closeFingerprintAttendance
+    );
+  }
+}
+
+
+/* FINGERPRINT ATTENDANCE FEATURE END */
