@@ -2339,6 +2339,19 @@ const latestPaymentRecord =
       payment.monthNumber === latestCompletedMonth
   );
 
+const studentPaymentHistory =
+  feePayments
+    .filter(
+      (payment) =>
+        payment.studentId === student.id &&
+        payment.status === "paid"
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.paidDate) -
+        new Date(a.paidDate)
+    );
+
 
 /*
   A fee is currently due when at least one
@@ -2510,6 +2523,65 @@ ${
     `
     : ""
 }
+
+<div class="student-fee-history">
+
+  <h3>
+    ഫീസ് ഹിസ്റ്ററി
+  </h3>
+
+  ${
+    studentPaymentHistory.length === 0
+      ? `
+        <p class="student-fee-history-empty">
+          ഫീസ് അടച്ച വിവരങ്ങൾ ലഭ്യമല്ല.
+        </p>
+      `
+      : studentPaymentHistory
+          .map(
+            (payment) => `
+              <div class="student-fee-history-item">
+
+                <div class="student-fee-history-main">
+
+                  <strong>
+                    ${
+                      payment.feeMonthMalayalam ||
+                      "ഫീസ് മാസം"
+                    }
+                    ${
+                      payment.feeYear || ""
+                    }
+                  </strong>
+
+                  <span>
+                    ഫീസ് : അടച്ചു
+                  </span>
+
+                </div>
+
+                <div class="student-fee-history-date">
+
+                  അടച്ച തീയതി:
+                  ${
+                    payment.paidDate
+                      ? new Date(
+                          payment.paidDate
+                        ).toLocaleDateString(
+                          "en-GB"
+                        )
+                      : "-"
+                  }
+
+                </div>
+
+              </div>
+            `
+          )
+          .join("")
+  }
+
+</div>
 
 ${
   feeDue
