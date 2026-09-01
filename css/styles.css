@@ -813,7 +813,7 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 /* Student ID */
 .student-card-id {
-  color: #022F20;
+  color: #0A0A0A;
   font-weight: 700;
 }
 
@@ -842,7 +842,7 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 /* Malayalam / detail labels */
 .student-detail-label {
-  color: #04452D;
+  color: #0A0A0A;
   font-weight: 700;
 }
 
