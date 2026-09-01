@@ -1209,6 +1209,51 @@ const attendancePercentage =
 
   </div>
 
+  </div>
+
+<!-- Student Attendance Summary -->
+<div class="student-attendance-summary">
+
+  <div class="student-attendance-header">
+    <span class="student-attendance-title">
+      Attendance
+    </span>
+
+    <span class="student-attendance-percent">
+      ${attendancePercentage}%
+    </span>
+  </div>
+
+  <div class="student-attendance-progress">
+    <div
+      class="student-attendance-progress-fill"
+      style="width: ${attendancePercentage}%"
+    ></div>
+  </div>
+
+  <div class="student-attendance-stats">
+
+    <div class="student-attendance-stat present">
+      <strong>${totalPresent}</strong>
+      <span>Present</span>
+    </div>
+
+    <div class="student-attendance-stat absent">
+      <strong>${totalAbsent}</strong>
+      <span>Absent</span>
+    </div>
+
+    <div class="student-attendance-stat total">
+      <strong>${totalClasses}</strong>
+      <span>Total Classes</span>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="student-card-actions">
+
   <div class="student-card-actions">
 
   <button
