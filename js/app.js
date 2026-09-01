@@ -156,6 +156,22 @@ function closeAddStudentForm() {
 }
 
 /* ==========================================================================
+   STUDENT ID GENERATOR START
+   ========================================================================== */
+
+function generateStudentId() {
+  const students = JSON.parse(
+    localStorage.getItem("gazal_students") || "[]"
+  );
+
+  const nextNumber = students.length + 1;
+
+  return "GZ-" + String(nextNumber).padStart(4, "0");
+}
+
+/* STUDENT ID GENERATOR END */
+
+/* ==========================================================================
    STUDENT LOCAL MEMORY FEATURE START
    Reversible: this section saves students in this device's localStorage.
    ========================================================================== */
