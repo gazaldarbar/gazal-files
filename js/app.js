@@ -224,7 +224,7 @@ function handleStudentFormSubmit(event) {
   }
 
   document.getElementById("btn-save-student").textContent =
-    "Upload / Save";
+    "Save";
 
   closeAddStudentForm();
 
