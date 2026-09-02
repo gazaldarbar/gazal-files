@@ -2624,6 +2624,16 @@ async function markFeeMonthPaid(
       payment.monthNumber === monthNumber
   );
 
+console.log(
+  "Fee Firestore function available:",
+  typeof window.saveFeePaymentToFirestore
+);
+
+console.log(
+  "Payment being saved:",
+  savedPayment
+);
+  
   if (
     savedPayment &&
     window.saveFeePaymentToFirestore
