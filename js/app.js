@@ -2789,45 +2789,6 @@ let paidStudents = 0;
   return;
 }
 
-
-/* ================================================================
-   LOAD ATTENDANCE ONCE FOR ALL FEE CARDS
-   ================================================================ */
-
-let attendanceRecords = [];
-
-try {
-
-  if (window.getAttendanceFromFirestore) {
-
-    attendanceRecords =
-      await window.getAttendanceFromFirestore();
-
-  }
-
-} catch (error) {
-
-  console.error(
-    "Failed to load attendance for fees:",
-    error
-  );
-
-}
-
-
-/* LocalStorage fallback */
-
-if (attendanceRecords.length === 0) {
-
-  attendanceRecords = JSON.parse(
-    localStorage.getItem(
-      "gazal_attendance"
-    ) || "[]"
-  );
-
-}
-
-
 students.forEach((student) => {
     const card = document.createElement("div");
 
