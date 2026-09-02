@@ -2089,6 +2089,12 @@ function renderFeesStudents() {
 
   list.innerHTML = "";
 
+  let totalStudents = students.length;
+
+let dueStudents = 0;
+
+let paidStudents = 0;
+
   if (students.length === 0) {
     list.innerHTML = `
       <div class="fees-empty-message">
@@ -2156,6 +2162,14 @@ const feeDue =
   latestCompletedMonth > 0 &&
   !latestMonthPaid;
 
+    if (feeDue) {
+  dueStudents++;
+}
+
+if (latestMonthPaid) {
+  paidStudents++;
+}
+
 
 card.innerHTML = `
   <div class="fees-card-top">
@@ -2217,7 +2231,40 @@ if (detailsButton) {
     openStudentFeeDetails(student);
   });
 }
-  });
+    });
+
+
+  const totalStudentsElement =
+    document.getElementById(
+      "fees-stat-total-students"
+    );
+
+  const dueStudentsElement =
+    document.getElementById(
+      "fees-stat-due"
+    );
+
+  const paidStudentsElement =
+    document.getElementById(
+      "fees-stat-paid"
+    );
+
+
+  if (totalStudentsElement) {
+    totalStudentsElement.textContent =
+      totalStudents;
+  }
+
+  if (dueStudentsElement) {
+    dueStudentsElement.textContent =
+      dueStudents;
+  }
+
+  if (paidStudentsElement) {
+    paidStudentsElement.textContent =
+      paidStudents;
+  }
+
 }
 
 /* FEES STUDENT LIST END */
