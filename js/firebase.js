@@ -8,10 +8,10 @@ import { initializeApp } from
 import {
   getFirestore,
   collection,
-  addDoc
+  addDoc,
+  getDocs
 } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyBS5RaiVeQse_dwKGFiKKoDozb3Ww2Bt4",
@@ -89,7 +89,72 @@ console.log(
 );
 
 
+/* ================================================================
+   STUDENT FIRESTORE FUNCTIONS
+   ================================================================ */
 
+
+/* Save one student to Firestore */
+
+async function saveStudentToFirestore(student) {
+  try {
+
+    const docRef = await addDoc(
+      collection(db, "students"),
+      student
+    );
+
+    console.log(
+      "Student saved to Firestore:",
+      docRef.id
+    );
+
+    return docRef.id;
+
+  } catch (error) {
+
+    console.error(
+      "Student save failed:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+
+/* Load all students from Firestore */
+
+async function getStudentsFromFirestore() {
+  try {
+
+    const snapshot = await getDocs(
+      collection(db, "students")
+    );
+
+    const students = [];
+
+    snapshot.forEach((doc) => {
+
+      students.push({
+        firestoreId: doc.id,
+        ...doc.data()
+      });
+
+    });
+
+    return students;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students:",
+      error
+    );
+
+    throw error;
+  }
+}
 
 /* ================================================================
    EXPORT FIRESTORE
@@ -97,5 +162,7 @@ console.log(
 
 export {
   db,
-  testFirestoreConnection
+  testFirestoreConnection,
+  saveStudentToFirestore,
+  getStudentsFromFirestore
 };
