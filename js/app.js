@@ -1400,6 +1400,46 @@ async function renderStudentsList(searchQuery = "") {
 
   }
 
+    /* ================================================================
+     LOAD ATTENDANCE RECORDS
+     Firestore first, localStorage fallback
+     ================================================================ */
+
+  let attendanceRecords = [];
+
+  try {
+
+    if (window.getAttendanceFromFirestore) {
+
+      attendanceRecords =
+        await window.getAttendanceFromFirestore();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load attendance from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* LocalStorage fallback */
+
+  if (
+    !attendanceRecords ||
+    attendanceRecords.length === 0
+  ) {
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+  }
 
   if (searchQuery) {
 
@@ -1450,23 +1490,6 @@ async function renderStudentsList(searchQuery = "") {
     /* ================================================================
    4 CLASS ATTENDANCE CYCLE
    ================================================================ */
-
-let attendanceRecords = JSON.parse(
-  localStorage.getItem("gazal_attendance") || "[]"
-);
-    /* LocalStorage fallback */
-  if (
-  !attendanceRecords ||
-  attendanceRecords.length === 0
-) {
-
-  attendanceRecords = JSON.parse(
-    localStorage.getItem(
-      "gazal_attendance"
-    ) || "[]"
-  );
-
-  }
 
 /*
   Get every class where this student was actually present.
