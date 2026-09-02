@@ -1451,9 +1451,38 @@ async function renderStudentsList(searchQuery = "") {
    4 CLASS ATTENDANCE CYCLE
    ================================================================ */
 
-const attendanceRecords = JSON.parse(
-  localStorage.getItem("gazal_attendance") || "[]"
-);
+let attendanceRecords = [];
+
+try {
+
+  if (window.getAttendanceFromFirestore) {
+
+    attendanceRecords =
+      await window.getAttendanceFromFirestore();
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance for student cards:",
+    error
+  );
+
+}
+    /* LocalStorage fallback */
+  if (
+  !attendanceRecords ||
+  attendanceRecords.length === 0
+) {
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+  }
 
 /*
   Get every class where this student was actually present.
