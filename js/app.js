@@ -1451,7 +1451,7 @@ async function renderStudentsList(searchQuery = "") {
    4 CLASS ATTENDANCE CYCLE
    ================================================================ */
 
-const attendanceRecords = JSON.parse(
+let attendanceRecords = JSON.parse(
   localStorage.getItem("gazal_attendance") || "[]"
 );
     /* LocalStorage fallback */
