@@ -3423,7 +3423,7 @@ if (
 
 
     item.className =
-      "attendance-history-item";
+  "attendance-history-card";
 
 
     item.innerHTML = `
