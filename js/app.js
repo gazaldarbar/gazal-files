@@ -1112,12 +1112,69 @@ function setupAttendanceRecordDetailsControls() {
    Reversible: remove this block to remove student list rendering.
    ========================================================================== */
 
-function renderStudentsList(searchQuery = "") {
-  const students = searchQuery
-  ? getStudentSearchMatches(searchQuery)
-  : JSON.parse(
-      localStorage.getItem("gazal_students") || "[]"
+async function renderStudentsList(searchQuery = "") {
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students from Firestore:",
+      error
     );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  if (searchQuery) {
+
+    students = students.filter(
+      (student) => {
+
+        const query =
+          searchQuery.toLowerCase();
+
+        return (
+          student.studentName
+            ?.toLowerCase()
+            .includes(query) ||
+
+          student.id
+            ?.toLowerCase()
+            .includes(query) ||
+
+          student.course
+            ?.toLowerCase()
+            .includes(query)
+        );
+
+      }
+    );
+
+  }
 
   const list = document.getElementById("students-list");
   const empty = document.getElementById("students-empty");
