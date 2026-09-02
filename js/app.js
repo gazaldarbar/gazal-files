@@ -2665,16 +2665,46 @@ console.log(
    FEES STUDENT LIST START
    ========================================================================== */
 
-function renderFeesStudents() {
+async function renderFeesStudents() {
   const list = document.getElementById(
     "fees-students-list"
   );
 
   if (!list) return;
 
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
+  let students = [];
+
+try {
+
+  if (window.getStudentsFromFirestore) {
+
+    students =
+      await window.getStudentsFromFirestore();
+
+  } else {
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load students for fees:",
+    error
   );
+
+  students = JSON.parse(
+    localStorage.getItem(
+      "gazal_students"
+    ) || "[]"
+  );
+
+}
 
   list.innerHTML = "";
 
@@ -2703,9 +2733,41 @@ card.className = "fees-student-card";
    FEE STATUS CALCULATION
    ================================================================ */
 
-const attendanceRecords = JSON.parse(
-  localStorage.getItem("gazal_attendance") || "[]"
-);
+let attendanceRecords = [];
+
+try {
+
+  if (window.getAttendanceFromFirestore) {
+
+    attendanceRecords =
+      await window.getAttendanceFromFirestore();
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance for fees:",
+    error
+  );
+
+}
+
+
+/* LocalStorage fallback */
+
+if (
+  !attendanceRecords ||
+  attendanceRecords.length === 0
+) {
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+}
 
 const presentClasses = [];
 
