@@ -173,6 +173,9 @@ async function getStudentsFromFirestore() {
 window.saveStudentToFirestore =
   saveStudentToFirestore;
 
+window.getStudentsFromFirestore =
+  getStudentsFromFirestore;
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
