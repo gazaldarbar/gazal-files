@@ -3481,6 +3481,13 @@ if (
 
     `;
 
+     historyList.appendChild(item);
+
+  });
+
+}
+
+
     /* ==========================================================================
    ATTENDANCE HISTORY MODAL CONTROLS
    ========================================================================== */
@@ -3554,8 +3561,4 @@ if (closeAttendanceHistoryFooterButton) {
 
 }
 
-    historyList.appendChild(item);
-
-  });
-
-}
+   
