@@ -285,6 +285,41 @@ async function getStudentsForAttendance() {
 }
 
 /* ================================================================
+   LOAD ATTENDANCE FROM FIRESTORE
+   ================================================================ */
+
+async function getAttendanceFromFirestore() {
+  try {
+
+    const snapshot = await getDocs(
+      collection(db, "attendance")
+    );
+
+    const attendanceRecords = [];
+
+    snapshot.forEach((attendanceDoc) => {
+
+      attendanceRecords.push({
+        firestoreId: attendanceDoc.id,
+        ...attendanceDoc.data()
+      });
+
+    });
+
+    return attendanceRecords;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load attendance:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -303,6 +338,9 @@ window.deleteStudentFromFirestore =
 window.saveAttendanceToFirestore =
   saveAttendanceToFirestore;
 
+window.getAttendanceFromFirestore =
+  getAttendanceFromFirestore;
+
 window.getStudentsForAttendance =
   getStudentsForAttendance;
 
@@ -318,5 +356,6 @@ export {
   getStudentFromFirestore,
   deleteStudentFromFirestore,
   saveAttendanceToFirestore,
+  getAttendanceFromFirestore,
   getStudentsForAttendance
 };
