@@ -53,12 +53,17 @@ async function testFirestoreConnection() {
       }
     );
 
-    console.log(
-      "Firestore test successful:",
+    alert(
+      "Firestore test successful! Document ID: " +
       docRef.id
     );
 
   } catch (error) {
+
+    alert(
+      "Firestore test failed: " +
+      error.message
+    );
 
     console.error(
       "Firestore test failed:",
