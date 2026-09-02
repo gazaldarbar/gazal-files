@@ -2820,3 +2820,205 @@ function getFeeMonthFromCycle(
   };
 
 }
+
+/* ==========================================================================
+   ATTENDANCE HISTORY
+   ========================================================================== */
+
+function renderAttendanceHistory() {
+
+  const historyList =
+    document.getElementById(
+      "attendance-history-list"
+    );
+
+  if (!historyList) return;
+
+
+  const attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+
+  /* Newest date first */
+  attendanceRecords.sort(
+    (a, b) =>
+      new Date(b.date) -
+      new Date(a.date)
+  );
+
+
+  historyList.innerHTML = "";
+
+
+  if (attendanceRecords.length === 0) {
+
+    historyList.innerHTML = `
+      <div class="attendance-history-empty">
+        No attendance records found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  attendanceRecords.forEach((record) => {
+
+    const presentCount =
+      record.students.filter(
+        (student) =>
+          student.status === "present"
+      ).length;
+
+
+    const absentCount =
+      record.students.filter(
+        (student) =>
+          student.status === "absent"
+      ).length;
+
+
+    const item =
+      document.createElement("div");
+
+
+    item.className =
+      "attendance-history-item";
+
+
+    item.innerHTML = `
+
+      <div class="attendance-history-item-top">
+
+        <div>
+
+          <strong>
+            ${new Date(
+              record.date
+            ).toLocaleDateString(
+              "en-GB",
+              {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+              }
+            )}
+          </strong>
+
+          <span>
+            ${record.course}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="
+          attendance-history-item-stats
+        "
+      >
+
+        <span
+          class="
+            attendance-history-present
+          "
+        >
+          ${presentCount} Present
+        </span>
+
+
+        <span
+          class="
+            attendance-history-absent
+          "
+        >
+          ${absentCount} Absent
+        </span>
+
+      </div>
+
+    `;
+
+    /* ==========================================================================
+   ATTENDANCE HISTORY MODAL CONTROLS
+   ========================================================================== */
+
+const viewAttendanceHistoryButton =
+  document.getElementById(
+    "btn-view-attendance-history"
+  );
+
+const attendanceHistoryModal =
+  document.getElementById(
+    "attendance-history-modal"
+  );
+
+const closeAttendanceHistoryButton =
+  document.getElementById(
+    "btn-close-attendance-history"
+  );
+
+const closeAttendanceHistoryFooterButton =
+  document.getElementById(
+    "btn-close-attendance-history-footer"
+  );
+
+
+if (viewAttendanceHistoryButton) {
+
+  viewAttendanceHistoryButton.addEventListener(
+    "click",
+    () => {
+
+      renderAttendanceHistory();
+
+      if (attendanceHistoryModal) {
+        attendanceHistoryModal.style.display =
+          "flex";
+      }
+
+    }
+  );
+
+}
+
+
+function closeAttendanceHistory() {
+
+  if (attendanceHistoryModal) {
+    attendanceHistoryModal.style.display =
+      "none";
+  }
+
+}
+
+
+if (closeAttendanceHistoryButton) {
+
+  closeAttendanceHistoryButton.addEventListener(
+    "click",
+    closeAttendanceHistory
+  );
+
+}
+
+
+if (closeAttendanceHistoryFooterButton) {
+
+  closeAttendanceHistoryFooterButton.addEventListener(
+    "click",
+    closeAttendanceHistory
+  );
+
+}
+
+    historyList.appendChild(item);
+
+  });
+
+}
