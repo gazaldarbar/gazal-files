@@ -3487,78 +3487,85 @@ if (
 
 }
 
-
 /* ==========================================================================
    ATTENDANCE HISTORY MODAL CONTROLS
    ========================================================================== */
 
-const viewAttendanceHistoryButton =
-  document.getElementById(
-    "btn-view-attendance-history"
-  );
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-const attendanceHistoryModal =
-  document.getElementById(
-    "attendance-history-modal"
-  );
+    const viewAttendanceHistoryButton =
+      document.getElementById(
+        "btn-view-attendance-history"
+      );
 
-const closeAttendanceHistoryButton =
-  document.getElementById(
-    "btn-close-attendance-history"
-  );
+    const attendanceHistoryModal =
+      document.getElementById(
+        "attendance-history-modal"
+      );
 
-const closeAttendanceHistoryFooterButton =
-  document.getElementById(
-    "btn-close-attendance-history-footer"
-  );
+    const closeAttendanceHistoryButton =
+      document.getElementById(
+        "btn-close-attendance-history"
+      );
 
-
-function closeAttendanceHistory() {
-
-  if (attendanceHistoryModal) {
-    attendanceHistoryModal.style.display =
-      "none";
-  }
-
-}
+    const closeAttendanceHistoryFooterButton =
+      document.getElementById(
+        "btn-close-attendance-history-footer"
+      );
 
 
-if (viewAttendanceHistoryButton) {
-
-  viewAttendanceHistoryButton.addEventListener(
-    "click",
-    async () => {
+    function closeAttendanceHistory() {
 
       if (attendanceHistoryModal) {
         attendanceHistoryModal.style.display =
-          "flex";
+          "none";
       }
 
-      await renderAttendanceHistory();
+    }
+
+
+    if (viewAttendanceHistoryButton) {
+
+      viewAttendanceHistoryButton.addEventListener(
+        "click",
+        async () => {
+
+          if (attendanceHistoryModal) {
+            attendanceHistoryModal.style.display =
+              "flex";
+          }
+
+          await renderAttendanceHistory();
+
+        }
+      );
 
     }
-  );
-
-}
 
 
-if (closeAttendanceHistoryButton) {
+    if (closeAttendanceHistoryButton) {
 
-  closeAttendanceHistoryButton.addEventListener(
-    "click",
-    closeAttendanceHistory
-  );
+      closeAttendanceHistoryButton.addEventListener(
+        "click",
+        closeAttendanceHistory
+      );
 
-}
+    }
 
 
-if (closeAttendanceHistoryFooterButton) {
+    if (closeAttendanceHistoryFooterButton) {
 
-  closeAttendanceHistoryFooterButton.addEventListener(
-    "click",
-    closeAttendanceHistory
-  );
+      closeAttendanceHistoryFooterButton.addEventListener(
+        "click",
+        closeAttendanceHistory
+      );
 
-}
+    }
+
+  }
+);
+
 
    
