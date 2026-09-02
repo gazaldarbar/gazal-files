@@ -2954,11 +2954,41 @@ if (detailsButton) {
 // STUDENT FEE DETAILS
 // ================================================================
 
-function openStudentFeeDetails(student) {
+async function openStudentFeeDetails(student) {
 
-  const attendanceRecords = JSON.parse(
-    localStorage.getItem("gazal_attendance") || "[]"
+  let attendanceRecords = [];
+
+try {
+
+  if (window.getAttendanceFromFirestore) {
+
+    attendanceRecords =
+      await window.getAttendanceFromFirestore();
+
+  } else {
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance for fee details:",
+    error
   );
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+}
 
   const presentClasses = [];
 
