@@ -1451,39 +1451,9 @@ async function renderStudentsList(searchQuery = "") {
    4 CLASS ATTENDANCE CYCLE
    ================================================================ */
 
-let attendanceRecords = [];
-
-try {
-
-  if (window.getAttendanceFromFirestore) {
-
-    attendanceRecords =
-      await window.getAttendanceFromFirestore();
-
-  } else {
-
-    attendanceRecords = JSON.parse(
-      localStorage.getItem(
-        "gazal_attendance"
-      ) || "[]"
-    );
-
-  }
-
-} catch (error) {
-
-  console.error(
-    "Failed to load attendance for student cards:",
-    error
-  );
-
-  attendanceRecords = JSON.parse(
-    localStorage.getItem(
-      "gazal_attendance"
-    ) || "[]"
-  );
-
-}
+const attendanceRecords = JSON.parse(
+  localStorage.getItem("gazal_attendance") || "[]"
+);
     /* LocalStorage fallback */
   if (
   !attendanceRecords ||
