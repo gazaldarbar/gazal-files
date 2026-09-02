@@ -2554,11 +2554,12 @@ function isFeeMonthPaid(
   as paid.
 */
 
-function markFeeMonthPaid(
+async function markFeeMonthPaid(
   studentId,
   monthNumber,
   feeMonthInfo
 ) {
+
   const payments = getFeePayments();
 
   const existingPayment = payments.find(
@@ -2568,6 +2569,7 @@ function markFeeMonthPaid(
   );
 
   if (existingPayment) {
+
     existingPayment.status = "paid";
 
     existingPayment.paidDate =
@@ -2583,6 +2585,7 @@ function markFeeMonthPaid(
       feeMonthInfo?.monthNameMalayalam ?? "";
 
   } else {
+
     payments.push({
       studentId: studentId,
 
@@ -2602,11 +2605,52 @@ function markFeeMonthPaid(
       feeMonthMalayalam:
         feeMonthInfo?.monthNameMalayalam ?? ""
     });
+
   }
 
-  saveFeePayments(payments);
-}
 
+  /* Save local backup */
+
+  saveFeePayments(payments);
+
+
+  /* ================================================================
+     SAVE FEE PAYMENT TO FIRESTORE
+     ================================================================ */
+
+  const savedPayment = payments.find(
+    (payment) =>
+      payment.studentId === studentId &&
+      payment.monthNumber === monthNumber
+  );
+
+  if (
+    savedPayment &&
+    window.saveFeePaymentToFirestore
+  ) {
+
+    try {
+
+      await window.saveFeePaymentToFirestore(
+        savedPayment
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Fee payment cloud save failed:",
+        error
+      );
+
+      alert(
+        "Fee was saved locally, but cloud backup failed."
+      );
+
+    }
+
+  }
+
+}
 /* ==========================================================================
    FEES STUDENT LIST START
    ========================================================================== */
