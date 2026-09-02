@@ -3488,7 +3488,7 @@ if (
 }
 
 
-    /* ==========================================================================
+/* ==========================================================================
    ATTENDANCE HISTORY MODAL CONTROLS
    ========================================================================== */
 
@@ -3513,31 +3513,31 @@ const closeAttendanceHistoryFooterButton =
   );
 
 
-if (viewAttendanceHistoryButton) {
-
-  viewAttendanceHistoryButton.addEventListener(
-  "click",
-  async () => {
-
-    if (attendanceHistoryModal) {
-      attendanceHistoryModal.style.display =
-        "flex";
-    }
-
-    await renderAttendanceHistory();
-
-  }
-);
-
-}
-
-
 function closeAttendanceHistory() {
 
   if (attendanceHistoryModal) {
     attendanceHistoryModal.style.display =
       "none";
   }
+
+}
+
+
+if (viewAttendanceHistoryButton) {
+
+  viewAttendanceHistoryButton.addEventListener(
+    "click",
+    async () => {
+
+      if (attendanceHistoryModal) {
+        attendanceHistoryModal.style.display =
+          "flex";
+      }
+
+      await renderAttendanceHistory();
+
+    }
+  );
 
 }
 
