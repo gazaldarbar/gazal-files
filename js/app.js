@@ -2542,40 +2542,54 @@ ${
             (payment) => `
               <div class="student-fee-history-item">
 
-                <div class="student-fee-history-main">
+  <div class="student-fee-history-main">
 
-                  <strong>
-                    ${
-                      payment.feeMonthMalayalam ||
-                      "ഫീസ് മാസം"
-                    }
-                    ${
-                      payment.feeYear || ""
-                    }
-                  </strong>
+    <strong>
+      ${
+        payment.feeMonthMalayalam ||
+        "ഫീസ് മാസം"
+      }
+      ${
+        payment.feeYear || ""
+      }
+    </strong>
 
-                  <span>
-                    ഫീസ് : അടച്ചു
-                  </span>
+    <span>
+      ഫീസ് : അടച്ചു
+    </span>
 
-                </div>
+  </div>
 
-                <div class="student-fee-history-date">
 
-                  അടച്ച തീയതി:
-                  ${
-                    payment.paidDate
-                      ? new Date(
-                          payment.paidDate
-                        ).toLocaleDateString(
-                          "en-GB"
-                        )
-                      : "-"
-                  }
+  <div class="student-fee-history-cycle">
 
-                </div>
+    <span class="student-fee-history-cycle-icon">
+      ✓
+    </span>
 
-              </div>
+    <span>
+      4 ക്ലാസുകൾ പൂർത്തിയായി
+    </span>
+
+  </div>
+
+
+  <div class="student-fee-history-date">
+
+    അടച്ച തീയതി:
+    ${
+      payment.paidDate
+        ? new Date(
+            payment.paidDate
+          ).toLocaleDateString(
+            "en-GB"
+          )
+        : "-"
+    }
+
+  </div>
+
+</div>
             `
           )
           .join("")
