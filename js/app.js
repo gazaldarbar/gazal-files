@@ -661,10 +661,11 @@ function setupAttendanceModalControls() {
 
 /* ==========================================================================
    ATTENDANCE SAVE FEATURE START
-   Saves Present / Absent records permanently in localStorage.
+   Saves Present / Absent records to Firestore and local backup.
    ========================================================================== */
 
-function saveAttendance() {
+async function saveAttendance() {
+
   const courseSelect =
     document.getElementById("attendance-course");
 
@@ -672,7 +673,9 @@ function saveAttendance() {
     document.getElementById("attendance-date");
 
   const modalStudents =
-    document.getElementById("attendance-modal-students");
+    document.getElementById(
+      "attendance-modal-students"
+    );
 
   if (
     !courseSelect ||
@@ -682,17 +685,58 @@ function saveAttendance() {
     return;
   }
 
+
   const course = courseSelect.value;
   const date = dateInput.value;
 
   if (!course || !date) {
-    alert("Please select both course and date.");
+
+    alert(
+      "Please select both course and date."
+    );
+
     return;
   }
 
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
+
+  /* ================================================================
+     LOAD STUDENTS
+     Firestore first, localStorage fallback
+     ================================================================ */
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsForAttendance) {
+
+      students =
+        await window.getStudentsForAttendance();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* Local fallback */
+
+  if (!students || students.length === 0) {
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
 
   const checkboxes =
     modalStudents.querySelectorAll(
@@ -701,15 +745,19 @@ function saveAttendance() {
 
   const attendanceStudents = [];
 
+
   checkboxes.forEach((checkbox) => {
+
     const studentId =
       checkbox.dataset.studentId;
 
     const student = students.find(
-      (item) => item.id === studentId
+      (item) =>
+        item.id === studentId
     );
 
     if (!student) return;
+
 
     attendanceStudents.push({
       id: student.id,
@@ -718,16 +766,67 @@ function saveAttendance() {
         ? "present"
         : "absent"
     });
+
   });
 
-  const attendanceRecords = JSON.parse(
-    localStorage.getItem(
-      "gazal_attendance"
-    ) || "[]"
-  );
 
-  /* Remove an existing record for the
-     same course and same date. */
+  /* ================================================================
+     CREATE ATTENDANCE RECORD
+     ================================================================ */
+
+  const attendanceRecord = {
+
+    course: course,
+    date: date,
+    students: attendanceStudents,
+    savedAt: new Date().toISOString()
+
+  };
+
+
+  /* ================================================================
+     SAVE TO FIRESTORE
+     ================================================================ */
+
+  try {
+
+    if (
+      window.saveAttendanceToFirestore
+    ) {
+
+      await window.saveAttendanceToFirestore(
+        attendanceRecord
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Attendance cloud save failed:",
+      error
+    );
+
+    alert(
+      "Attendance could not be saved to the cloud."
+    );
+
+    return;
+  }
+
+
+  /* ================================================================
+     KEEP LOCAL BACKUP
+     ================================================================ */
+
+  const attendanceRecords =
+    JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+
   const updatedRecords =
     attendanceRecords.filter(
       (record) =>
@@ -737,26 +836,29 @@ function saveAttendance() {
         )
     );
 
-  updatedRecords.push({
-    course: course,
-    date: date,
-    students: attendanceStudents,
-    savedAt: new Date().toISOString()
-  });
+
+  updatedRecords.push(
+    attendanceRecord
+  );
+
 
   localStorage.setItem(
     "gazal_attendance",
     JSON.stringify(updatedRecords)
   );
 
+
   closeAttendanceModal();
+
 
   alert(
     "Attendance saved successfully!"
   );
+
 }
 
 /* ATTENDANCE SAVE FEATURE END */
+
 
 /* ==========================================================================
    ATTENDANCE HISTORY FEATURE START
