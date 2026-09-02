@@ -2579,12 +2579,17 @@ ${
     അടച്ച തീയതി:
     ${
       payment.paidDate
-        ? new Date(
-            payment.paidDate
-          ).toLocaleDateString(
-            "en-GB"
-          )
-        : "-"
+  ? new Date(
+      payment.paidDate
+    ).toLocaleDateString(
+      "ml-IN",
+      {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    )
+  : "-"
     }
 
   </div>
