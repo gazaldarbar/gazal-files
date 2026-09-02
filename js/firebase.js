@@ -157,6 +157,13 @@ async function getStudentsFromFirestore() {
 }
 
 /* ================================================================
+   MAKE FIRESTORE FUNCTION AVAILABLE TO APP.JS
+   ================================================================ */
+
+window.saveStudentToFirestore =
+  saveStudentToFirestore;
+
+/* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
 
