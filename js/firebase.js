@@ -5,6 +5,11 @@
 import { initializeApp } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 
+import {
+  getFirestore
+} from
+  "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBS5RaiVeQse_dwKGFiKKoDozb3Ww2Bt4",
@@ -16,12 +21,41 @@ const firebaseConfig = {
 };
 
 
+/* ================================================================
+   INITIALIZE FIREBASE
+   ================================================================ */
+
 const firebaseApp =
   initializeApp(firebaseConfig);
 
 
-/* Firebase is now initialized */
+/* ================================================================
+   INITIALIZE FIRESTORE DATABASE
+   ================================================================ */
+
+const db =
+  getFirestore(firebaseApp);
+
+
+/* ================================================================
+   FIREBASE TEST
+   ================================================================ */
+
 console.log(
   "Firebase connected:",
   firebaseApp.name
 );
+
+console.log(
+  "Firestore connected:",
+  db
+);
+
+
+/* ================================================================
+   EXPORT FIRESTORE
+   ================================================================ */
+
+export {
+  db
+};
