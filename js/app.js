@@ -1576,8 +1576,22 @@ const monthComplete =
     const latestCompletedMonth =
   completedMonths;
 
+    /*
+  A payment is currently due only when the
+  student is exactly at the end of a 4-class cycle.
+
+  If a new cycle has already started (5/4, 6/4,
+  7/4), the previous month's payment may be paid,
+  but the current cycle is not yet due.
+*/
+
+const cycleCurrentlyComplete =
+  remainingInCurrentCycle === 0 &&
+  totalPresentClasses > 0;
+
 
 const latestMonthPaid =
+  cycleCurrentlyComplete &&
   latestCompletedMonth > 0
     ? isFeeMonthPaid(
         student.id,
@@ -1587,7 +1601,7 @@ const latestMonthPaid =
 
 
 const feeDue =
-  latestCompletedMonth > 0 &&
+  cycleCurrentlyComplete &&
   !latestMonthPaid;
 
     card.innerHTML = `
