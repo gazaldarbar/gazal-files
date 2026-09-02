@@ -461,13 +461,13 @@ function setAttendanceDateDefault() {
 
 /* ATTENDANCE DATE DEFAULT END */
 
-
-/* ==========================================================================
+ /* ==========================================================================
    ATTENDANCE MODAL STUDENT LIST START
    Shows selected course students inside the attendance popup.
    ========================================================================== */
 
-function renderAttendanceStudents() {
+async function renderAttendanceStudents() {
+
   const courseSelect =
     document.getElementById("attendance-course");
 
@@ -486,6 +486,7 @@ function renderAttendanceStudents() {
   const modalStudents =
     document.getElementById("attendance-modal-students");
 
+
   if (
     !courseSelect ||
     !dateInput ||
@@ -495,110 +496,258 @@ function renderAttendanceStudents() {
     return;
   }
 
-  const selectedCourse = courseSelect.value;
+
+  const selectedCourse =
+    courseSelect.value;
+
 
   // Don't open the popup until a course is selected.
+
   if (!selectedCourse) {
     return;
   }
 
-  // Load saved students.
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
 
-  // Find students belonging to the selected course.
-  const courseStudents = students.filter(
-    (student) => student.course === selectedCourse
-  );
+  /* ================================================================
+     LOAD STUDENTS
+     Firestore first, localStorage fallback
+     ================================================================ */
 
-  const attendanceRecords = JSON.parse(
-  localStorage.getItem("gazal_attendance") || "[]"
-);
+  let students = [];
 
-const savedAttendance = attendanceRecords.find(
-  (record) =>
-    record.course === selectedCourse &&
-    record.date === dateInput.value
-);
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* LocalStorage fallback */
+
+  if (
+    !students ||
+    students.length === 0
+  ) {
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /* ================================================================
+     LOAD ATTENDANCE
+     Firestore first, localStorage fallback
+     ================================================================ */
+
+  let attendanceRecords = [];
+
+  try {
+
+    if (window.getAttendanceFromFirestore) {
+
+      attendanceRecords =
+        await window.getAttendanceFromFirestore();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load attendance from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* LocalStorage fallback */
+
+  if (
+    !attendanceRecords ||
+    attendanceRecords.length === 0
+  ) {
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+  }
+
+
+  // Find students belonging to selected course.
+
+  const courseStudents =
+    students.filter(
+      (student) =>
+        student.course === selectedCourse
+    );
+
+
+  // Find saved attendance for same course and date.
+
+  const savedAttendance =
+    attendanceRecords.find(
+      (record) =>
+        record.course === selectedCourse &&
+        record.date === dateInput.value
+    );
+
 
   // Update popup details.
+
   if (modalCourse) {
-    modalCourse.textContent = selectedCourse;
+
+    modalCourse.textContent =
+      selectedCourse;
+
   }
+
 
   if (modalDate) {
+
     modalDate.textContent =
       dateInput.value || "";
+
   }
 
+
   // Clear previous students.
+
   modalStudents.innerHTML = "";
 
+
   // No students found.
-  if (courseStudents.length === 0) {
+
+  if (
+    courseStudents.length === 0
+  ) {
+
     modalStudents.innerHTML = `
       <div class="attendance-modal-empty">
         No students found in this course.
       </div>
     `;
+
   } else {
-    courseStudents.forEach((student) => {
-      const card = document.createElement("div");
 
-      card.className = "attendance-modal-student-card";
+    courseStudents.forEach(
+      (student) => {
 
-      card.innerHTML = `
-  <div class="attendance-student-main">
+        const card =
+          document.createElement("div");
 
-    <button
-      type="button"
-      class="attendance-student-name"
-      data-student-id="${student.id}"
-    >
-      <strong>${student.studentName}</strong>
-      <span>${student.id}</span>
-    </button>
 
-    <label class="attendance-student-checkbox">
-      <input
-  type="checkbox"
-  data-student-id="${student.id}"
-  ${
-    savedAttendance &&
-    savedAttendance.students.some(
-      (recordStudent) =>
-        recordStudent.id === student.id &&
-        recordStudent.status === "present"
-    )
-      ? "checked"
-      : ""
+        card.className =
+          "attendance-modal-student-card";
+
+
+        card.innerHTML = `
+
+          <div class="attendance-student-main">
+
+            <button
+              type="button"
+              class="attendance-student-name"
+              data-student-id="${student.id}"
+            >
+
+              <strong>
+                ${student.studentName}
+              </strong>
+
+              <span>
+                ${student.id}
+              </span>
+
+            </button>
+
+
+            <label
+              class="attendance-student-checkbox"
+            >
+
+              <input
+                type="checkbox"
+                data-student-id="${student.id}"
+
+                ${
+                  savedAttendance &&
+                  savedAttendance.students.some(
+                    (recordStudent) =>
+                      recordStudent.id === student.id &&
+                      recordStudent.status === "present"
+                  )
+                    ? "checked"
+                    : ""
+                }
+              >
+
+            </label>
+
+          </div>
+
+        `;
+
+
+        const studentNameButton =
+          card.querySelector(
+            ".attendance-student-name"
+          );
+
+
+        if (studentNameButton) {
+
+          studentNameButton.addEventListener(
+            "click",
+            () => {
+
+              openFingerprintAttendance(
+                student
+              );
+
+            }
+          );
+
+        }
+
+
+        modalStudents.appendChild(
+          card
+        );
+
+      }
+    );
+
   }
->
-    </label>
 
-  </div>
-`;
-
-      const studentNameButton = card.querySelector(
-  ".attendance-student-name"
-);
-
-if (studentNameButton) {
-  studentNameButton.addEventListener("click", () => {
-    openFingerprintAttendance(student);
-  });
-}
-
-      modalStudents.appendChild(card);
-    });
-  }
 
   // Open attendance modal.
-  modal.style.display = "flex";
+
+  modal.style.display =
+    "flex";
+
 }
 
 /* ATTENDANCE MODAL STUDENT LIST END */
+      
 
 /* ==========================================================================
    ATTENDANCE MODAL CONTROLS START
