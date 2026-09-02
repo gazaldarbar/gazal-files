@@ -1621,17 +1621,60 @@ function getStudentSearchMatches(query) {
    STUDENT DELETE FEATURE START
    Reversible: remove this block to remove student deletion.
    ========================================================================== */
+async function deleteStudent(studentId) {
 
-function deleteStudent(studentId) {
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
+  let student = null;
 
-  const student = students.find(
-    (item) => item.id === studentId
-  );
+  try {
 
-  if (!student) return;
+    /* Load student from Firestore */
+
+    if (window.getStudentFromFirestore) {
+
+      student =
+        await window.getStudentFromFirestore(
+          studentId
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load student from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* Fallback to localStorage */
+
+  if (!student) {
+
+    const students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+    student = students.find(
+      (item) => item.id === studentId
+    );
+
+  }
+
+
+  if (!student) {
+
+    alert(
+      "Student could not be found."
+    );
+
+    return;
+
+  }
+
 
   const confirmed = confirm(
     `Delete ${student.studentName}?\n\nThis action cannot be undone.`
@@ -1639,17 +1682,60 @@ function deleteStudent(studentId) {
 
   if (!confirmed) return;
 
-  const updatedStudents = students.filter(
-    (item) => item.id !== studentId
+
+  try {
+
+    /* Delete from Firestore */
+
+    if (window.deleteStudentFromFirestore) {
+
+      await window.deleteStudentFromFirestore(
+        studentId
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to delete student from Firestore:",
+      error
+    );
+
+    alert(
+      "Failed to delete student from cloud."
+    );
+
+    return;
+
+  }
+
+
+  /* Also remove local backup */
+
+  const localStudents = JSON.parse(
+    localStorage.getItem(
+      "gazal_students"
+    ) || "[]"
   );
+
+  const updatedStudents =
+    localStudents.filter(
+      (item) => item.id !== studentId
+    );
 
   localStorage.setItem(
     "gazal_students",
     JSON.stringify(updatedStudents)
   );
 
-  renderStudentsList();
+
+  /* Refresh student list */
+
+  await renderStudentsList();
+
 }
+
 
 /* STUDENT DELETE FEATURE END */
 
