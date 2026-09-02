@@ -3357,8 +3357,12 @@ try {
     error
   );
 
-}
+  alert(
+    "Failed to load attendance history:\n\n" +
+    error.message
+  );
 
+}
 
 /* LocalStorage fallback */
 
@@ -3505,18 +3509,18 @@ const closeAttendanceHistoryFooterButton =
 if (viewAttendanceHistoryButton) {
 
   viewAttendanceHistoryButton.addEventListener(
-    "click",
-    () => {
+  "click",
+  async () => {
 
-      renderAttendanceHistory();
-
-      if (attendanceHistoryModal) {
-        attendanceHistoryModal.style.display =
-          "flex";
-      }
-
+    if (attendanceHistoryModal) {
+      attendanceHistoryModal.style.display =
+        "flex";
     }
-  );
+
+    await renderAttendanceHistory();
+
+  }
+);
 
 }
 
