@@ -2699,6 +2699,39 @@ console.log(
 
 async function renderFeesStudents() {
     await loadFeePaymentsFromFirestore();
+  let attendanceRecords = [];
+
+try {
+
+  if (window.getAttendanceFromFirestore) {
+
+    attendanceRecords =
+      await window.getAttendanceFromFirestore();
+
+  } else {
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance for fees:",
+    error
+  );
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+}
   const list = document.getElementById(
     "fees-students-list"
   );
@@ -2804,22 +2837,6 @@ card.className = "fees-student-card";
 /* ================================================================
    FEE STATUS CALCULATION
    ================================================================ */
-
-
-/* LocalStorage fallback */
-
-if (
-  !attendanceRecords ||
-  attendanceRecords.length === 0
-) {
-
-  attendanceRecords = JSON.parse(
-    localStorage.getItem(
-      "gazal_attendance"
-    ) || "[]"
-  );
-
-}
 
 const presentClasses = [];
 
