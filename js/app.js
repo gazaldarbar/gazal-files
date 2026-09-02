@@ -1460,6 +1460,14 @@ try {
     attendanceRecords =
       await window.getAttendanceFromFirestore();
 
+  } else {
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
   }
 
 } catch (error) {
@@ -1467,6 +1475,12 @@ try {
   console.error(
     "Failed to load attendance for student cards:",
     error
+  );
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
   );
 
 }
