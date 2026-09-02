@@ -2715,22 +2715,17 @@ let dueStudents = 0;
 let paidStudents = 0;
 
   if (students.length === 0) {
-    list.innerHTML = `
-      <div class="fees-empty-message">
-        No students found.
-      </div>
-    `;
-    return;
-  }
-
-  students.forEach((student) => {
-    const card = document.createElement("div");
-
-card.className = "fees-student-card";
+  list.innerHTML = `
+    <div class="fees-empty-message">
+      No students found.
+    </div>
+  `;
+  return;
+}
 
 
 /* ================================================================
-   FEE STATUS CALCULATION
+   LOAD ATTENDANCE ONCE FOR ALL FEE CARDS
    ================================================================ */
 
 let attendanceRecords = [];
@@ -2752,6 +2747,30 @@ try {
   );
 
 }
+
+
+/* LocalStorage fallback */
+
+if (attendanceRecords.length === 0) {
+
+  attendanceRecords = JSON.parse(
+    localStorage.getItem(
+      "gazal_attendance"
+    ) || "[]"
+  );
+
+}
+
+
+students.forEach((student) => {
+    const card = document.createElement("div");
+
+card.className = "fees-student-card";
+
+
+/* ================================================================
+   FEE STATUS CALCULATION
+   ================================================================ */
 
 
 /* LocalStorage fallback */
