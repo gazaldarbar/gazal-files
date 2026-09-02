@@ -1660,61 +1660,141 @@ function deleteStudent(studentId) {
 
 let editingStudentId = null;
 
-function editStudent(studentId) {
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
+async function editStudent(studentId) {
 
-  const student = students.find(
-    (item) => item.id === studentId
-  );
+  let student = null;
 
-  if (!student) return;
+  try {
+
+    if (window.getStudentFromFirestore) {
+
+      student =
+        await window.getStudentFromFirestore(
+          studentId
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load student from Firestore:",
+      error
+    );
+
+  }
+
+
+  /* Fallback to localStorage */
+
+  if (!student) {
+
+    const students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+    student = students.find(
+      (item) => item.id === studentId
+    );
+
+  }
+
+
+  if (!student) {
+
+    alert(
+      "Student could not be found."
+    );
+
+    return;
+  }
+
 
   editingStudentId = studentId;
 
+
   // Open the existing student form.
-  document.getElementById("students-panel").style.display = "none";
-  document.getElementById("home-panel").style.display = "none";
-  document.getElementById("placeholder-panel").style.display = "none";
-  document.getElementById("add-student-panel").style.display = "block";
+  document.getElementById(
+    "students-panel"
+  ).style.display = "none";
+
+  document.getElementById(
+    "home-panel"
+  ).style.display = "none";
+
+  document.getElementById(
+    "placeholder-panel"
+  ).style.display = "none";
+
+  document.getElementById(
+    "add-student-panel"
+  ).style.display = "block";
+
 
   // Change form title.
-  const formTitle = document.querySelector(
-    "#add-student-panel .form-header h2"
-  );
+  const formTitle =
+    document.querySelector(
+      "#add-student-panel .form-header h2"
+    );
 
   if (formTitle) {
-    formTitle.textContent = "Edit Student";
+
+    formTitle.textContent =
+      "Edit Student";
+
   }
 
+
   // Fill existing student data.
-  document.getElementById("student-name").value =
+  document.getElementById(
+    "student-name"
+  ).value =
     student.studentName || "";
 
-  document.getElementById("parent-name").value =
+  document.getElementById(
+    "parent-name"
+  ).value =
     student.parentName || "";
 
-  document.getElementById("student-place").value =
+  document.getElementById(
+    "student-place"
+  ).value =
     student.place || "";
 
-  document.getElementById("student-phone").value =
+  document.getElementById(
+    "student-phone"
+  ).value =
     student.phone || "";
 
-  document.getElementById("backup-phone").value =
+  document.getElementById(
+    "backup-phone"
+  ).value =
     student.backupPhone || "";
 
-  document.getElementById("student-course").value =
+  document.getElementById(
+    "student-course"
+  ).value =
     student.course || "";
 
-  document.getElementById("admission-date").value =
+  document.getElementById(
+    "admission-date"
+  ).value =
     student.admissionDate || "";
 
+
   // Change Save button text.
-  document.getElementById("btn-save-student").textContent =
+  document.getElementById(
+    "btn-save-student"
+  ).textContent =
     "Save";
 
-  document.getElementById("main-content").scrollTop = 0;
+
+  document.getElementById(
+    "main-content"
+  ).scrollTop = 0;
+
 }
 
 /* STUDENT EDIT FEATURE END */
