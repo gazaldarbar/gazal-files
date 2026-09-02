@@ -3175,7 +3175,7 @@ function getFeeMonthFromCycle(
    ATTENDANCE HISTORY
    ========================================================================== */
 
-function renderAttendanceHistory() {
+async function renderAttendanceHistory() {
 
   const historyList =
     document.getElementById(
@@ -3185,12 +3185,46 @@ function renderAttendanceHistory() {
   if (!historyList) return;
 
 
-  const attendanceRecords = JSON.parse(
+  /* ================================================================
+   LOAD ATTENDANCE
+   Firestore first, localStorage fallback
+   ================================================================ */
+
+let attendanceRecords = [];
+
+try {
+
+  if (window.getAttendanceFromFirestore) {
+
+    attendanceRecords =
+      await window.getAttendanceFromFirestore();
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance from Firestore:",
+    error
+  );
+
+}
+
+
+/* LocalStorage fallback */
+
+if (
+  !attendanceRecords ||
+  attendanceRecords.length === 0
+) {
+
+  attendanceRecords = JSON.parse(
     localStorage.getItem(
       "gazal_attendance"
     ) || "[]"
   );
 
+}
 
   /* Newest date first */
   attendanceRecords.sort(
