@@ -785,34 +785,35 @@ async function saveAttendance() {
 
 
   /* ================================================================
-     SAVE TO FIRESTORE
-     ================================================================ */
+   SAVE TO FIRESTORE
+   ================================================================ */
 
-  try {
+try {
 
-    if (
-      window.saveAttendanceToFirestore
-    ) {
+  if (
+    window.saveAttendanceToFirestore
+  ) {
 
-      await window.saveAttendanceToFirestore(
-        attendanceRecord
-      );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Attendance cloud save failed:",
-      error
+    await window.saveAttendanceToFirestore(
+      attendanceRecord
     );
 
-    alert(
-      "Attendance could not be saved to the cloud."
-    );
-
-    return;
   }
+
+} catch (error) {
+
+  console.error(
+    "Attendance cloud save failed:",
+    error
+  );
+
+  alert(
+    "Attendance cloud save failed:\n\n" +
+    error.message
+  );
+
+  return;
+}
 
 
   /* ================================================================
