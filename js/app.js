@@ -3259,8 +3259,8 @@ ${
 
 if (markPaidButton) {
   markPaidButton.addEventListener(
-    "click",
-    () => {
+  "click",
+  async () => {
 
       /*
   Create an oldest-first copy because
@@ -3291,12 +3291,11 @@ const feeMonthInfo =
   actual fee month.
 */
 
-markFeeMonthPaid(
+await markFeeMonthPaid(
   student.id,
   latestCompletedMonth,
   feeMonthInfo
 );
-
       overlay.remove();
 
       openStudentFeeDetails(student);
