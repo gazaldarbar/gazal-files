@@ -268,7 +268,7 @@ function generateStudentId() {
    STUDENT LOCAL MEMORY FEATURE START
    Reversible: this section saves students in this device's localStorage.
    ========================================================================== */
-function handleStudentFormSubmit(event) {
+async function handleStudentFormSubmit(event) {
   event.preventDefault();
 
   const students = JSON.parse(
@@ -319,6 +319,30 @@ function handleStudentFormSubmit(event) {
     "gazal_students",
     JSON.stringify(students)
   );
+
+  /* Save student to Firestore cloud */
+
+if (window.saveStudentToFirestore) {
+
+  try {
+
+    await window.saveStudentToFirestore(
+      savedStudent
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Student cloud save failed:",
+      error
+    );
+
+    alert(
+      "Student was saved locally, but cloud backup failed."
+    );
+  }
+
+}
 
   event.target.reset();
 
