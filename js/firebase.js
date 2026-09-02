@@ -6,7 +6,9 @@ import { initializeApp } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 
 import {
-  getFirestore
+  getFirestore,
+  collection,
+  addDoc
 } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -36,6 +38,36 @@ const firebaseApp =
 const db =
   getFirestore(firebaseApp);
 
+/* ================================================================
+   FIRESTORE TEST FUNCTION
+   ================================================================ */
+
+async function testFirestoreConnection() {
+  try {
+
+    const docRef = await addDoc(
+      collection(db, "test"),
+      {
+        message: "Gazal Darbar Firestore is working",
+        createdAt: new Date().toISOString()
+      }
+    );
+
+    console.log(
+      "Firestore test successful:",
+      docRef.id
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Firestore test failed:",
+      error
+    );
+
+  }
+}
+
 
 /* ================================================================
    FIREBASE TEST
@@ -57,5 +89,6 @@ console.log(
    ================================================================ */
 
 export {
-  db
+  db,
+  testFirestoreConnection
 };
