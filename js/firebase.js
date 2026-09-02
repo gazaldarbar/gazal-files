@@ -11,7 +11,9 @@ import {
   addDoc,
   getDocs,
   doc,
-  setDoc
+  setDoc,
+  getDoc,
+  deleteDoc
 } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -167,7 +169,75 @@ async function getStudentsFromFirestore() {
 }
 
 /* ================================================================
-   MAKE FIRESTORE FUNCTION AVAILABLE TO APP.JS
+   GET ONE STUDENT FROM FIRESTORE
+   ================================================================ */
+
+async function getStudentFromFirestore(studentId) {
+  try {
+
+    const studentDocRef = doc(
+      db,
+      "students",
+      studentId
+    );
+
+    const studentSnapshot =
+      await getDoc(studentDocRef);
+
+    if (!studentSnapshot.exists()) {
+      return null;
+    }
+
+    return {
+      id: studentSnapshot.id,
+      ...studentSnapshot.data()
+    };
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load student:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+
+/* ================================================================
+   DELETE STUDENT FROM FIRESTORE
+   ================================================================ */
+
+async function deleteStudentFromFirestore(studentId) {
+  try {
+
+    const studentDocRef = doc(
+      db,
+      "students",
+      studentId
+    );
+
+    await deleteDoc(studentDocRef);
+
+    console.log(
+      "Student deleted from Firestore:",
+      studentId
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to delete student:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+/* ================================================================
+   MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
 window.saveStudentToFirestore =
@@ -175,6 +245,12 @@ window.saveStudentToFirestore =
 
 window.getStudentsFromFirestore =
   getStudentsFromFirestore;
+
+window.getStudentFromFirestore =
+  getStudentFromFirestore;
+
+window.deleteStudentFromFirestore =
+  deleteStudentFromFirestore;
 
 /* ================================================================
    EXPORT FIRESTORE
@@ -184,5 +260,7 @@ export {
   db,
   testFirestoreConnection,
   saveStudentToFirestore,
-  getStudentsFromFirestore
+  getStudentsFromFirestore,
+  getStudentFromFirestore,
+  deleteStudentFromFirestore
 };
