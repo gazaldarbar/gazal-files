@@ -320,6 +320,85 @@ async function getAttendanceFromFirestore() {
 }
 
 /* ================================================================
+   FEE PAYMENTS FIRESTORE FUNCTIONS
+   ================================================================ */
+
+
+/* Save one fee payment */
+
+async function saveFeePaymentToFirestore(payment) {
+  try {
+
+    const paymentId =
+      `${payment.studentId}_${payment.monthNumber}`;
+
+    const paymentDocRef = doc(
+      db,
+      "fee_payments",
+      paymentId
+    );
+
+    await setDoc(
+      paymentDocRef,
+      payment,
+      {
+        merge: true
+      }
+    );
+
+    console.log(
+      "Fee payment saved to Firestore:",
+      paymentId
+    );
+
+    return paymentId;
+
+  } catch (error) {
+
+    console.error(
+      "Fee payment save failed:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+
+/* Load all fee payments */
+
+async function getFeePaymentsFromFirestore() {
+  try {
+
+    const snapshot = await getDocs(
+      collection(db, "fee_payments")
+    );
+
+    const payments = [];
+
+    snapshot.forEach((paymentDoc) => {
+
+      payments.push({
+        firestoreId: paymentDoc.id,
+        ...paymentDoc.data()
+      });
+
+    });
+
+    return payments;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load fee payments:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -344,6 +423,12 @@ window.getAttendanceFromFirestore =
 window.getStudentsForAttendance =
   getStudentsForAttendance;
 
+window.saveFeePaymentToFirestore =
+  saveFeePaymentToFirestore;
+
+window.getFeePaymentsFromFirestore =
+  getFeePaymentsFromFirestore;
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
@@ -357,5 +442,7 @@ export {
   deleteStudentFromFirestore,
   saveAttendanceToFirestore,
   getAttendanceFromFirestore,
-  getStudentsForAttendance
+  getStudentsForAttendance,
+  saveFeePaymentToFirestore,
+  getFeePaymentsFromFirestore
 };
