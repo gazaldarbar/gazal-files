@@ -9,7 +9,9 @@ import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  doc,
+  setDoc
 } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -99,17 +101,26 @@ console.log(
 async function saveStudentToFirestore(student) {
   try {
 
-    const docRef = await addDoc(
-      collection(db, "students"),
-      student
+    const studentDocRef = doc(
+      db,
+      "students",
+      student.id
+    );
+
+    await setDoc(
+      studentDocRef,
+      student,
+      {
+        merge: true
+      }
     );
 
     console.log(
       "Student saved to Firestore:",
-      docRef.id
+      student.id
     );
 
-    return docRef.id;
+    return student.id;
 
   } catch (error) {
 
@@ -121,7 +132,6 @@ async function saveStudentToFirestore(student) {
     throw error;
   }
 }
-
 
 /* Load all students from Firestore */
 
