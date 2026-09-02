@@ -2528,6 +2528,38 @@ function saveFeePayments(payments) {
   );
 }
 
+      async function loadFeePaymentsFromFirestore() {
+
+  if (!window.getFeePaymentsFromFirestore) {
+    return getFeePayments();
+  }
+
+  try {
+
+    const payments =
+      await window.getFeePaymentsFromFirestore();
+
+    saveFeePayments(payments);
+
+    console.log(
+      "Fee payments loaded from Firestore:",
+      payments
+    );
+
+    return payments;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load fee payments from Firestore:",
+      error
+    );
+
+    return getFeePayments();
+  }
+
+      }
+
 
 /*
   Check whether a specific student's
@@ -2666,6 +2698,7 @@ console.log(
    ========================================================================== */
 
 async function renderFeesStudents() {
+    await loadFeePaymentsFromFirestore();
   const list = document.getElementById(
     "fees-students-list"
   );
