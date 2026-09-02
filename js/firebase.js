@@ -237,6 +237,54 @@ async function deleteStudentFromFirestore(studentId) {
 }
 
 /* ================================================================
+   ATTENDANCE FIRESTORE FUNCTIONS
+   ================================================================ */
+
+async function saveAttendanceToFirestore(
+  attendanceRecord
+) {
+  try {
+
+    const attendanceId =
+      `${attendanceRecord.course}_${attendanceRecord.date}`;
+
+    const attendanceDocRef = doc(
+      db,
+      "attendance",
+      attendanceId
+    );
+
+    await setDoc(
+      attendanceDocRef,
+      attendanceRecord
+    );
+
+    console.log(
+      "Attendance saved to Firestore:",
+      attendanceId
+    );
+
+    return attendanceId;
+
+  } catch (error) {
+
+    console.error(
+      "Attendance save failed:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+
+async function getStudentsForAttendance() {
+
+  return await getStudentsFromFirestore();
+
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -252,6 +300,12 @@ window.getStudentFromFirestore =
 window.deleteStudentFromFirestore =
   deleteStudentFromFirestore;
 
+window.saveAttendanceToFirestore =
+  saveAttendanceToFirestore;
+
+window.getStudentsForAttendance =
+  getStudentsForAttendance;
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
@@ -262,5 +316,7 @@ export {
   saveStudentToFirestore,
   getStudentsFromFirestore,
   getStudentFromFirestore,
-  deleteStudentFromFirestore
+  deleteStudentFromFirestore,
+  saveAttendanceToFirestore,
+  getStudentsForAttendance
 };
