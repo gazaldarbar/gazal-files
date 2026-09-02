@@ -3093,7 +3093,13 @@ const latestCompletedMonth =
   has already been paid.
 */
 
+const cycleCurrentlyComplete =
+  totalPresentClasses > 0 &&
+  totalPresentClasses % 4 === 0;
+
+
 const latestMonthPaid =
+  cycleCurrentlyComplete &&
   latestCompletedMonth > 0
     ? isFeeMonthPaid(
         student.id,
@@ -3132,7 +3138,7 @@ const studentPaymentHistory =
 */
 
 const feeDue =
-  latestCompletedMonth > 0 &&
+  cycleCurrentlyComplete &&
   !latestMonthPaid;
   
   const overlay = document.createElement("div");
