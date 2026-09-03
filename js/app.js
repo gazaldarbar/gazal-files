@@ -298,14 +298,79 @@ function closeAddStudentForm() {
    STUDENT ID GENERATOR START
    ========================================================================== */
 
-function generateStudentId() {
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
+async function generateStudentId() {
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students for ID generation:",
+      error
+    );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Find the highest existing
+    GZ-XXXX number.
+  */
+
+  let highestNumber = 0;
+
+  students.forEach((student) => {
+
+    const match =
+      String(student.id || "")
+        .match(/^GZ-(\d+)$/);
+
+    if (match) {
+
+      const number =
+        parseInt(match[1], 10);
+
+      if (number > highestNumber) {
+        highestNumber = number;
+      }
+
+    }
+
+  });
+
+
+  const nextNumber =
+    highestNumber + 1;
+
+
+  return (
+    "GZ-" +
+    String(nextNumber).padStart(4, "0")
   );
 
-  const nextNumber = students.length + 1;
-
-  return "GZ-" + String(nextNumber).padStart(4, "0");
 }
 
 /* STUDENT ID GENERATOR END */
@@ -353,7 +418,7 @@ async function handleStudentFormSubmit(event) {
     savedStudent = students[studentIndex];
   } else {
     savedStudent = {
-      id: generateStudentId(),
+      id: await generateStudentId(),
       ...studentData,
       createdAt: new Date().toISOString(),
     };
