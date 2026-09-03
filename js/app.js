@@ -3144,9 +3144,7 @@ const cycleCurrentlyComplete =
   that has not yet been paid.
 */
 
-let hasUnpaidCompletedMonth = false;
-
-let oldestUnpaidMonth = null;
+const unpaidMonths = [];
 
 for (
   let monthNumber = 1;
@@ -3161,16 +3159,33 @@ for (
     )
   ) {
 
-    hasUnpaidCompletedMonth = true;
-
-    oldestUnpaidMonth =
-      monthNumber;
-
-    break;
+    unpaidMonths.push(
+      monthNumber
+    );
 
   }
 
 }
+
+
+/*
+  True when one or more completed
+  fee cycles are still unpaid.
+*/
+
+const hasUnpaidCompletedMonth =
+  unpaidMonths.length > 0;
+
+
+/*
+  The payment button always pays
+  the oldest unpaid cycle first.
+*/
+
+const oldestUnpaidMonth =
+  unpaidMonths.length > 0
+    ? unpaidMonths[0]
+    : null;
 
 
 /*
