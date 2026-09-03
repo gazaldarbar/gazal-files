@@ -2916,6 +2916,13 @@ backButton.style.display =
 
       </button>
 
+<button
+  class="student-attendance-btn"
+  type="button"
+>
+  <span class="student-action-icon">✓</span>
+  <span>Attendance</span>
+</button>
 
       <button
         class="student-delete-btn"
@@ -2965,6 +2972,31 @@ backButton.style.display =
 
   }
 
+
+  /*
+  Open selected student's attendance.
+*/
+
+const attendanceButton =
+  card.querySelector(
+    ".student-attendance-btn"
+  );
+
+
+if (attendanceButton) {
+
+  attendanceButton.addEventListener(
+    "click",
+    () => {
+
+      renderStudentAttendance(
+        student.id
+      );
+
+    }
+  );
+
+}
 
   /*
     Delete selected student.
