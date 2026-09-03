@@ -574,6 +574,77 @@ if (studentAttendanceBackButton) {
 
 }
 
+/* ================================================================
+   MORE — CHANGE PASSWORD NAVIGATION
+   ================================================================ */
+
+const changePasswordButton =
+  document.getElementById(
+    "change-password-button"
+  );
+
+
+const changePasswordPanel =
+  document.getElementById(
+    "change-password-panel"
+  );
+
+
+const morePanel =
+  document.getElementById(
+    "more-panel"
+  );
+
+
+const changePasswordBack =
+  document.getElementById(
+    "change-password-back"
+  );
+
+
+if (
+  changePasswordButton &&
+  changePasswordPanel &&
+  morePanel
+) {
+
+  changePasswordButton.addEventListener(
+    "click",
+    () => {
+
+      morePanel.style.display =
+        "none";
+
+      changePasswordPanel.style.display =
+        "block";
+
+    }
+  );
+
+}
+
+
+if (
+  changePasswordBack &&
+  changePasswordPanel &&
+  morePanel
+) {
+
+  changePasswordBack.addEventListener(
+    "click",
+    () => {
+
+      changePasswordPanel.style.display =
+        "none";
+
+      morePanel.style.display =
+        "block";
+
+    }
+  );
+
+}
+
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
