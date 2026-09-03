@@ -201,8 +201,6 @@ function renderHome() {
   document.getElementById("stat-fees").textContent = "—";
 
   setActionButton("btn-new-student", "plus", t("actionNewStudent"));
-  setActionButton("btn-students", "students", t("actionStudents"));
-  setActionButton("btn-attendance-home", "attendance", t("actionAttendance"));
   setActionButton("btn-fee-balance", "fees", t("actionFeeBalance"));
   setActionButton("btn-pay", "pay", t("actionPay"));
 
