@@ -650,6 +650,253 @@ if (
 
 }
 
+/* ================================================================
+   CHANGE PASSWORD FUNCTIONALITY
+   ================================================================ */
+
+const changePasswordCurrent =
+  document.getElementById(
+    "change-password-current"
+  );
+
+
+const changePasswordNew =
+  document.getElementById(
+    "change-password-new"
+  );
+
+
+const changePasswordConfirm =
+  document.getElementById(
+    "change-password-confirm"
+  );
+
+
+const saveNewPasswordButton =
+  document.getElementById(
+    "save-new-password-button"
+  );
+
+
+async function hashSharedPassword(
+  password
+) {
+
+  const encoder =
+    new TextEncoder();
+
+
+  const data =
+    encoder.encode(
+      password
+    );
+
+
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
+
+
+  return Array
+    .from(
+      new Uint8Array(
+        hashBuffer
+      )
+    )
+    .map(
+      (byte) =>
+        byte
+          .toString(16)
+          .padStart(
+            2,
+            "0"
+          )
+    )
+    .join(
+      ""
+    );
+
+}
+
+
+/* ================================================================
+   UPDATE PASSWORD
+   ================================================================ */
+
+if (
+  saveNewPasswordButton &&
+  changePasswordCurrent &&
+  changePasswordNew &&
+  changePasswordConfirm
+) {
+
+  saveNewPasswordButton.addEventListener(
+    "click",
+    async () => {
+
+      const currentPassword =
+        changePasswordCurrent.value.trim();
+
+
+      const newPassword =
+        changePasswordNew.value.trim();
+
+
+      const confirmPassword =
+        changePasswordConfirm.value.trim();
+
+
+      /* ------------------------------------------------
+         Validate all fields
+         ------------------------------------------------ */
+
+      if (
+        currentPassword.length !== 4 ||
+        newPassword.length !== 4 ||
+        confirmPassword.length !== 4
+      ) {
+
+        alert(
+          "Please enter a valid 4-digit password."
+        );
+
+        return;
+
+      }
+
+
+      /* ------------------------------------------------
+         New passwords must match
+         ------------------------------------------------ */
+
+      if (
+        newPassword !==
+        confirmPassword
+      ) {
+
+        alert(
+          "New passwords do not match."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        saveNewPasswordButton.disabled =
+          true;
+
+        saveNewPasswordButton.textContent =
+          "Updating...";
+
+
+        /* ------------------------------------------------
+           Hash current password
+           ------------------------------------------------ */
+
+        const currentPasswordHash =
+          await hashSharedPassword(
+            currentPassword
+          );
+
+
+        /* ------------------------------------------------
+           Get Firebase password hash
+           ------------------------------------------------ */
+
+        const storedPasswordHash =
+          await window
+            .getSharedPinHash();
+
+
+        /* ------------------------------------------------
+           Verify current password
+           ------------------------------------------------ */
+
+        if (
+          currentPasswordHash !==
+          storedPasswordHash
+        ) {
+
+          alert(
+            "Current password is incorrect."
+          );
+
+          return;
+
+        }
+
+
+        /* ------------------------------------------------
+           Hash new password
+           ------------------------------------------------ */
+
+        const newPasswordHash =
+          await hashSharedPassword(
+            newPassword
+          );
+
+
+        /* ------------------------------------------------
+           Save new password hash
+           ------------------------------------------------ */
+
+        await window
+          .saveSharedPinHash(
+            newPasswordHash
+          );
+
+
+        /* ------------------------------------------------
+           Success
+           ------------------------------------------------ */
+
+        changePasswordCurrent.value =
+          "";
+
+        changePasswordNew.value =
+          "";
+
+        changePasswordConfirm.value =
+          "";
+
+
+        alert(
+          "Password updated successfully."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Failed to update password:",
+          error
+        );
+
+
+        alert(
+          "Unable to update password."
+        );
+
+      } finally {
+
+        saveNewPasswordButton.disabled =
+          false;
+
+        saveNewPasswordButton.textContent =
+          "Update Password";
+
+      }
+
+    }
+  );
+
+}
+
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
