@@ -107,9 +107,28 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   text-align: center;
 }
 
-.pin-brand { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin-bottom: var(--space-5); }
-.pin-brand img { width: 68px; height: 68px; border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-.pin-brand h1 { font-size: 25px; letter-spacing: 0.4px; }
+.pin-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.pin-brand img {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.pin-office-text {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #F7F2E7;
+  text-align: center;
+}
 
 .pin-dots { display: flex; gap: var(--space-3); margin-bottom: var(--space-5); }
 .pin-dot {
