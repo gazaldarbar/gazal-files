@@ -257,12 +257,15 @@ function selectTab(key, btnEl) {
   // This prevents multiple sections appearing on screen together.
   // ================================================================
   const panels = [
-    "home-panel",
-    "students-panel",
-    "add-student-panel",
-    "attendance-panel",
-    "placeholder-panel"
-  ];
+  "home-panel",
+  "students-panel",
+  "add-student-panel",
+  "attendance-panel",
+  "fees-panel",
+  "more-panel",
+  "change-password-panel",
+  "placeholder-panel"
+];
 
   panels.forEach((id) => {
     const panel = document.getElementById(id);
@@ -273,6 +276,8 @@ function selectTab(key, btnEl) {
   });
 
   hideStudentAttendancePanel();
+
+
   
   // ================================================================
   // HOME
