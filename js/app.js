@@ -3520,7 +3520,7 @@ const presentClassesOldestFirst =
 const feeMonthInfo =
   getFeeMonthFromCycle(
     presentClassesOldestFirst,
-    latestCompletedMonth
+    oldestUnpaidMonth
   );
 
 
@@ -3531,7 +3531,7 @@ const feeMonthInfo =
 
 await markFeeMonthPaid(
   student.id,
-  latestCompletedMonth,
+  oldestUnpaidMonth,
   feeMonthInfo
 );
       overlay.remove();
