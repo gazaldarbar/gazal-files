@@ -4758,3 +4758,201 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
   }
 
 }
+
+/* ================================================================
+   QR POPUP
+   ================================================================ */
+
+.qr-popup-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  background:
+    rgba(5, 32, 24, 0.72);
+
+  backdrop-filter:
+    blur(10px);
+
+  -webkit-backdrop-filter:
+    blur(10px);
+
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease;
+}
+
+
+.qr-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.qr-popup {
+  position: relative;
+
+  width: 100%;
+  max-width: 420px;
+
+  padding:
+    32px 24px 28px;
+
+  border-radius: 28px;
+
+  text-align: center;
+
+  background:
+    #F7F5F0;
+
+  box-shadow:
+    0 24px 70px
+    rgba(0, 0, 0, 0.35);
+}
+
+
+.qr-popup h2 {
+  margin: 0;
+
+  color:
+    #164835;
+
+  font-size: 25px;
+
+  font-weight: 700;
+}
+
+
+.qr-popup > p {
+  margin:
+    8px 0 24px;
+
+  color:
+    rgba(22, 72, 53, 0.65);
+
+  font-size: 14px;
+}
+
+
+.qr-popup-close {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  color:
+    #164835;
+
+  background:
+    rgba(22, 72, 53, 0.08);
+
+  font-size: 28px;
+}
+
+
+.qr-image-wrap {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  border-radius: 22px;
+
+  background:
+    #FFFFFF;
+
+  box-shadow:
+    0 8px 25px
+    rgba(15, 45, 34, 0.08);
+}
+
+
+.website-qr-image {
+  display: block;
+
+  width: 100%;
+  max-width: 280px;
+
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+.qr-website-text {
+  margin:
+    20px 0 0 !important;
+
+  color:
+    #164835 !important;
+
+  font-size: 15px !important;
+
+  font-weight: 600;
+}
+
+/* ================================================================
+   QR POPUP ANIMATION
+   ================================================================ */
+
+.qr-popup-overlay {
+  opacity: 0;
+  visibility: hidden;
+
+  display: flex;
+
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease;
+}
+
+
+.qr-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.qr-popup {
+  opacity: 0;
+
+  transform:
+    translateY(30px)
+    scale(0.94);
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.qr-popup-overlay.active .qr-popup {
+  opacity: 1;
+
+  transform:
+    translateY(0)
+    scale(1);
+}
