@@ -70,7 +70,134 @@ function renderHome() {
 })();
   document.getElementById("stat-classes").textContent =
   GAZAL_COURSES.length;
-  document.getElementById("stat-attendance").textContent = "—";
+  /*
+  HOME DASHBOARD —
+  LOAD TODAY'S ATTENDANCE
+*/
+
+(async () => {
+
+  try {
+
+    let attendanceRecords = [];
+
+    if (
+      window.getAttendanceFromFirestore
+    ) {
+
+      attendanceRecords =
+        await window.getAttendanceFromFirestore();
+
+    } else {
+
+      attendanceRecords = JSON.parse(
+        localStorage.getItem(
+          "gazal_attendance"
+        ) || "[]"
+      );
+
+    }
+
+
+    /*
+      Get today's date in the same
+      YYYY-MM-DD format used by attendance.
+    */
+
+    const today =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+    /*
+      Find today's attendance records.
+    */
+
+    const todaysRecords =
+      attendanceRecords.filter(
+        (record) =>
+          record.date === today
+      );
+
+
+    let presentCount = 0;
+
+    let markedCount = 0;
+
+
+    todaysRecords.forEach(
+      (record) => {
+
+        record.students.forEach(
+          (attendanceStudent) => {
+
+            if (
+              attendanceStudent.status ===
+              "present"
+            ) {
+
+              presentCount++;
+
+            }
+
+
+            if (
+              attendanceStudent.status ===
+                "present" ||
+              attendanceStudent.status ===
+                "absent"
+            ) {
+
+              markedCount++;
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    /*
+      Calculate attendance percentage.
+    */
+
+    const attendancePercentage =
+      markedCount > 0
+        ? Math.round(
+            (presentCount / markedCount) * 100
+          )
+        : 0;
+
+
+    /*
+      Display:
+      18 (90%)
+    */
+
+    document.getElementById(
+      "stat-attendance"
+    ).textContent =
+      markedCount > 0
+        ? `${presentCount} (${attendancePercentage}%)`
+        : "—";
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load today's attendance:",
+      error
+    );
+
+    document.getElementById(
+      "stat-attendance"
+    ).textContent = "—";
+
+  }
+
+})();
   document.getElementById("stat-fees").textContent = "—";
 
   setActionButton("btn-new-student", "plus", t("actionNewStudent"));
