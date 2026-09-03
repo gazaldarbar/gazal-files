@@ -21,7 +21,53 @@ function renderHome() {
   document.getElementById("search-box").insertAdjacentHTML("afterbegin", icon("search"));
 
   // Placeholder stats — wired to real data in Phase 2/3/4.
-  document.getElementById("stat-students").textContent = "—";
+  /*
+  HOME DASHBOARD —
+  LOAD TOTAL STUDENTS
+*/
+
+(async () => {
+
+  try {
+
+    let students = [];
+
+    if (
+      window.getStudentsFromFirestore
+    ) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+    document.getElementById(
+      "stat-students"
+    ).textContent =
+      students.length;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load dashboard students:",
+      error
+    );
+
+    document.getElementById(
+      "stat-students"
+    ).textContent = "—";
+
+  }
+
+})();
   document.getElementById("stat-classes").textContent = "—";
   document.getElementById("stat-attendance").textContent = "—";
   document.getElementById("stat-fees").textContent = "—";
