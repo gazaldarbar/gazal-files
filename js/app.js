@@ -4531,5 +4531,424 @@ document.addEventListener(
   }
 );
 
+/* ================================================================
+   TODAY'S ATTENDANCE POPUP
+   ================================================================ */
 
+async function openTodayAttendancePopup() {
+
+  let attendanceRecords = [];
+
+  try {
+
+    if (window.getAttendanceFromFirestore) {
+
+      attendanceRecords =
+        await window.getAttendanceFromFirestore();
+
+    } else {
+
+      attendanceRecords = JSON.parse(
+        localStorage.getItem(
+          "gazal_attendance"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load today's attendance:",
+      error
+    );
+
+    attendanceRecords = JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Get today's date.
+  */
+
+  const today =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+
+  /*
+    Get only today's attendance records.
+  */
+
+  const todaysRecords =
+    attendanceRecords.filter(
+      (record) =>
+        record.date === today
+    );
+
+
+  /*
+    Overall totals.
+  */
+
+  let totalPresent = 0;
+
+  let totalAbsent = 0;
+
+
+  /*
+    Course-wise summaries.
+  */
+
+  const courseAttendance = {};
+
+
+  todaysRecords.forEach(
+    (record) => {
+
+      let present = 0;
+
+      let absent = 0;
+
+
+      record.students.forEach(
+        (attendanceStudent) => {
+
+          if (
+            attendanceStudent.status ===
+            "present"
+          ) {
+
+            present++;
+            totalPresent++;
+
+          }
+
+
+          if (
+            attendanceStudent.status ===
+            "absent"
+          ) {
+
+            absent++;
+            totalAbsent++;
+
+          }
+
+        }
+      );
+
+
+      const total =
+        present + absent;
+
+
+      /*
+        Add this class record to its course.
+      */
+
+      if (!courseAttendance[record.course]) {
+
+        courseAttendance[
+          record.course
+        ] = {
+          present: 0,
+          absent: 0
+        };
+
+      }
+
+
+      courseAttendance[
+        record.course
+      ].present += present;
+
+
+      courseAttendance[
+        record.course
+      ].absent += absent;
+
+    }
+  );
+
+
+  /*
+    Overall percentage.
+  */
+
+  const totalMarked =
+    totalPresent + totalAbsent;
+
+
+  const attendancePercentage =
+    totalMarked > 0
+      ? Math.round(
+          (totalPresent / totalMarked) * 100
+        )
+      : 0;
+
+
+  /*
+    Create popup.
+  */
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.className =
+    "today-attendance-overlay";
+
+
+  overlay.innerHTML = `
+
+    <div class="today-attendance-popup">
+
+      <div class="today-attendance-header">
+
+        <div>
+
+          <h2>
+            ഇന്നത്തെ ഹാജർ
+          </h2>
+
+          <p>
+            ${today}
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="today-attendance-close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div
+        class="
+          today-attendance-summary
+        "
+      >
+
+        <div
+          class="
+            today-attendance-stat
+            present
+          "
+        >
+
+          <span>
+            ഹാജർ
+          </span>
+
+          <strong>
+            ${totalPresent}
+          </strong>
+
+        </div>
+
+
+        <div
+          class="
+            today-attendance-stat
+            absent
+          "
+        >
+
+          <span>
+            ഹാജരായില്ല
+          </span>
+
+          <strong>
+            ${totalAbsent}
+          </strong>
+
+        </div>
+
+
+        <div
+          class="
+            today-attendance-stat
+            percentage
+          "
+        >
+
+          <span>
+            ഹാജർ ശതമാനം
+          </span>
+
+          <strong>
+            ${attendancePercentage}%
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="
+          today-attendance-course-list
+        "
+      >
+
+        <h3>
+          ഇന്നത്തെ ക്ലാസുകൾ
+        </h3>
+
+
+        ${
+          Object.keys(
+            courseAttendance
+          ).length === 0
+
+            ? `
+              <div
+                class="
+                  today-attendance-empty
+                "
+              >
+                ഇന്നത്തെ ഹാജർ രേഖകൾ
+                ലഭ്യമല്ല.
+              </div>
+            `
+
+            : Object.entries(
+                courseAttendance
+              )
+                .map(
+                  (
+                    [course, data]
+                  ) => {
+
+                    const total =
+                      data.present +
+                      data.absent;
+
+
+                    const percentage =
+                      total > 0
+                        ? Math.round(
+                            (
+                              data.present /
+                              total
+                            ) * 100
+                          )
+                        : 0;
+
+
+                    return `
+
+                      <div
+                        class="
+                          today-attendance-course-card
+                        "
+                      >
+
+                        <h4>
+                          ${course}
+                        </h4>
+
+
+                        <div
+                          class="
+                            today-attendance-course-info
+                          "
+                        >
+
+                          <span>
+                            ഹാജർ:
+                            <strong>
+                              ${data.present}
+                            </strong>
+                          </span>
+
+
+                          <span>
+                            ഹാജരായില്ല:
+                            <strong>
+                              ${data.absent}
+                            </strong>
+                          </span>
+
+
+                          <span>
+                            ${percentage}%
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    `;
+
+                  }
+                )
+                .join("")
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+
+  /*
+    Close button.
+  */
+
+  const closeButton =
+    overlay.querySelector(
+      ".today-attendance-close"
+    );
+
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
+      "click",
+      () => {
+        overlay.remove();
+      }
+    );
+
+  }
+
+
+  /*
+    Close outside popup.
+  */
+
+  overlay.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target === overlay
+      ) {
+
+        overlay.remove();
+
+      }
+
+    }
+  );
+
+}
    
