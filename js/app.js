@@ -2000,6 +2000,749 @@ function setupAttendanceRecordDetailsControls() {
 /* ATTENDANCE RECORD DETAILS FEATURE END */
 
 /* ==========================================================================
+   STUDENTS — COURSE NAVIGATION STATE
+   ========================================================================== */
+
+let studentsView = "courses";
+
+let selectedStudentsCourse = null;
+
+let selectedStudentId = null;
+
+
+/* ==========================================================================
+   STUDENTS — COURSE LIST VIEW
+   ========================================================================== */
+
+function renderStudentsCourseList() {
+
+  const list =
+    document.getElementById(
+      "students-list"
+    );
+
+  const empty =
+    document.getElementById(
+      "students-empty"
+    );
+
+  const title =
+    document.getElementById(
+      "students-title"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "students-subtitle"
+    );
+
+  const count =
+    document.getElementById(
+      "students-count"
+    );
+
+  const backButton =
+    document.getElementById(
+      "students-back-button"
+    );
+
+
+  /*
+    Set navigation state.
+  */
+
+  studentsView = "courses";
+
+  selectedStudentsCourse = null;
+
+  selectedStudentId = null;
+
+
+  /*
+    Header.
+  */
+
+  title.textContent =
+    "സ്റ്റുഡൻ്റ്സ്";
+
+  subtitle.style.display =
+    "none";
+
+  count.textContent =
+    GAZAL_COURSES.length;
+
+  backButton.style.display =
+    "none";
+
+
+  /*
+    Clear old student cards.
+  */
+
+  list.innerHTML = "";
+
+  empty.style.display =
+    "none";
+
+
+  /*
+    Create two-column course buttons.
+  */
+
+  const coursesGrid =
+    document.createElement("div");
+
+  coursesGrid.className =
+    "students-courses-grid";
+
+
+  GAZAL_COURSES.forEach(
+    (course) => {
+
+      const courseButton =
+        document.createElement(
+          "button"
+        );
+
+      courseButton.type =
+        "button";
+
+      courseButton.className =
+        "students-course-button";
+
+      courseButton.textContent =
+        course;
+
+
+      courseButton.addEventListener(
+        "click",
+        () => {
+
+          selectedStudentsCourse =
+            course;
+
+          studentsView =
+            "course-students";
+
+          renderStudentsByCourse(
+            course
+          );
+
+        }
+      );
+
+
+      coursesGrid.appendChild(
+        courseButton
+      );
+
+    }
+  );
+
+
+  list.appendChild(
+    coursesGrid
+  );
+
+}
+
+/* ==========================================================================
+   STUDENTS — SELECTED COURSE STUDENTS VIEW
+   ========================================================================== */
+
+async function renderStudentsByCourse(course) {
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students:",
+      error
+    );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Get only students enrolled in
+    the selected course.
+  */
+
+  const courseStudents =
+    students.filter(
+      (student) =>
+        student.course === course
+    );
+
+
+  /*
+    Get interface elements.
+  */
+
+  const list =
+    document.getElementById(
+      "students-list"
+    );
+
+  const empty =
+    document.getElementById(
+      "students-empty"
+    );
+
+  const title =
+    document.getElementById(
+      "students-title"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "students-subtitle"
+    );
+
+  const count =
+    document.getElementById(
+      "students-count"
+    );
+
+  const backButton =
+    document.getElementById(
+      "students-back-button"
+    );
+
+
+  /*
+    Update navigation state.
+  */
+
+  studentsView =
+    "course-students";
+
+  selectedStudentsCourse =
+    course;
+
+  selectedStudentId =
+    null;
+
+
+  /*
+    Update header.
+  */
+
+  title.textContent =
+    course;
+
+  subtitle.textContent =
+    `${courseStudents.length} വിദ്യാർത്ഥികൾ`;
+
+  subtitle.style.display =
+    "block";
+
+  count.textContent =
+    courseStudents.length;
+
+  backButton.style.display =
+    "inline-flex";
+
+
+  /*
+    Clear previous content.
+  */
+
+  list.innerHTML = "";
+
+
+  /*
+    Empty state.
+  */
+
+  if (
+    courseStudents.length === 0
+  ) {
+
+    empty.style.display =
+      "block";
+
+    empty.innerHTML =
+      "<p>ഈ കോഴ്സിൽ വിദ്യാർത്ഥികൾ ഇല്ല.</p>";
+
+    return;
+
+  }
+
+
+  empty.style.display =
+    "none";
+
+
+  /*
+    Create student list.
+  */
+
+  const studentsCourseList =
+    document.createElement(
+      "div"
+    );
+
+  studentsCourseList.className =
+    "students-course-students-list";
+
+
+  courseStudents.forEach(
+    (student) => {
+
+      const studentButton =
+        document.createElement(
+          "button"
+        );
+
+      studentButton.type =
+        "button";
+
+      studentButton.className =
+        "course-student-row";
+
+
+      studentButton.innerHTML = `
+
+        <span
+          class="course-student-name"
+        >
+          ${student.studentName}
+        </span>
+
+        <span
+          class="course-student-place"
+        >
+          ${student.place || "-"}
+        </span>
+
+      `;
+
+
+      /*
+        Open full student details.
+        We will create this next.
+      */
+
+      studentButton.addEventListener(
+        "click",
+        () => {
+
+          selectedStudentId =
+            student.id;
+
+          studentsView =
+            "student-details";
+
+          renderStudentFullDetails(
+            student.id
+          );
+
+        }
+      );
+
+
+      studentsCourseList.appendChild(
+        studentButton
+      );
+
+    }
+  );
+
+
+  list.appendChild(
+    studentsCourseList
+  );
+
+}
+
+/* ==========================================================================
+   STUDENTS — FULL STUDENT DETAILS VIEW
+   ========================================================================== */
+
+async function renderStudentFullDetails(studentId) {
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load student:",
+      error
+    );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Find selected student.
+  */
+
+  const student =
+    students.find(
+      (student) =>
+        student.id === studentId
+    );
+
+
+  if (!student) {
+
+    alert(
+      "Student could not be found."
+    );
+
+    renderStudentsByCourse(
+      selectedStudentsCourse
+    );
+
+    return;
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "students-list"
+    );
+
+  const empty =
+    document.getElementById(
+      "students-empty"
+    );
+
+  const title =
+    document.getElementById(
+      "students-title"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "students-subtitle"
+    );
+
+  const count =
+    document.getElementById(
+      "students-count"
+    );
+
+  const backButton =
+    document.getElementById(
+      "students-back-button"
+    );
+
+
+  /*
+    Update navigation state.
+  */
+
+  studentsView =
+    "student-details";
+
+  selectedStudentId =
+    student.id;
+
+
+  /*
+    Header.
+  */
+
+  title.textContent =
+    student.studentName;
+
+  subtitle.textContent =
+    student.course;
+
+  subtitle.style.display =
+    "block";
+
+  count.textContent =
+    "";
+
+  backButton.style.display =
+    "inline-flex";
+
+
+  list.innerHTML = "";
+
+  empty.style.display =
+    "none";
+
+
+  /*
+    Create full student card.
+  */
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+  card.className =
+    "student-card";
+
+
+  card.innerHTML = `
+
+    <div class="student-card-top">
+
+      <div>
+
+        <h3>
+          ${student.studentName}
+        </h3>
+
+        <p class="student-card-id">
+          ${student.id}
+        </p>
+
+      </div>
+
+
+      <span class="student-course-badge">
+        ${student.course}
+      </span>
+
+    </div>
+
+
+    <div class="student-details">
+
+      <div class="student-detail-row">
+
+        <span class="student-detail-label">
+          രക്ഷിതാവിൻ്റെ പേര്
+        </span>
+
+        <span class="student-detail-value">
+          ${student.parentName || "-"}
+        </span>
+
+      </div>
+
+
+      <div class="student-detail-row">
+
+        <span class="student-detail-label">
+          സ്ഥലം
+        </span>
+
+        <span class="student-detail-value">
+          ${student.place || "-"}
+        </span>
+
+      </div>
+
+
+      <div class="student-detail-row">
+
+        <span class="student-detail-label">
+          ഫോൺ നമ്പർ
+        </span>
+
+        <a
+          class="student-phone-link"
+          href="tel:${student.phone}"
+        >
+          📞 ${student.phone}
+        </a>
+
+      </div>
+
+
+      ${
+        student.backupPhone
+          ? `
+
+            <div class="student-detail-row">
+
+              <span class="student-detail-label">
+                2nd ഫോൺ നമ്പർ
+              </span>
+
+              <a
+                class="student-phone-link"
+                href="tel:${student.backupPhone}"
+              >
+                📞 ${student.backupPhone}
+              </a>
+
+            </div>
+
+          `
+          : ""
+      }
+
+
+      <div class="student-detail-row">
+
+        <span class="student-detail-label">
+          കോഴ്സ്
+        </span>
+
+        <span class="student-detail-value">
+          ${student.course}
+        </span>
+
+      </div>
+
+
+      <div class="student-detail-row">
+
+        <span class="student-detail-label">
+          അഡ്മിഷൻ ഡേറ്റ്
+        </span>
+
+        <span class="student-detail-value">
+          ${student.admissionDate || "-"}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="student-card-actions">
+
+      <button
+        class="student-edit-btn"
+        type="button"
+      >
+
+        <span class="student-action-icon">
+          ✎
+        </span>
+
+        <span>
+          Edit
+        </span>
+
+      </button>
+
+
+      <button
+        class="student-delete-btn"
+        type="button"
+      >
+
+        <span class="student-action-icon">
+          ×
+        </span>
+
+        <span>
+          Delete
+        </span>
+
+      </button>
+
+    </div>
+
+  `;
+
+
+  list.appendChild(
+    card
+  );
+
+
+  /*
+    Edit selected student.
+  */
+
+  const editButton =
+    card.querySelector(
+      ".student-edit-btn"
+    );
+
+
+  if (editButton) {
+
+    editButton.addEventListener(
+      "click",
+      () => {
+        editStudent(
+          student.id
+        );
+      }
+    );
+
+  }
+
+
+  /*
+    Delete selected student.
+  */
+
+  const deleteButton =
+    card.querySelector(
+      ".student-delete-btn"
+    );
+
+
+  if (deleteButton) {
+
+    deleteButton.addEventListener(
+      "click",
+      () => {
+        deleteStudent(
+          student.id
+        );
+      }
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================================
    STUDENT LIST FEATURE START
    Reversible: remove this block to remove student list rendering.
    ========================================================================== */
