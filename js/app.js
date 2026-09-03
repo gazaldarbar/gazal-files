@@ -593,104 +593,283 @@ async function generateStudentId() {
    Reversible: this section saves students in this device's localStorage.
    ========================================================================== */
 async function handleStudentFormSubmit(event) {
+
   event.preventDefault();
 
-  const students = JSON.parse(
-    localStorage.getItem("gazal_students") || "[]"
-  );
 
-  const studentData = {
-    studentName: document.getElementById("student-name").value.trim(),
-    parentName: document.getElementById("parent-name").value.trim(),
-    place: document.getElementById("student-place").value.trim(),
-    phone: document.getElementById("student-phone").value.trim(),
-    backupPhone: document.getElementById("backup-phone").value.trim(),
-    course: document.getElementById("student-course").value,
-    admissionDate: document.getElementById("admission-date").value,
-  };
+  /*
+    LOAD CURRENT STUDENTS
 
-  let savedStudent = null;
+    Firestore is the primary database.
+    localStorage is the fallback backup.
+  */
 
-  if (editingStudentId) {
-    const studentIndex = students.findIndex(
-      (student) => student.id === editingStudentId
-    );
-
-    if (studentIndex === -1) {
-      alert("Student could not be found. Please try again.");
-      editingStudentId = null;
-      return;
-    }
-
-    students[studentIndex] = {
-      ...students[studentIndex],
-      ...studentData,
-      updatedAt: new Date().toISOString(),
-    };
-
-    savedStudent = students[studentIndex];
-  } else {
-    savedStudent = {
-      id: await generateStudentId(),
-      ...studentData,
-      createdAt: new Date().toISOString(),
-    };
-
-    students.push(savedStudent);
-  }
-
-  localStorage.setItem(
-    "gazal_students",
-    JSON.stringify(students)
-  );
-
-  /* Save student to Firestore cloud */
-
-if (window.saveStudentToFirestore) {
+  let students = [];
 
   try {
 
-    await window.saveStudentToFirestore(
-      savedStudent
-    );
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
 
   } catch (error) {
 
     console.error(
-      "Student cloud save failed:",
+      "Failed to load students:",
       error
     );
 
-    alert(
-      "Student was saved locally, but cloud backup failed."
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
     );
+
   }
 
-}
+
+  /*
+    GET FORM DATA
+  */
+
+  const studentData = {
+
+    studentName:
+      document.getElementById(
+        "student-name"
+      ).value.trim(),
+
+    parentName:
+      document.getElementById(
+        "parent-name"
+      ).value.trim(),
+
+    place:
+      document.getElementById(
+        "student-place"
+      ).value.trim(),
+
+    phone:
+      document.getElementById(
+        "student-phone"
+      ).value.trim(),
+
+    backupPhone:
+      document.getElementById(
+        "backup-phone"
+      ).value.trim(),
+
+    course:
+      document.getElementById(
+        "student-course"
+      ).value,
+
+    admissionDate:
+      document.getElementById(
+        "admission-date"
+      ).value
+
+  };
+
+
+  let savedStudent = null;
+
+
+  /*
+    EDIT EXISTING STUDENT
+  */
+
+  if (editingStudentId) {
+
+    const studentIndex =
+      students.findIndex(
+        (student) =>
+          student.id ===
+          editingStudentId
+      );
+
+
+    if (studentIndex === -1) {
+
+      alert(
+        "Student could not be found. Please try again."
+      );
+
+      return;
+
+    }
+
+
+    savedStudent = {
+
+      ...students[studentIndex],
+
+      ...studentData,
+
+      updatedAt:
+        new Date().toISOString()
+
+    };
+
+
+    /*
+      Update Firestore first.
+    */
+
+    if (window.saveStudentToFirestore) {
+
+      try {
+
+        await window.saveStudentToFirestore(
+          savedStudent
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Student update failed:",
+          error
+        );
+
+        alert(
+          "Student could not be updated in the cloud."
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    /*
+      Update local backup.
+    */
+
+    students[studentIndex] =
+      savedStudent;
+
+  }
+
+
+  /*
+    ADD NEW STUDENT
+  */
+
+  else {
+
+    savedStudent = {
+
+      id:
+        await generateStudentId(),
+
+      ...studentData,
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    /*
+      Save new student to Firestore.
+    */
+
+    if (window.saveStudentToFirestore) {
+
+      try {
+
+        await window.saveStudentToFirestore(
+          savedStudent
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Student save failed:",
+          error
+        );
+
+        alert(
+          "Student could not be saved in the cloud."
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    students.push(
+      savedStudent
+    );
+
+  }
+
+
+  /*
+    SYNC LOCAL BACKUP
+  */
+
+  localStorage.setItem(
+    "gazal_students",
+    JSON.stringify(
+      students
+    )
+  );
+
+
+  /*
+    RESET FORM
+  */
 
   event.target.reset();
 
+
   editingStudentId = null;
 
-  const formTitle = document.querySelector(
-    "#add-student-panel .form-header h2"
-  );
+
+  const formTitle =
+    document.querySelector(
+      "#add-student-panel .form-header h2"
+    );
+
 
   if (formTitle) {
-    formTitle.textContent = "Add Student";
+
+    formTitle.textContent =
+      "Add Student";
+
   }
 
-  document.getElementById("btn-save-student").textContent =
+
+  document.getElementById(
+    "btn-save-student"
+  ).textContent =
     "Save";
 
+
   closeAddStudentForm();
+
 
   alert(
     "Student saved successfully!\n\nID: " +
     savedStudent.id
   );
-}
 
+} 
 
 /* STUDENT LOCAL MEMORY FEATURE END */
 
