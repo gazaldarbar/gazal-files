@@ -687,9 +687,10 @@ async function hashSharedPassword(
 
 
   const data =
-    encoder.encode(
-      password
-    );
+  encoder.encode(
+    "gazal-darbar-shared-pin:" +
+    password
+  );
 
 
   const hashBuffer =
