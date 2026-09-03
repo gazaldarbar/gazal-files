@@ -5914,3 +5914,196 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
       rgba(255, 190, 20, 0.25);
 
 }
+
+/* ================================================================
+   MORE PANEL
+   ================================================================ */
+
+#more-panel {
+  width: 100%;
+  padding: 18px 16px 110px;
+}
+
+
+/* ================================================================
+   MORE HEADER
+   ================================================================ */
+
+.more-header {
+  margin-bottom: 24px;
+}
+
+.more-header h2 {
+  margin: 0;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  letter-spacing: -0.5px;
+}
+
+.more-header p {
+  margin: 6px 0 0;
+
+  font-size: 14px;
+
+  opacity: 0.55;
+}
+
+
+/* ================================================================
+   MORE OPTIONS
+   ================================================================ */
+
+.more-options {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+/* ================================================================
+   MORE OPTION CARD
+   ================================================================ */
+
+.more-option-card {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.045);
+
+  cursor: pointer;
+
+  text-align: left;
+
+  color: inherit;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+.more-option-card:active {
+  transform:
+    scale(0.98);
+
+  background:
+    rgba(255, 255, 255, 0.075);
+
+  border-color:
+    rgba(255, 255, 255, 0.14);
+}
+
+
+/* ================================================================
+   MORE OPTION ICON
+   ================================================================ */
+
+.more-option-icon {
+  width: 48px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 15px;
+
+  font-size: 21px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.04)
+    );
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.08);
+}
+
+
+/* ================================================================
+   MORE OPTION TEXT
+   ================================================================ */
+
+.more-option-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.more-option-content h3 {
+  margin: 0;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  letter-spacing:
+    -0.2px;
+}
+
+.more-option-content p {
+  margin: 4px 0 0;
+
+  font-size: 13px;
+
+  opacity: 0.55;
+}
+
+
+/* ================================================================
+   MORE OPTION ARROW
+   ================================================================ */
+
+.more-option-arrow {
+  font-size: 28px;
+
+  line-height: 1;
+
+  opacity: 0.4;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.more-option-card:active
+.more-option-arrow {
+  transform:
+    translateX(3px);
+
+  opacity: 0.8;
+}
