@@ -3217,15 +3217,7 @@ const studentPaymentHistory =
     );
 
 
-/*
-  A fee is currently due when at least one
-  completed month exists and the latest
-  completed month has not been paid.
-*/
 
-const feeDue =
-  cycleCurrentlyComplete &&
-  !latestMonthPaid;
   
   const overlay = document.createElement("div");
 
@@ -3522,7 +3514,6 @@ const feeMonthInfo =
     presentClassesOldestFirst,
     oldestUnpaidMonth
   );
-
 
 /*
   Save payment together with the
