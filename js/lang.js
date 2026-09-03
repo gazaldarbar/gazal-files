@@ -17,7 +17,7 @@ const STRINGS = {
     pinMismatch: "PINs did not match, try again",
     pinDelete: "Delete",
 
-    greeting: "Today",
+    greeting: "",
     searchPlaceholder: "Search student name, ID, or phone",
 
     navHome: "Home",
@@ -66,7 +66,7 @@ const STRINGS = {
     pinMismatch: "PINs did not match, try again",
     pinDelete: "Delete",
 
-    greeting: "Today",
+    greeting: "",
     searchPlaceholder: "സെർച്ച്",
 
     navHome: "ഹോം",
@@ -75,20 +75,20 @@ const STRINGS = {
     navFees: "ഫീസ്",
     navMore: "More",
 
-    statStudents: "സ്റ്റുഡൻ്റ്സ്",
-    statClassesToday: "Today's Classes",
-    statAttendanceToday: "Today's Attendance",
-    statPendingFees: "Pending Fees",
+    statStudents: "സ്റ്റുഡൻസിൻ്റെ എണ്ണം",
+    statClassesToday: "ഇന്നത്തെ ക്ലാസുകൾ",
+    statAttendanceToday: "ഇന്നത്തെ അറ്റൻ്റൻസ്",
+    statPendingFees: "ഫീസ് ബാലൻസ്",
 
-    actionNewStudent: "Add",
+    actionNewStudent: " ന്യൂ അഡ്മിഷൻ",
     actionStudents: "സ്റ്റുഡൻ്റ്സ്",
     actionAttendance: "അറ്റൻ്റൻസ്",
     actionFees: "ഫീസ്",
     actionFeeBalance: "ഫീസ് ബാലൻസ്",
-    actionPay: "Pay",
+    actionPay: "QR CODE",
 
-    todaysClasses: "Today's Classes",
-    noClassesToday: "No classes scheduled for today",
+    todaysClasses: "ഇന്നത്തെ ക്ലാസുകൾ",
+    noClassesToday: "ഇന്ന് ക്ലാസുകളില്ല",
 
     syncSynced: "All data synced",
     syncWaiting: "Waiting for internet",
