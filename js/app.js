@@ -3139,14 +3139,59 @@ const cycleCurrentlyComplete =
   totalPresentClasses % 4 === 0;
 
 
+/*
+  Find the first completed 4-class cycle
+  that has not yet been paid.
+*/
+
+let hasUnpaidCompletedMonth = false;
+
+let oldestUnpaidMonth = null;
+
+for (
+  let monthNumber = 1;
+  monthNumber <= completedMonths;
+  monthNumber++
+) {
+
+  if (
+    !isFeeMonthPaid(
+      student.id,
+      monthNumber
+    )
+  ) {
+
+    hasUnpaidCompletedMonth = true;
+
+    oldestUnpaidMonth =
+      monthNumber;
+
+    break;
+
+  }
+
+}
+
+
+/*
+  Fee is due if any completed cycle
+  is still unpaid.
+*/
+
+const feeDue =
+  hasUnpaidCompletedMonth;
+
+
+/*
+  Show "Paid" only if the student is
+  currently exactly at the end of a
+  completed cycle and everything is paid.
+*/
+
 const latestMonthPaid =
   cycleCurrentlyComplete &&
-  latestCompletedMonth > 0
-    ? isFeeMonthPaid(
-        student.id,
-        latestCompletedMonth
-      )
-    : false;
+  latestCompletedMonth > 0 &&
+  !hasUnpaidCompletedMonth;
 
   const feePayments =
   getFeePayments();
