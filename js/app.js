@@ -348,6 +348,26 @@ function setupAddStudentFeature() {
     form.addEventListener("submit", handleStudentFormSubmit);
   }
 
+  /* ================================================================
+   HOME — TODAY'S ATTENDANCE BUTTON
+   ================================================================ */
+
+const todayAttendanceButton =
+  document.getElementById(
+    "btn-today-attendance"
+  );
+
+if (todayAttendanceButton) {
+
+  todayAttendanceButton.addEventListener(
+    "click",
+    () => {
+      openTodayAttendancePopup();
+    }
+  );
+
+}
+
 /* ================================================================
    HOME — TOTAL COURSES BUTTON
    ================================================================ */
