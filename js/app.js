@@ -219,6 +219,27 @@ function setupAddStudentFeature() {
   if (form) {
     form.addEventListener("submit", handleStudentFormSubmit);
   }
+
+/* ================================================================
+   HOME — TOTAL COURSES BUTTON
+   ================================================================ */
+
+const totalCoursesButton =
+  document.getElementById(
+    "btn-total-courses"
+  );
+
+if (totalCoursesButton) {
+
+  totalCoursesButton.addEventListener(
+    "click",
+    () => {
+      openTotalCoursesPopup();
+    }
+  );
+
+}
+  
   loadCourseOptions();
   setAttendanceDateDefault();
 
