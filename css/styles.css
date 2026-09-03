@@ -4314,3 +4314,447 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
   }
 
 }
+
+/* ================================================================
+   TODAY'S ATTENDANCE POPUP
+   ================================================================ */
+
+.today-attendance-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  background:
+    rgba(5, 32, 24, 0.72);
+
+  backdrop-filter:
+    blur(10px);
+
+  -webkit-backdrop-filter:
+    blur(10px);
+}
+
+
+/* ================================================================
+   POPUP
+   ================================================================ */
+
+.today-attendance-popup {
+  width: 100%;
+  max-width: 620px;
+
+  max-height: 88vh;
+
+  overflow-y: auto;
+
+  padding: 20px 20px 80px;
+
+  border-radius: 28px;
+
+  background:
+    #F7F5F0;
+
+  box-shadow:
+    0 24px 70px
+    rgba(0, 0, 0, 0.35);
+}
+
+
+.today-attendance-popup::-webkit-scrollbar {
+  width: 5px;
+}
+
+.today-attendance-popup::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+
+  background:
+    rgba(20, 72, 53, 0.25);
+}
+
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+
+.today-attendance-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding-bottom: 18px;
+
+  margin-bottom: 20px;
+
+  border-bottom:
+    1px solid
+    rgba(20, 72, 53, 0.12);
+}
+
+
+.today-attendance-header h2 {
+  margin: 0;
+
+  color:
+    #164835;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+
+.today-attendance-header p {
+  margin: 7px 0 0;
+
+  color:
+    rgba(22, 72, 53, 0.6);
+
+  font-size: 14px;
+}
+
+
+/* ================================================================
+   CLOSE BUTTON
+   ================================================================ */
+
+.today-attendance-close {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  color:
+    #164835;
+
+  background:
+    rgba(22, 72, 53, 0.08);
+
+  font-size: 28px;
+
+  line-height: 1;
+}
+
+
+.today-attendance-close:active {
+  transform:
+    scale(0.92);
+}
+
+
+/* ================================================================
+   OVERALL SUMMARY
+   ================================================================ */
+
+.today-attendance-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 24px;
+}
+
+
+.today-attendance-stat {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 105px;
+
+  padding: 14px 8px;
+
+  border-radius: 18px;
+
+  background:
+    #FFFFFF;
+
+  border:
+    1px solid
+    rgba(22, 72, 53, 0.08);
+
+  box-shadow:
+    0 6px 18px
+    rgba(15, 45, 34, 0.05);
+
+  text-align: center;
+}
+
+
+.today-attendance-stat span {
+  color:
+    rgba(22, 72, 53, 0.65);
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+.today-attendance-stat strong {
+  margin-top: 9px;
+
+  color:
+    #164835;
+
+  font-size: 27px;
+
+  font-weight: 700;
+}
+
+
+/* Present accent */
+
+.today-attendance-stat.present {
+  border-bottom:
+    4px solid
+    #164835;
+}
+
+
+/* Absent accent */
+
+.today-attendance-stat.absent {
+  border-bottom:
+    4px solid
+    rgba(180, 60, 60, 0.75);
+}
+
+
+/* Percentage accent */
+
+.today-attendance-stat.percentage {
+  border-bottom:
+    4px solid
+    #F4C430;
+}
+
+
+/* ================================================================
+   COURSE LIST
+   ================================================================ */
+
+.today-attendance-course-list h3 {
+  margin:
+    0 0 14px;
+
+  color:
+    #164835;
+
+  font-size: 18px;
+}
+
+
+.today-attendance-course-list {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* ================================================================
+   COURSE CARD
+   ================================================================ */
+
+.today-attendance-course-card {
+  position: relative;
+
+  margin-bottom: 12px;
+
+  padding: 17px 18px;
+
+  border-radius: 20px;
+
+  background:
+    #FFFFFF;
+
+  border:
+    1px solid
+    rgba(22, 72, 53, 0.08);
+
+  box-shadow:
+    0 6px 20px
+    rgba(15, 45, 34, 0.06);
+
+  overflow: hidden;
+}
+
+
+.today-attendance-course-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 5px;
+  height: 100%;
+
+  background:
+    #F4C430;
+}
+
+
+.today-attendance-course-card h4 {
+  margin: 0 0 14px;
+
+  padding-left: 4px;
+
+  color:
+    #164835;
+
+  font-size: 18px;
+}
+
+
+/* ================================================================
+   COURSE ATTENDANCE DETAILS
+   ================================================================ */
+
+.today-attendance-course-info {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  padding-top: 13px;
+
+  border-top:
+    1px solid
+    rgba(22, 72, 53, 0.08);
+}
+
+
+.today-attendance-course-info span {
+  padding:
+    7px 10px;
+
+  border-radius: 10px;
+
+  color:
+    rgba(22, 72, 53, 0.7);
+
+  background:
+    rgba(22, 72, 53, 0.06);
+
+  font-size: 13px;
+}
+
+
+.today-attendance-course-info span strong {
+  color:
+    #164835;
+}
+
+
+/* Percentage pill */
+
+.today-attendance-course-info span:last-child {
+  color:
+    #164835;
+
+  background:
+    rgba(244, 196, 48, 0.35);
+
+  font-weight: 700;
+}
+
+
+/* ================================================================
+   EMPTY STATE
+   ================================================================ */
+
+.today-attendance-empty {
+  padding: 35px 20px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  color:
+    rgba(22, 72, 53, 0.65);
+
+  background:
+    rgba(22, 72, 53, 0.05);
+
+  border:
+    1px dashed
+    rgba(22, 72, 53, 0.15);
+}
+
+
+/* ================================================================
+   MOBILE
+   ================================================================ */
+
+@media (max-width: 480px) {
+
+  .today-attendance-overlay {
+    align-items: flex-end;
+
+    padding: 10px;
+  }
+
+
+  .today-attendance-popup {
+    max-height: 88vh;
+
+    border-radius:
+      28px 28px 20px 20px;
+
+    padding:
+      18px 18px 70px;
+  }
+
+
+  .today-attendance-header h2 {
+    font-size: 20px;
+  }
+
+
+  .today-attendance-summary {
+    gap: 7px;
+  }
+
+
+  .today-attendance-stat {
+    min-height: 95px;
+
+    padding:
+      12px 5px;
+  }
+
+
+  .today-attendance-stat strong {
+    font-size: 23px;
+  }
+
+
+  .today-attendance-stat span {
+    font-size: 11px;
+  }
+
+}
