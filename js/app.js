@@ -3479,6 +3479,26 @@ async function renderStudentAttendance(studentId) {
 
         }
 
+/* ================================================================
+   HIDE STUDENT ATTENDANCE HISTORY
+   ================================================================ */
+
+function hideStudentAttendancePanel() {
+
+  const attendancePanel =
+    document.getElementById(
+      "student-attendance-panel"
+    );
+
+  if (attendancePanel) {
+
+    attendancePanel.style.display =
+      "none";
+
+  }
+
+}
+
 /* ==========================================================================
    STUDENT LIST FEATURE START
    Reversible: remove this block to remove student list rendering.
