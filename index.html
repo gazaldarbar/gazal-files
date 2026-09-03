@@ -356,14 +356,44 @@
 <div id="students-panel" style="display:none;">
 
   <div class="students-header">
-    <h2>സ്റ്റുഡൻ്റ്സ്</h2>
+
+    <button
+      id="students-back-button"
+      class="students-back-button"
+      type="button"
+      style="display:none;"
+    >
+      ←
+    </button>
+
+    <div class="students-header-title">
+
+      <h2 id="students-title">
+        സ്റ്റുഡൻ്റ്സ്
+      </h2>
+
+      <p
+        id="students-subtitle"
+        style="display:none;"
+      ></p>
+
+    </div>
+
     <span id="students-count"></span>
+
   </div>
+
 
   <div id="students-list"></div>
 
-  <div id="students-empty" style="display:none;">
-    <p>No students added yet.</p>
+
+  <div
+    id="students-empty"
+    style="display:none;"
+  >
+    <p>
+      No students added yet.
+    </p>
   </div>
 
 </div>
