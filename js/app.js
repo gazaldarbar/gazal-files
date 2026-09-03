@@ -3023,7 +3023,410 @@ if (attendanceButton) {
 
 }
 
+/* ==========================================================================
+   STUDENT ATTENDANCE HISTORY VIEW
+   ========================================================================== */
 
+async function renderStudentAttendance(studentId) {
+
+  let attendanceRecords = [];
+
+
+  /*
+    Load attendance from Firestore.
+  */
+
+  try {
+
+    if (
+      window.getAttendanceFromFirestore
+    ) {
+
+      attendanceRecords =
+        await window
+          .getAttendanceFromFirestore();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load attendance:",
+      error
+    );
+
+  }
+
+
+  /*
+    Local backup fallback.
+  */
+
+  if (
+    !attendanceRecords ||
+    attendanceRecords.length === 0
+  ) {
+
+    attendanceRecords =
+      JSON.parse(
+        localStorage.getItem(
+          "gazal_attendance"
+        ) || "[]"
+      );
+
+  }
+
+
+  /*
+    Find the selected student.
+  */
+
+  let students = [];
+
+  try {
+
+    if (
+      window.getStudentsFromFirestore
+    ) {
+
+      students =
+        await window
+          .getStudentsFromFirestore();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students:",
+      error
+    );
+
+  }
+
+
+  if (
+    !students ||
+    students.length === 0
+  ) {
+
+    students =
+      JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+  }
+
+
+  const student =
+    students.find(
+      (item) =>
+        item.id === studentId
+    );
+
+
+  if (!student) {
+
+    alert(
+      "Student could not be found."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Get Attendance History interface.
+  */
+
+  const studentsPanel =
+    document.getElementById(
+      "students-panel"
+    );
+
+  const attendancePanel =
+    document.getElementById(
+      "student-attendance-panel"
+    );
+
+  const history =
+    document.getElementById(
+      "student-attendance-history"
+    );
+
+  const empty =
+    document.getElementById(
+      "student-attendance-empty"
+    );
+
+  const studentName =
+    document.getElementById(
+      "student-attendance-student"
+    );
+
+
+  /*
+    Open Attendance History.
+  */
+
+  studentsPanel.style.display =
+    "none";
+
+  attendancePanel.style.display =
+    "block";
+
+
+  studentName.textContent =
+    student.studentName;
+
+
+  history.innerHTML =
+    "";
+
+
+  /*
+    Get only attendance belonging
+    to this student.
+  */
+
+  const studentAttendance =
+    [];
+
+
+  attendanceRecords.forEach(
+    (record) => {
+
+      const attendanceEntry =
+        record.students?.find(
+          (item) =>
+            item.id === studentId
+        );
+
+
+      if (!attendanceEntry) {
+        return;
+      }
+
+
+      studentAttendance.push({
+
+        date:
+          record.date,
+
+        course:
+          record.course,
+
+        status:
+          attendanceEntry.status
+
+      });
+
+    }
+  );
+
+
+  /*
+    Sort newest first.
+  */
+
+  studentAttendance.sort(
+    (a, b) =>
+      new Date(b.date) -
+      new Date(a.date)
+  );
+
+
+  /*
+    Empty state.
+  */
+
+  if (
+    studentAttendance.length === 0
+  ) {
+
+    empty.style.display =
+      "block";
+
+    history.innerHTML =
+      "";
+
+    return;
+
+  }
+
+
+  empty.style.display =
+    "none";
+
+
+  /*
+    Group records by month.
+  */
+
+  const groupedAttendance =
+    {};
+
+
+  studentAttendance.forEach(
+    (record) => {
+
+      const date =
+        new Date(
+          record.date +
+          "T00:00:00"
+        );
+
+      const monthName =
+        date.toLocaleDateString(
+          "en-US",
+          {
+            month:
+              "long",
+
+            year:
+              "numeric"
+          }
+        );
+
+
+      if (
+        !groupedAttendance[
+          monthName
+        ]
+      ) {
+
+        groupedAttendance[
+          monthName
+        ] =
+          [];
+
+      }
+
+
+      groupedAttendance[
+        monthName
+      ].push(
+        record
+      );
+
+    }
+  );
+
+
+  /*
+    Render each month.
+  */
+
+  Object.entries(
+    groupedAttendance
+  ).forEach(
+    ([
+      month,
+      records
+    ]) => {
+
+      const monthSection =
+        document.createElement(
+          "div"
+        );
+
+
+      monthSection.className =
+        "student-attendance-month";
+
+
+      const monthTitle =
+        document.createElement(
+          "h3"
+        );
+
+
+      monthTitle.textContent =
+        month;
+
+
+      monthSection.appendChild(
+        monthTitle
+      );
+
+
+      records.forEach(
+        (record) => {
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+
+          row.className =
+            "student-attendance-record " +
+            record.status;
+
+
+          const date =
+            new Date(
+              record.date +
+              "T00:00:00"
+            );
+
+
+          row.innerHTML = `
+
+            <span
+              class="student-attendance-status"
+            >
+              ${
+                record.status ===
+                "present"
+                  ? "✓"
+                  : "✕"
+              }
+            </span>
+
+
+            <span
+              class="student-attendance-date"
+            >
+              ${
+                date.toLocaleDateString(
+                  "en-US",
+                  {
+                    day:
+                      "numeric",
+
+                    month:
+                      "long",
+
+                    year:
+                      "numeric"
+                  }
+                )
+              }
+            </span>
+
+          `;
+
+
+          monthSection.appendChild(
+            row
+          );
+
+        }
+      );
+
+
+      history.appendChild(
+        monthSection
+      );
+
+    }
+  );
+
+        }
 
 /* ==========================================================================
    STUDENT LIST FEATURE START
