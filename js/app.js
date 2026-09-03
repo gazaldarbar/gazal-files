@@ -18,7 +18,7 @@ function onUnlocked() {
 function renderHome() {
   document.getElementById("greeting").textContent = t("greeting");
   document.getElementById("search-input").placeholder = t("searchPlaceholder");
-  document.getElementById("search-box").insertAdjacentHTML("afterbegin", icon("search"));
+  
 
   // Placeholder stats — wired to real data in Phase 2/3/4.
   /*
