@@ -462,6 +462,51 @@ function closeAddStudentForm() {
   }
 }
 
+/* ================================================================
+   STUDENTS — BACK NAVIGATION
+   ================================================================ */
+
+const studentsBackButton =
+  document.getElementById(
+    "students-back-button"
+  );
+
+if (studentsBackButton) {
+
+  studentsBackButton.addEventListener(
+    "click",
+    () => {
+
+      if (
+        studentsView ===
+        "student-details"
+      ) {
+
+        renderStudentsByCourse(
+          selectedStudentsCourse
+        );
+
+        return;
+
+      }
+
+
+      if (
+        studentsView ===
+        "course-students"
+      ) {
+
+        renderStudentsCourseList();
+
+        return;
+
+      }
+
+    }
+  );
+
+}
+
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
