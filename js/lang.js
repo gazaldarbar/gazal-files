@@ -28,7 +28,7 @@ const STRINGS = {
     navMore: "More",
 
     statStudents: "Students",
-    statClassesToday: "Courses",
+    totalCourses: "Courses",
     statAttendanceToday: "Today's Attendance",
     statPendingFees: "Pending Fees",
 
@@ -77,7 +77,7 @@ const STRINGS = {
     navMore: "More",
 
     statStudents: "സ്റ്റുഡൻസിൻ്റെ എണ്ണം",
-    statClassesToday: "കോഴ്‌സുകൾ",
+    totalCourses: "കോഴ്‌സുകൾ",
     statAttendanceToday: "ഇന്നത്തെ അറ്റൻ്റൻസ്",
     statPendingFees: "ഫീസ് ബാലൻസ്",
 
