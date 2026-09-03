@@ -116,12 +116,14 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
 }
 
 .pin-brand img {
-  width: 68px;
-  height: 68px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  width: 190px;
+  height: auto;
+  max-height: 110px;
+  object-fit: contain;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
-
 .pin-office-text {
   font-size: 20px;
   font-weight: 600;
