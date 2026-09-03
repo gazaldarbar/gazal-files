@@ -68,7 +68,8 @@ function renderHome() {
   }
 
 })();
-  document.getElementById("stat-classes").textContent = "—";
+  document.getElementById("stat-classes").textContent =
+  GAZAL_COURSES.length;
   document.getElementById("stat-attendance").textContent = "—";
   document.getElementById("stat-fees").textContent = "—";
 
