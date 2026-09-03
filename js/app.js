@@ -794,6 +794,19 @@ if (
         saveNewPasswordButton.textContent =
           "Updating...";
 
+        if (
+  !window.getSharedPinHash ||
+  !window.saveSharedPinHash
+) {
+
+  alert(
+    "Security system is still loading. Please try again."
+  );
+
+  return;
+
+        }
+
 
         /* ------------------------------------------------
            Hash current password
