@@ -399,6 +399,122 @@ async function getFeePaymentsFromFirestore() {
 }
 
 /* ================================================================
+   APP SHARED PIN SECURITY
+   ================================================================ */
+
+const APP_SECURITY_COLLECTION =
+  "app_settings";
+
+const APP_SECURITY_DOCUMENT =
+  "security";
+
+
+/* ------------------------------------------------
+   Get shared PIN hash
+   ------------------------------------------------ */
+
+async function getSharedPinHash() {
+
+  try {
+
+    const securityDocRef =
+      doc(
+        db,
+        APP_SECURITY_COLLECTION,
+        APP_SECURITY_DOCUMENT
+      );
+
+
+    const securitySnapshot =
+      await getDoc(
+        securityDocRef
+      );
+
+
+    if (
+      !securitySnapshot.exists()
+    ) {
+
+      return null;
+
+    }
+
+
+    return (
+      securitySnapshot.data()
+        .pinHash || null
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load shared PIN:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* ------------------------------------------------
+   Save or change shared PIN hash
+   ------------------------------------------------ */
+
+async function saveSharedPinHash(
+  pinHash
+) {
+
+  try {
+
+    const securityDocRef =
+      doc(
+        db,
+        APP_SECURITY_COLLECTION,
+        APP_SECURITY_DOCUMENT
+      );
+
+
+    await setDoc(
+      securityDocRef,
+      {
+
+        pinHash:
+          pinHash,
+
+        updatedAt:
+          new Date()
+            .toISOString()
+
+      },
+
+      {
+        merge:
+          true
+      }
+    );
+
+
+    console.log(
+      "Shared PIN updated successfully."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to save shared PIN:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -429,6 +545,12 @@ window.saveFeePaymentToFirestore =
 window.getFeePaymentsFromFirestore =
   getFeePaymentsFromFirestore;
 
+window.getSharedPinHash =
+  getSharedPinHash;
+
+window.saveSharedPinHash =
+  saveSharedPinHash;
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
@@ -444,5 +566,7 @@ export {
   getAttendanceFromFirestore,
   getStudentsForAttendance,
   saveFeePaymentToFirestore,
-  getFeePaymentsFromFirestore
+  getFeePaymentsFromFirestore,
+  getSharedPinHash,
+  saveSharedPinHash
 };
