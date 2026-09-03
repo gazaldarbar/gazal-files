@@ -2486,7 +2486,19 @@ async function renderStudentsByCourse(course) {
     "block";
 
   count.textContent =
-    courseStudents.length;
+  courseStudents.length;
+
+count.style.display =
+  "inline-flex";
+
+backButton.style.display =
+  "inline-flex";
+
+title.style.display =
+  "block";
+
+subtitle.style.display =
+  "block";
 
   backButton.style.display =
     "inline-flex";
@@ -2701,6 +2713,21 @@ async function renderStudentFullDetails(studentId) {
       "students-back-button"
     );
 
+  /*
+  STUDENT DETAILS HEADER STATE
+*/
+
+title.style.display =
+  "none";
+
+subtitle.style.display =
+  "none";
+
+count.style.display =
+  "none";
+
+backButton.style.display =
+  "inline-flex";
 
   /*
     Update navigation state.
