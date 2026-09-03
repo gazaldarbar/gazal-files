@@ -2845,8 +2845,8 @@ const latestCompletedMonth =
 
 
 /*
-  True only when exactly 4, 8, 12...
-  classes have been completed.
+  True when currently at exactly
+  4, 8, 12... classes.
 */
 const cycleCurrentlyComplete =
   totalPresentClasses > 0 &&
@@ -2854,27 +2854,49 @@ const cycleCurrentlyComplete =
 
 
 /*
-  Only show PAID when the CURRENT
-  cycle is exactly complete and paid.
+  Check if ANY completed 4-class
+  fee cycle is still unpaid.
 */
-const latestMonthPaid =
-  cycleCurrentlyComplete &&
-  latestCompletedMonth > 0
-    ? isFeeMonthPaid(
-        student.id,
-        latestCompletedMonth
-      )
-    : false;
+let hasUnpaidCompletedMonth = false;
+
+for (
+  let monthNumber = 1;
+  monthNumber <= completedMonths;
+  monthNumber++
+) {
+
+  if (
+    !isFeeMonthPaid(
+      student.id,
+      monthNumber
+    )
+  ) {
+
+    hasUnpaidCompletedMonth = true;
+    break;
+
+  }
+
+}
 
 
 /*
-  Fee is due only when the CURRENT
-  cycle is complete but unpaid.
+  Fee is due whenever at least one
+  completed 4-class cycle remains unpaid.
 */
 const feeDue =
+  hasUnpaidCompletedMonth;
+
+
+/*
+  Show PAID only when the current
+  cycle is exactly complete AND all
+  completed cycles are paid.
+*/
+const latestMonthPaid =
   cycleCurrentlyComplete &&
   latestCompletedMonth > 0 &&
-  !latestMonthPaid;
+  !hasUnpaidCompletedMonth;
 
     if (feeDue) {
   dueStudents++;
