@@ -507,6 +507,57 @@ if (studentsBackButton) {
 
 }
 
+/* ================================================================
+   STUDENT ATTENDANCE — BACK NAVIGATION
+   ================================================================ */
+
+const studentAttendanceBackButton =
+  document.getElementById(
+    "student-attendance-back"
+  );
+
+if (studentAttendanceBackButton) {
+
+  studentAttendanceBackButton.addEventListener(
+    "click",
+    () => {
+
+      const attendancePanel =
+        document.getElementById(
+          "student-attendance-panel"
+        );
+
+      const studentsPanel =
+        document.getElementById(
+          "students-panel"
+        );
+
+
+      attendancePanel.style.display =
+        "none";
+
+      studentsPanel.style.display =
+        "block";
+
+
+      /*
+        Return to the same student's
+        full details card.
+      */
+
+      if (selectedStudentId) {
+
+        renderStudentFullDetails(
+          selectedStudentId
+        );
+
+      }
+
+    }
+  );
+
+}
+
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
