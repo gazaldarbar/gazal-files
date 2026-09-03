@@ -671,25 +671,261 @@ function openTotalCoursesPopup() {
       (courseCard) => {
 
         courseCard.addEventListener(
-          "click",
-          () => {
+  "click",
+  () => {
 
-            const course =
-              courseCard.dataset.course;
+    const course =
+      courseCard.dataset.course;
 
-            // Next step:
-            // openCourseStudentsPopup(course)
+    overlay.remove();
 
-            console.log(
-              "Selected course:",
-              course
-            );
+    openCourseStudentsPopup(
+      course
+    );
 
-          }
-        );
+  }
+);
 
       }
     );
+
+}
+
+
+/* ================================================================
+   COURSE STUDENTS POPUP
+   ================================================================ */
+
+async function openCourseStudentsPopup(courseName) {
+
+  let students = [];
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load course students:",
+      error
+    );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Get only students enrolled
+    in the selected course.
+  */
+
+  const courseStudents =
+    students.filter(
+      (student) =>
+        student.course === courseName
+    );
+
+
+  /*
+    Create popup overlay.
+  */
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.className =
+    "course-students-overlay";
+
+
+  overlay.innerHTML = `
+
+    <div class="course-students-popup">
+
+      <div class="course-students-header">
+
+        <div>
+
+          <h2>
+            ${courseName}
+          </h2>
+
+          <p>
+            ആകെ വിദ്യാർത്ഥികൾ:
+            <strong>
+              ${courseStudents.length}
+            </strong>
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="course-students-close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="course-students-list">
+
+        ${
+          courseStudents.length === 0
+            ? `
+              <div
+                class="
+                  course-students-empty
+                "
+              >
+                ഈ കോഴ്‌സിൽ
+                വിദ്യാർത്ഥികളൊന്നുമില്ല.
+              </div>
+            `
+            : courseStudents
+                .map(
+                  (student) => `
+
+                    <div
+                      class="
+                        course-student-card
+                      "
+                    >
+
+                      <div
+                        class="
+                          course-student-main
+                        "
+                      >
+
+                        <h3>
+                          ${student.studentName}
+                        </h3>
+
+                        <p>
+                          ${student.place || ""}
+                        </p>
+
+                      </div>
+
+
+                      <div
+                        class="
+                          course-student-phones
+                        "
+                      >
+
+                        ${
+                          student.phone
+                            ? `
+                              <a
+                                href="
+                                  tel:${student.phone}
+                                "
+                              >
+                                📞
+                                ${student.phone}
+                              </a>
+                            `
+                            : ""
+                        }
+
+
+                        ${
+                          student.backupPhone
+                            ? `
+                              <a
+                                href="
+                                  tel:${student.backupPhone}
+                                "
+                              >
+                                📞
+                                ${student.backupPhone}
+                              </a>
+                            `
+                            : ""
+                        }
+
+                      </div>
+
+                    </div>
+
+                  `
+                )
+                .join("")
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+
+  /*
+    Close button.
+  */
+
+  const closeButton =
+    overlay.querySelector(
+      ".course-students-close"
+    );
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
+      "click",
+      () => {
+
+        overlay.remove();
+
+      }
+    );
+
+  }
+
+
+  /*
+    Close when clicking outside popup.
+  */
+
+  overlay.addEventListener(
+    "click",
+    (event) => {
+
+      if (event.target === overlay) {
+
+        overlay.remove();
+
+      }
+
+    }
+  );
 
 }
 
