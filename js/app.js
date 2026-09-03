@@ -546,6 +546,131 @@ function loadCourseOptions() {
 
 /* COURSE LIST FEATURE END */
 
+// ================================================================
+// HOME — TOTAL COURSES POPUP
+// ================================================================
+
+function openTotalCoursesPopup() {
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.className =
+    "courses-popup-overlay";
+
+
+  overlay.innerHTML = `
+    <div class="courses-popup">
+
+      <div class="courses-popup-header">
+
+        <div>
+
+          <h2>
+            കോഴ്സുകൾ
+          </h2>
+
+          <p>
+            Gazal Darbar Music & Dance Academy
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="courses-popup-close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="courses-grid">
+
+        ${GAZAL_COURSES
+          .map(
+            (course) => `
+              <button
+                type="button"
+                class="course-select-card"
+                data-course="${course}"
+              >
+                ${course}
+              </button>
+            `
+          )
+          .join("")
+        }
+
+      </div>
+
+    </div>
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+
+  const closeButton =
+    overlay.querySelector(
+      ".courses-popup-close"
+    );
+
+
+  closeButton.addEventListener(
+    "click",
+    () => {
+      overlay.remove();
+    }
+  );
+
+
+  overlay.addEventListener(
+    "click",
+    (event) => {
+
+      if (event.target === overlay) {
+        overlay.remove();
+      }
+
+    }
+  );
+
+
+  overlay
+    .querySelectorAll(
+      ".course-select-card"
+    )
+    .forEach(
+      (courseCard) => {
+
+        courseCard.addEventListener(
+          "click",
+          () => {
+
+            const course =
+              courseCard.dataset.course;
+
+            // Next step:
+            // openCourseStudentsPopup(course)
+
+            console.log(
+              "Selected course:",
+              course
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
 /* ==========================================================================
    ATTENDANCE DATE DEFAULT START
    ========================================================================== */
