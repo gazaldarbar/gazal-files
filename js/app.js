@@ -286,7 +286,7 @@ function selectTab(key, btnEl) {
   if (key === "students") {
     document.getElementById("students-panel").style.display = "block";
 
-    renderStudentsList();
+    renderStudentsCourseList();
     return;
   }
 
