@@ -17,7 +17,7 @@ const STRINGS = {
     pinMismatch: "PINs did not match, try again",
     pinDelete: "Delete",
 
-    greeting: "",
+    
     searchPlaceholder: "Search student name, ID, or phone",
 
     navHome: "Home",
@@ -66,7 +66,7 @@ const STRINGS = {
     pinMismatch: "PINs did not match, try again",
     pinDelete: "Delete",
 
-    greeting: "",
+    
     searchPlaceholder: "സെർച്ച്",
 
     navHome: "ഹോം",
