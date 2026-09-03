@@ -402,6 +402,7 @@ if (attendanceCourse) {
   setupFingerprintAttendanceControls();
   setupAttendanceHistoryControls();
   setupAttendanceRecordDetailsControls();
+  setupQrPopup();
   
 }
 
@@ -4950,3 +4951,93 @@ async function openTodayAttendancePopup() {
 
 }
    
+/* ================================================================
+   QR POPUP FEATURE
+   ================================================================ */
+
+function openQrPopup() {
+
+  const overlay =
+    document.getElementById(
+      "qr-popup-overlay"
+    );
+
+  if (overlay) {
+    overlay.classList.add("active");
+  }
+
+}
+
+
+function closeQrPopup() {
+
+  const overlay =
+    document.getElementById(
+      "qr-popup-overlay"
+    );
+
+  if (overlay) {
+    overlay.classList.remove("active");
+  }
+
+}
+
+
+function setupQrPopup() {
+
+  const payButton =
+    document.getElementById(
+      "btn-pay"
+    );
+
+  const closeButton =
+    document.getElementById(
+      "qr-popup-close"
+    );
+
+  const overlay =
+    document.getElementById(
+      "qr-popup-overlay"
+    );
+
+
+  if (payButton) {
+
+    payButton.addEventListener(
+      "click",
+      openQrPopup
+    );
+
+  }
+
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
+      "click",
+      closeQrPopup
+    );
+
+  }
+
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      (event) => {
+
+        if (
+          event.target === overlay
+        ) {
+
+          closeQrPopup();
+
+        }
+
+      }
+    );
+
+  }
+
+}
