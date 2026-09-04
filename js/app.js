@@ -743,6 +743,372 @@ if (
 }
 
 /* ================================================================
+   NOTES — SAVE / DISPLAY / DELETE
+   ================================================================ */
+
+
+/* ------------------------------------------------
+   ELEMENTS
+   ------------------------------------------------ */
+
+const notesInput =
+  document.getElementById(
+    "notes-input"
+  );
+
+
+const saveNoteButton =
+  document.getElementById(
+    "save-note-button"
+  );
+
+
+const notesList =
+  document.getElementById(
+    "notes-list"
+  );
+
+
+/* ------------------------------------------------
+   GET SAVED NOTES
+   ------------------------------------------------ */
+
+function getNotes() {
+
+  return JSON.parse(
+    localStorage.getItem(
+      "gazal_notes"
+    ) || "[]"
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SAVE NOTES
+   ------------------------------------------------ */
+
+function saveNotes(
+  notes
+) {
+
+  localStorage.setItem(
+    "gazal_notes",
+    JSON.stringify(
+      notes
+    )
+  );
+
+}
+
+
+/* ------------------------------------------------
+   FORMAT DATE
+   ------------------------------------------------ */
+
+function formatNoteDate(
+  dateString
+) {
+
+  const date =
+    new Date(
+      dateString
+    );
+
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+      dateStyle:
+        "medium",
+
+      timeStyle:
+        "short"
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   ESCAPE HTML
+   ------------------------------------------------ */
+
+function escapeNoteHtml(
+  text
+) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.textContent =
+    text;
+
+
+  return div.innerHTML;
+
+}
+
+
+/* ------------------------------------------------
+   RENDER NOTES
+   ------------------------------------------------ */
+
+function renderNotes() {
+
+  if (
+    !notesList
+  ) {
+
+    return;
+
+  }
+
+
+  const notes =
+    getNotes();
+
+
+  /*
+    EMPTY STATE
+  */
+
+  if (
+    notes.length === 0
+  ) {
+
+    notesList.innerHTML =
+      `
+        <div class="notes-empty">
+
+          No notes yet.
+          <br>
+
+          Write your first office note above.
+
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  /*
+    SHOW NOTES
+  */
+
+  notesList.innerHTML =
+    notes
+      .map(
+        (note) =>
+          `
+            <div
+              class="note-card"
+              data-note-id="${note.id}"
+            >
+
+              <button
+                type="button"
+                class="note-delete-button"
+                data-note-id="${note.id}"
+                aria-label="Delete note"
+              >
+                🗑
+              </button>
+
+
+              <div
+                class="note-card-text"
+              >
+                ${escapeNoteHtml(
+                  note.text
+                )}
+              </div>
+
+
+              <div
+                class="note-card-date"
+              >
+                ${formatNoteDate(
+                  note.createdAt
+                )}
+              </div>
+
+            </div>
+          `
+      )
+      .join(
+        ""
+      );
+
+
+  setupNoteDeleteButtons();
+
+}
+
+
+/* ------------------------------------------------
+   SAVE NEW NOTE
+   ------------------------------------------------ */
+
+if (
+  saveNoteButton &&
+  notesInput
+) {
+
+  saveNoteButton.addEventListener(
+    "click",
+    () => {
+
+      const text =
+        notesInput.value.trim();
+
+
+      /*
+        PREVENT EMPTY NOTE
+      */
+
+      if (
+        !text
+      ) {
+
+        alert(
+          "Please write a note first."
+        );
+
+        return;
+
+      }
+
+
+      const notes =
+        getNotes();
+
+
+      const newNote = {
+
+        id:
+          "note_" +
+          Date.now(),
+
+        text:
+          text,
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      /*
+        NEWEST NOTE FIRST
+      */
+
+      notes.unshift(
+        newNote
+      );
+
+
+      saveNotes(
+        notes
+      );
+
+
+      /*
+        CLEAR INPUT
+      */
+
+      notesInput.value =
+        "";
+
+
+      /*
+        UPDATE SCREEN
+      */
+
+      renderNotes();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   DELETE BUTTONS
+   ------------------------------------------------ */
+
+function setupNoteDeleteButtons() {
+
+  document
+    .querySelectorAll(
+      ".note-delete-button"
+    )
+    .forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const noteId =
+              button.dataset.noteId;
+
+
+            const confirmed =
+              confirm(
+                "Delete this note?"
+              );
+
+
+            if (
+              !confirmed
+            ) {
+
+              return;
+
+            }
+
+
+            const notes =
+              getNotes();
+
+
+            const updatedNotes =
+              notes.filter(
+                (note) =>
+                  note.id !==
+                  noteId
+              );
+
+
+            saveNotes(
+              updatedNotes
+            );
+
+
+            renderNotes();
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* ------------------------------------------------
+   INITIAL RENDER
+   ------------------------------------------------ */
+
+renderNotes();
+
+/* ================================================================
    CHANGE PASSWORD FUNCTIONALITY
    ================================================================ */
 
