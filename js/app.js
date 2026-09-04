@@ -6813,10 +6813,66 @@ async function editStudent(studentId) {
   ).value =
     student.course || "";
 
-  document.getElementById(
+    document.getElementById(
     "admission-date"
   ).value =
     student.admissionDate || "";
+
+
+/* ================================================================
+   LOAD EXISTING STUDENT PHOTO FOR EDITING
+   ================================================================ */
+
+
+/*
+  Clear any previously selected
+  file from another student.
+*/
+
+selectedStudentPhotoFile =
+  null;
+
+
+/*
+  Load the saved Base64 photo.
+*/
+
+selectedStudentPhotoData =
+  student.photoData ||
+  null;
+
+
+if (
+  student.photoData
+) {
+
+  studentPhotoImage.src =
+    student.photoData;
+
+
+  studentPhotoImage.style.display =
+    "block";
+
+
+  studentPhotoPlaceholder.style.display =
+    "none";
+
+} else {
+
+  studentPhotoImage.src =
+    "";
+
+
+  studentPhotoImage.style.display =
+    "none";
+
+
+  studentPhotoPlaceholder.style.display =
+    "flex";
+
+}
+
+
 
 
   // Change Save button text.
