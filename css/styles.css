@@ -6648,3 +6648,442 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
 
 }
 
+/* ================================================================
+   NOTES PANEL
+   ================================================================ */
+
+#notes-panel {
+  width: 100%;
+  padding: 24px 20px 40px;
+  box-sizing: border-box;
+}
+
+
+.notes-header {
+  margin-bottom: 24px;
+}
+
+
+.notes-title-area h2 {
+  margin: 0 0 8px;
+
+  color: #F7F2E7;
+
+  font-size: 26px;
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+}
+
+
+.notes-title-area p {
+  margin: 0;
+
+  color: rgba(
+    247,
+    242,
+    231,
+    0.62
+  );
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* ================================================================
+   NOTES EDITOR CARD
+   ================================================================ */
+
+.notes-editor-card {
+  padding: 18px;
+
+  border:
+    1px solid
+    rgba(
+      247,
+      242,
+      231,
+      0.10
+    );
+
+  border-radius: 22px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  box-sizing:
+    border-box;
+}
+
+
+.notes-input {
+  width: 100%;
+  min-height: 130px;
+
+  padding: 15px;
+
+  resize:
+    vertical;
+
+  border:
+    1px solid
+    rgba(
+      247,
+      242,
+      231,
+      0.10
+    );
+
+  border-radius: 15px;
+
+  outline:
+    none;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
+
+  color:
+    #F7F2E7;
+
+  font-family:
+    inherit;
+
+  font-size:
+    15px;
+
+  line-height:
+    1.55;
+
+  box-sizing:
+    border-box;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.notes-input::placeholder {
+  color:
+    rgba(
+      247,
+      242,
+      231,
+      0.38
+    );
+}
+
+
+.notes-input:focus {
+  border-color:
+    rgba(
+      255,
+      205,
+      56,
+      0.55
+    );
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.28
+    );
+}
+
+
+.notes-editor-card
+.save-new-password-button {
+  width:
+    100%;
+
+  margin-top:
+    14px;
+}
+
+
+/* ================================================================
+   SAVED NOTES
+   ================================================================ */
+
+.notes-list-section {
+  margin-top:
+    30px;
+}
+
+
+.notes-list-section h3 {
+  margin:
+    0 0 14px;
+
+  color:
+    #F7F2E7;
+
+  font-size:
+    17px;
+
+  font-weight:
+    700;
+}
+
+
+.notes-list {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    12px;
+}
+
+
+/* ================================================================
+   INDIVIDUAL NOTE CARD
+   ================================================================ */
+
+.note-card {
+  position:
+    relative;
+
+  padding:
+    17px;
+
+  border:
+    1px solid
+    rgba(
+      247,
+      242,
+      231,
+      0.10
+    );
+
+  border-radius:
+    18px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.045
+    );
+
+  box-sizing:
+    border-box;
+
+  animation:
+    noteAppear
+    0.25s
+    ease;
+}
+
+
+.note-card-text {
+  padding-right:
+    42px;
+
+  color:
+    #F7F2E7;
+
+  font-size:
+    15px;
+
+  line-height:
+    1.55;
+
+  white-space:
+    pre-wrap;
+
+  word-break:
+    break-word;
+}
+
+
+.note-card-date {
+  margin-top:
+    12px;
+
+  color:
+    rgba(
+      247,
+      242,
+      231,
+      0.42
+    );
+
+  font-size:
+    12px;
+}
+
+
+/* ================================================================
+   DELETE BUTTON
+   ================================================================ */
+
+.note-delete-button {
+  position:
+    absolute;
+
+  top:
+    12px;
+
+  right:
+    12px;
+
+  width:
+    34px;
+
+  height:
+    34px;
+
+  border:
+    none;
+
+  border-radius:
+    10px;
+
+  background:
+    rgba(
+      255,
+      90,
+      90,
+      0.10
+    );
+
+  color:
+    rgba(
+      255,
+      150,
+      150,
+      0.95
+    );
+
+  font-size:
+    16px;
+
+  cursor:
+    pointer;
+
+  transition:
+    transform
+    0.2s
+    ease,
+    background
+    0.2s
+    ease;
+}
+
+
+.note-delete-button:hover {
+  background:
+    rgba(
+      255,
+      90,
+      90,
+      0.20
+    );
+
+  transform:
+    scale(
+      1.06
+    );
+}
+
+
+.note-delete-button:active {
+  transform:
+    scale(
+      0.92
+    );
+}
+
+
+/* ================================================================
+   EMPTY NOTES STATE
+   ================================================================ */
+
+.notes-empty {
+  padding:
+    30px 20px;
+
+  border:
+    1px dashed
+    rgba(
+      247,
+      242,
+      231,
+      0.14
+    );
+
+  border-radius:
+    18px;
+
+  color:
+    rgba(
+      247,
+      242,
+      231,
+      0.45
+    );
+
+  text-align:
+    center;
+
+  font-size:
+    14px;
+}
+
+
+/* ================================================================
+   NOTE ANIMATION
+   ================================================================ */
+
+@keyframes noteAppear {
+
+  from {
+
+    opacity:
+      0;
+
+    transform:
+      translateY(
+        8px
+      );
+
+  }
+
+
+  to {
+
+    opacity:
+      1;
+
+    transform:
+      translateY(
+        0
+      );
+
+  }
+
+}
