@@ -2356,7 +2356,50 @@ async function loadInstituteProfile() {
       }
     );
 
+    /* ============================================
+       LOAD INSTITUTE LOGO
+       ============================================ */
 
+    if (
+      profile.logoData
+    ) {
+
+      instituteLogoImage.src =
+        profile.logoData;
+
+
+      instituteLogoImage.style.display =
+        "block";
+
+
+      instituteLogoPlaceholder.style.display =
+        "none";
+
+
+      console.log(
+        "Institute logo loaded from Firestore."
+      );
+
+    } else {
+
+      /*
+        No logo saved.
+        Show default placeholder.
+      */
+
+      instituteLogoImage.src =
+        "";
+
+
+      instituteLogoImage.style.display =
+        "none";
+
+
+      instituteLogoPlaceholder.style.display =
+        "flex";
+
+    }
+    
     console.log(
       "Institute profile loaded successfully."
     );
