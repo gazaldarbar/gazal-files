@@ -1738,8 +1738,9 @@ if (
 
 }
 
+
 /* ------------------------------------------------
-   UPLOAD LOGO + SHOW PREVIEW
+   SELECT + PREVIEW + UPLOAD LOGO
    ------------------------------------------------ */
 
 if (
@@ -1769,7 +1770,18 @@ if (
       try {
 
         /*
-          Show local preview immediately.
+          Show uploading status.
+        */
+
+        uploadInstituteLogoButton.textContent =
+          "Uploading...";
+
+        uploadInstituteLogoButton.disabled =
+          true;
+
+
+        /*
+          Show preview immediately.
         */
 
         const reader =
@@ -1810,7 +1822,7 @@ if (
 
 
         /*
-          Upload logo to Firebase Storage.
+          Check Firebase function.
         */
 
         if (
@@ -1818,11 +1830,15 @@ if (
         ) {
 
           throw new Error(
-            "Firebase logo upload function is not available."
+            "Firebase Storage upload function is not available."
           );
 
         }
 
+
+        /*
+          Upload selected file.
+        */
 
         const logoUrl =
           await window
@@ -1832,8 +1848,8 @@ if (
 
 
         /*
-          Save logo URL inside
-          Institute Profile document.
+          Save permanent logo URL
+          inside Institute Profile.
         */
 
         if (
@@ -1841,7 +1857,7 @@ if (
         ) {
 
           throw new Error(
-            "Institute profile save function is not available."
+            "Institute Profile save function is not available."
           );
 
         }
@@ -1857,8 +1873,17 @@ if (
 
 
         console.log(
-          "Institute logo saved successfully."
+          "Institute logo uploaded and saved:",
+          logoUrl
         );
+
+
+        uploadInstituteLogoButton.textContent =
+          "Change Logo";
+
+
+        uploadInstituteLogoButton.disabled =
+          false;
 
 
         alert(
@@ -1873,8 +1898,17 @@ if (
         );
 
 
+        uploadInstituteLogoButton.textContent =
+          "Upload Logo";
+
+
+        uploadInstituteLogoButton.disabled =
+          false;
+
+
         alert(
-          "Failed to upload institute logo."
+          "Failed to upload institute logo: " +
+          error.message
         );
 
       }
@@ -1884,10 +1918,6 @@ if (
 
 }
 
-
-  /* ================================================================
-   INSTITUTE PROFILE EDIT / SAVE
-   ================================================================ */
 /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
    ================================================================ */
