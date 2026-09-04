@@ -677,6 +677,71 @@ if (
 }
 
 /* ================================================================
+   MORE — NOTES NAVIGATION
+   ================================================================ */
+
+const notesButton =
+  document.getElementById(
+    "notes-button"
+  );
+
+
+const notesPanel =
+  document.getElementById(
+    "notes-panel"
+  );
+
+
+const notesBack =
+  document.getElementById(
+    "notes-back"
+  );
+
+
+if (
+  notesButton &&
+  notesPanel &&
+  morePanel
+) {
+
+  notesButton.addEventListener(
+    "click",
+    () => {
+
+      morePanel.style.display =
+        "none";
+
+      notesPanel.style.display =
+        "block";
+
+    }
+  );
+
+}
+
+
+if (
+  notesBack &&
+  notesPanel &&
+  morePanel
+) {
+
+  notesBack.addEventListener(
+    "click",
+    () => {
+
+      notesPanel.style.display =
+        "none";
+
+      morePanel.style.display =
+        "block";
+
+    }
+  );
+
+}
+
+/* ================================================================
    CHANGE PASSWORD FUNCTIONALITY
    ================================================================ */
 
