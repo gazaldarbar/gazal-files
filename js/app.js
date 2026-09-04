@@ -1811,6 +1811,9 @@ if (
   /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
    ================================================================ */
+/* ================================================================
+   INSTITUTE PROFILE EDIT / SAVE
+   ================================================================ */
 
 const editInstituteProfileButton =
   document.getElementById(
@@ -1818,26 +1821,30 @@ const editInstituteProfileButton =
   );
 
 
-const instituteProfileFields = [
-  "profile-institute-name",
-  "profile-tagline",
-  "profile-established",
-  "profile-legacy",
-  "profile-address",
-  "profile-district",
-  "profile-state",
-  "profile-pin-code",
-  "profile-phone",
-  "profile-whatsapp",
-  "profile-email",
-  "profile-website",
-  "profile-founder",
-  "profile-designation"
-];
-
-
 let instituteProfileEditMode =
   false;
+
+
+/* ------------------------------------------------
+   PROFILE FIELD KEYS
+   ------------------------------------------------ */
+
+const instituteProfileFieldKeys = [
+  "instituteName",
+  "tagline",
+  "established",
+  "legacy",
+  "address",
+  "district",
+  "state",
+  "pinCode",
+  "phone",
+  "whatsapp",
+  "email",
+  "website",
+  "founder",
+  "designation"
+];
 
 
 /* ------------------------------------------------
@@ -1852,25 +1859,32 @@ if (
     "click",
     async () => {
 
-      /*
-        ENTER EDIT MODE
-      */
+
+      /* ============================================
+         ENTER EDIT MODE
+         ============================================ */
 
       if (
         !instituteProfileEditMode
       ) {
 
-        instituteProfileFields.forEach(
-          (fieldId) => {
+        const profileRows =
+          document.querySelectorAll(
+            "#institute-profile-panel .profile-info-row"
+          );
 
-            const field =
-              document.getElementById(
-                fieldId
+
+        profileRows.forEach(
+          (row, index) => {
+
+            const valueElement =
+              row.querySelector(
+                "strong"
               );
 
 
             if (
-              !field
+              !valueElement
             ) {
 
               return;
@@ -1879,7 +1893,7 @@ if (
 
 
             const currentValue =
-              field.textContent.trim();
+              valueElement.textContent.trim();
 
 
             const input =
@@ -1900,11 +1914,13 @@ if (
               "institute-profile-edit-input";
 
 
-            input.dataset.fieldId =
-              fieldId;
+            input.dataset.profileKey =
+              instituteProfileFieldKeys[
+                index
+              ];
 
 
-            field.replaceWith(
+            valueElement.replaceWith(
               input
             );
 
@@ -1925,34 +1941,28 @@ if (
       }
 
 
-      /*
-        SAVE PROFILE
-      */
+      /* ============================================
+         SAVE PROFILE
+         ============================================ */
 
-      const profile = {};
-
-
-      instituteProfileFields.forEach(
-        (fieldId) => {
-
-          const input =
-            document.querySelector(
-              `[data-field-id="${fieldId}"]`
-            );
+      const profile =
+        {};
 
 
-          if (
-            !input
-          ) {
-
-            return;
-
-          }
+      const profileInputs =
+        document.querySelectorAll(
+          "#institute-profile-panel .institute-profile-edit-input"
+        );
 
 
-          profile[
-            fieldId
-          ] =
+      profileInputs.forEach(
+        (input) => {
+
+          const key =
+            input.dataset.profileKey;
+
+
+          profile[key] =
             input.value.trim();
 
         }
@@ -1973,32 +1983,17 @@ if (
         }
 
 
-        instituteProfileFields.forEach(
-          (fieldId) => {
+        /*
+          Convert inputs back to normal text.
+        */
 
-            const input =
-              document.querySelector(
-                `[data-field-id="${fieldId}"]`
-              );
-
-
-            if (
-              !input
-            ) {
-
-              return;
-
-            }
-
+        profileInputs.forEach(
+          (input) => {
 
             const strong =
               document.createElement(
                 "strong"
               );
-
-
-            strong.id =
-              fieldId;
 
 
             strong.textContent =
@@ -2043,6 +2038,8 @@ if (
   );
 
 }
+
+      
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
