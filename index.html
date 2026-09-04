@@ -630,6 +630,75 @@
 
   <form id="add-student-form" class="student-form">
 
+    <!-- STUDENT PHOTO -->
+<div class="student-photo-upload">
+
+  <div
+    id="student-photo-preview"
+    class="student-photo-preview"
+  >
+
+    <span
+      id="student-photo-placeholder"
+      class="student-photo-placeholder"
+    >
+      👤
+    </span>
+
+    <img
+      id="student-photo-image"
+      class="student-photo-image"
+      alt="Student photo"
+      style="display:none;"
+    >
+
+  </div>
+
+
+  <div class="student-photo-actions">
+
+    <button
+      type="button"
+      id="btn-take-student-photo"
+      class="student-photo-action"
+    >
+      📷 Take Photo
+    </button>
+
+
+    <button
+      type="button"
+      id="btn-upload-student-photo"
+      class="student-photo-action"
+    >
+      🖼 Upload Photo
+    </button>
+
+  </div>
+
+
+  <!-- Camera capture input -->
+  <input
+    id="student-camera-input"
+    type="file"
+    accept="image/*"
+    capture="environment"
+    style="display:none;"
+  >
+
+
+  <!-- Gallery upload input -->
+  <input
+    id="student-gallery-input"
+    type="file"
+    accept="image/*"
+    style="display:none;"
+  >
+
+</div>
+
+<!-- STUDENT PHOTO END -->
+
     <div class="form-group">
       <label for="student-name">വിദ്യാർത്ഥിയുടെ പേര്</label>
       <input
