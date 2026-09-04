@@ -17,6 +17,15 @@ import {
 } from
   "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from
+  "https://www.gstatic.com/firebasejs/12.8.0/firebase-storage.js";
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyBS5RaiVeQse_dwKGFiKKoDozb3Ww2Bt4",
   authDomain: "gazal-darbar-app.firebaseapp.com",
@@ -41,6 +50,15 @@ const firebaseApp =
 
 const db =
   getFirestore(firebaseApp);
+
+/* ================================================================
+   INITIALIZE FIREBASE STORAGE
+   ================================================================ */
+
+const storage =
+  getStorage(
+    firebaseApp
+  );
 
 /* ================================================================
    FIRESTORE TEST FUNCTION
