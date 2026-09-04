@@ -7087,3 +7087,162 @@ main { flex: 1; overflow-y: auto; padding: 0 var(--space-3) 100px; }
   }
 
 }
+
+/* ================================================================
+   INSTITUTE PROFILE
+   ================================================================ */
+
+#institute-profile-panel{
+  padding-bottom:40px;
+}
+
+
+.institute-profile-header{
+  margin-bottom:24px;
+}
+
+
+.institute-profile-title-area{
+  margin-top:18px;
+}
+
+
+.institute-profile-title-area h2{
+  margin:0;
+  font-size:24px;
+}
+
+
+.institute-profile-title-area p{
+  margin:6px 0 0;
+  font-size:14px;
+  opacity:.65;
+}
+
+
+.institute-profile-section{
+  margin-bottom:24px;
+}
+
+
+.institute-profile-section h3{
+  margin:0 0 12px;
+  font-size:16px;
+}
+
+
+.institute-profile-card{
+  background:
+    rgba(255,255,255,.06);
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
+  border-radius:18px;
+
+  overflow:hidden;
+}
+
+
+.profile-info-row{
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:20px;
+
+  padding:
+    16px;
+
+  border-bottom:
+    1px solid
+    rgba(255,255,255,.07);
+}
+
+
+.profile-info-row:last-child{
+  border-bottom:none;
+}
+
+
+.profile-info-row span{
+  font-size:14px;
+
+  opacity:.6;
+
+  flex:
+    0 0 40%;
+}
+
+
+.profile-info-row strong{
+  font-size:14px;
+
+  text-align:right;
+
+  line-height:1.5;
+
+  flex:
+    1;
+}
+
+
+/* ================================================================
+   COURSES LIST
+   ================================================================ */
+
+.institute-course-row{
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:
+    14px 16px;
+
+  border-bottom:
+    1px solid
+    rgba(255,255,255,.07);
+}
+
+
+.institute-course-row:last-child{
+  border-bottom:none;
+}
+
+
+.institute-course-name{
+  font-size:14px;
+
+  line-height:1.4;
+}
+
+
+.institute-course-fee{
+  font-size:14px;
+
+  font-weight:700;
+
+  white-space:nowrap;
+}
+
+
+/* ================================================================
+   EDIT PROFILE BUTTON
+   ================================================================ */
+
+#edit-institute-profile-button{
+  width:100%;
+
+  margin-top:8px;
+}
+
