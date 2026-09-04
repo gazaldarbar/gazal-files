@@ -6176,27 +6176,45 @@ const feeDue =
 
   <div class="student-card-top">
 
-    <!-- STUDENT PHOTO -->
+  <div class="student-card-profile">
 
-    <div class="student-card-photo">
+    ${
+      student.photoData
+        ? `
+          <img
+            class="student-card-photo"
+            src="${student.photoData}"
+            alt="${student.studentName}"
+          >
+        `
+        : `
+          <div class="student-card-photo-placeholder">
+            👤
+          </div>
+        `
+    }
 
-      ${
-        student.photoData
-          ? `
-            <img
-              src="${student.photoData}"
-              alt="${student.studentName}"
-              class="student-card-photo-image"
-            >
-          `
-          : `
-            <div class="student-card-photo-placeholder">
-              👤
-            </div>
-          `
-      }
+
+    <div>
+
+      <h3>
+        ${student.studentName}
+      </h3>
+
+      <p class="student-card-id">
+        ${student.id}
+      </p>
 
     </div>
+
+  </div>
+
+
+  <span class="student-course-badge">
+    ${student.course}
+  </span>
+
+</div>
 
 
     <!-- STUDENT NAME + ID -->
