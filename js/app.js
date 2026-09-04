@@ -2663,6 +2663,183 @@ function previewStudentPhoto(
 
 }
 
+/* ------------------------------------------------
+   COMPRESS STUDENT PHOTO
+   ------------------------------------------------ */
+
+function compressStudentPhoto(
+  file
+) {
+
+  return new Promise(
+    (
+      resolve,
+      reject
+    ) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        () => {
+
+          const image =
+            new Image();
+
+
+          image.onload =
+            () => {
+
+              /*
+                Maximum student photo size.
+              */
+
+              const maxSize =
+                500;
+
+
+              let width =
+                image.width;
+
+
+              let height =
+                image.height;
+
+
+              /*
+                Keep proportions.
+              */
+
+              if (
+                width > height &&
+                width > maxSize
+              ) {
+
+                height =
+                  Math.round(
+                    height *
+                    (
+                      maxSize /
+                      width
+                    )
+                  );
+
+
+                width =
+                  maxSize;
+
+              }
+
+              else if (
+                height > maxSize
+              ) {
+
+                width =
+                  Math.round(
+                    width *
+                    (
+                      maxSize /
+                      height
+                    )
+                  );
+
+
+                height =
+                  maxSize;
+
+              }
+
+
+              /*
+                Create compression canvas.
+              */
+
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
+
+
+              canvas.width =
+                width;
+
+
+              canvas.height =
+                height;
+
+
+              const context =
+                canvas.getContext(
+                  "2d"
+                );
+
+
+              context.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+              );
+
+
+              /*
+                Convert to compressed JPEG Base64.
+              */
+
+              const compressedPhoto =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  0.80
+                );
+
+
+              resolve(
+                compressedPhoto
+              );
+
+            };
+
+
+          image.onerror =
+            () => {
+
+              reject(
+                new Error(
+                  "Failed to process student photo."
+                )
+              );
+
+            };
+
+
+          image.src =
+            reader.result;
+
+        };
+
+
+      reader.onerror =
+        () => {
+
+          reject(
+            new Error(
+              "Failed to read student photo."
+            )
+          );
+
+        };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
 
 /* ------------------------------------------------
    CAMERA PHOTO SELECTED
@@ -2889,6 +3066,64 @@ async function handleStudentFormSubmit(event) {
       ).value
 
   };
+
+  /* ------------------------------------------------
+   COMPRESS SELECTED STUDENT PHOTO
+   ------------------------------------------------ */
+
+if (
+  selectedStudentPhotoFile
+) {
+
+  try {
+
+    console.log(
+      "Compressing student photo..."
+    );
+
+
+    const studentPhotoData =
+      await compressStudentPhoto(
+        selectedStudentPhotoFile
+      );
+
+
+    console.log(
+      "Student photo compressed."
+    );
+
+
+    console.log(
+      "Student photo Base64 size:",
+      studentPhotoData.length
+    );
+
+
+    /*
+      Add photo to student data.
+    */
+
+    studentData.photoData =
+      studentPhotoData;
+
+  } catch (error) {
+
+    console.error(
+      "Student photo processing failed:",
+      error
+    );
+
+
+    alert(
+      "Failed to process student photo."
+    );
+
+
+    return;
+
+  }
+
+}
 
 
   let savedStudent = null;
