@@ -746,6 +746,10 @@ if (
    NOTES — SAVE / DISPLAY / DELETE
    ================================================================ */
 
+/* ================================================================
+   NOTES — FIRESTORE + LOCAL BACKUP
+   ================================================================ */
+
 
 /* ------------------------------------------------
    ELEMENTS
@@ -770,7 +774,7 @@ const notesList =
 
 
 /* ------------------------------------------------
-   GET SAVED NOTES
+   GET LOCAL NOTES
    ------------------------------------------------ */
 
 function getNotes() {
@@ -785,7 +789,7 @@ function getNotes() {
 
 
 /* ------------------------------------------------
-   SAVE NOTES
+   SAVE LOCAL NOTES
    ------------------------------------------------ */
 
 function saveNotes(
@@ -898,6 +902,21 @@ function renderNotes() {
 
 
   /*
+    NEWEST NOTE FIRST
+  */
+
+  notes.sort(
+    (a, b) =>
+      new Date(
+        b.createdAt
+      ) -
+      new Date(
+        a.createdAt
+      )
+  );
+
+
+  /*
     SHOW NOTES
   */
 
@@ -952,6 +971,71 @@ function renderNotes() {
 
 
 /* ------------------------------------------------
+   LOAD NOTES FROM FIRESTORE
+   ------------------------------------------------ */
+
+async function loadNotesFromCloud() {
+
+  try {
+
+    if (
+      !window.getNotesFromFirestore
+    ) {
+
+      return;
+
+    }
+
+
+    const cloudNotes =
+      await window
+        .getNotesFromFirestore();
+
+
+    if (
+      !Array.isArray(
+        cloudNotes
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+      SAVE CLOUD DATA
+      AS LOCAL BACKUP
+    */
+
+    saveNotes(
+      cloudNotes
+    );
+
+
+    renderNotes();
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load notes from Firestore:",
+      error
+    );
+
+
+    /*
+      LOCAL NOTES
+      WILL CONTINUE TO WORK
+    */
+
+    renderNotes();
+
+  }
+
+}
+
+
+/* ------------------------------------------------
    SAVE NEW NOTE
    ------------------------------------------------ */
 
@@ -962,7 +1046,7 @@ if (
 
   saveNoteButton.addEventListener(
     "click",
-    () => {
+    async () => {
 
       const text =
         notesInput.value.trim();
@@ -985,10 +1069,6 @@ if (
       }
 
 
-      const notes =
-        getNotes();
-
-
       const newNote = {
 
         id:
@@ -999,38 +1079,90 @@ if (
           text,
 
         createdAt:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       };
 
 
-      /*
-        NEWEST NOTE FIRST
-      */
+      try {
 
-      notes.unshift(
-        newNote
-      );
+        /*
+          PREVENT DOUBLE CLICK
+        */
 
-
-      saveNotes(
-        notes
-      );
+        saveNoteButton.disabled =
+          true;
 
 
-      /*
-        CLEAR INPUT
-      */
+        /*
+          SAVE TO FIRESTORE
+        */
 
-      notesInput.value =
-        "";
+        if (
+          window.saveNoteToFirestore
+        ) {
+
+          await window
+            .saveNoteToFirestore(
+              newNote
+            );
+
+        }
 
 
-      /*
-        UPDATE SCREEN
-      */
+        /*
+          UPDATE LOCAL BACKUP
+        */
 
-      renderNotes();
+        const notes =
+          getNotes();
+
+
+        notes.unshift(
+          newNote
+        );
+
+
+        saveNotes(
+          notes
+        );
+
+
+        /*
+          CLEAR INPUT
+        */
+
+        notesInput.value =
+          "";
+
+
+        /*
+          UPDATE SCREEN
+        */
+
+        renderNotes();
+
+
+      } catch (error) {
+
+        console.error(
+          "Failed to save note:",
+          error
+        );
+
+
+        alert(
+          "Unable to save note."
+        );
+
+
+      } finally {
+
+        saveNoteButton.disabled =
+          false;
+
+      }
 
     }
   );
@@ -1053,7 +1185,7 @@ function setupNoteDeleteButtons() {
 
         button.addEventListener(
           "click",
-          () => {
+          async () => {
 
             const noteId =
               button.dataset.noteId;
@@ -1074,24 +1206,61 @@ function setupNoteDeleteButtons() {
             }
 
 
-            const notes =
-              getNotes();
+            try {
+
+              /*
+                DELETE FROM FIRESTORE
+              */
+
+              if (
+                window.deleteNoteFromFirestore
+              ) {
+
+                await window
+                  .deleteNoteFromFirestore(
+                    noteId
+                  );
+
+              }
 
 
-            const updatedNotes =
-              notes.filter(
-                (note) =>
-                  note.id !==
-                  noteId
+              /*
+                DELETE FROM LOCAL BACKUP
+              */
+
+              const notes =
+                getNotes();
+
+
+              const updatedNotes =
+                notes.filter(
+                  (note) =>
+                    note.id !==
+                    noteId
+                );
+
+
+              saveNotes(
+                updatedNotes
               );
 
 
-            saveNotes(
-              updatedNotes
-            );
+              renderNotes();
 
 
-            renderNotes();
+            } catch (error) {
+
+              console.error(
+                "Failed to delete note:",
+                error
+              );
+
+
+              alert(
+                "Unable to delete note."
+              );
+
+            }
 
           }
         );
@@ -1107,6 +1276,13 @@ function setupNoteDeleteButtons() {
    ------------------------------------------------ */
 
 renderNotes();
+
+
+/* ------------------------------------------------
+   LOAD CLOUD NOTES
+   ------------------------------------------------ */
+
+loadNotesFromCloud();
 
 /* ================================================================
    CHANGE PASSWORD FUNCTIONALITY
