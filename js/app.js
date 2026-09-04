@@ -265,6 +265,7 @@ function selectTab(key, btnEl) {
   "more-panel",
   "change-password-panel",
   "notes-panel",
+  "institute-profile-panel",
   "placeholder-panel"
 ];
 
@@ -1578,6 +1579,107 @@ if (
           "Update Password";
 
       }
+
+    }
+  );
+
+}
+
+/* ================================================================
+   INSTITUTE PROFILE NAVIGATION
+   ================================================================ */
+
+const instituteProfileButton =
+  document.getElementById(
+    "institute-profile-button"
+  );
+
+
+const instituteProfileBackButton =
+  document.getElementById(
+    "institute-profile-back"
+  );
+
+
+if (
+  instituteProfileButton
+) {
+
+  instituteProfileButton.addEventListener(
+    "click",
+    () => {
+
+      /*
+        Hide More panel.
+      */
+
+      document.getElementById(
+        "more-panel"
+      ).style.display =
+        "none";
+
+
+      /*
+        Show Institute Profile.
+      */
+
+      document.getElementById(
+        "institute-profile-panel"
+      ).style.display =
+        "block";
+
+
+      /*
+        Scroll to top.
+      */
+
+      document.getElementById(
+        "main-content"
+      ).scrollTop =
+        0;
+
+    }
+  );
+
+}
+
+
+if (
+  instituteProfileBackButton
+) {
+
+  instituteProfileBackButton.addEventListener(
+    "click",
+    () => {
+
+      /*
+        Hide Institute Profile.
+      */
+
+      document.getElementById(
+        "institute-profile-panel"
+      ).style.display =
+        "none";
+
+
+      /*
+        Return to More.
+      */
+
+      document.getElementById(
+        "more-panel"
+      ).style.display =
+        "block";
+
+
+      /*
+        Scroll to top.
+      */
+
+      document.getElementById(
+        "main-content"
+      ).scrollTop =
+        0;
 
     }
   );
