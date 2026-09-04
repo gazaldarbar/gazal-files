@@ -1716,14 +1716,15 @@ async function handleStudentFormSubmit(event) {
   );
 
 
-  /*
-    RESET FORM
-  */
+/*
+  RESET FORM
+*/
 
-  event.target.reset();
+event.target.reset();
 
+resetStudentPhoto();
 
-  editingStudentId = null;
+editingStudentId = null;
 
 
   const formTitle =
