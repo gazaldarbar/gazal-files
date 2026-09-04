@@ -356,12 +356,35 @@ function setupAddStudentFeature() {
   const form = document.getElementById("add-student-form");
 
   if (addButton) {
-    addButton.addEventListener("click", openAddStudentForm);
-  }
 
-  if (cancelButton) {
-    cancelButton.addEventListener("click", closeAddStudentForm);
-  }
+  addButton.addEventListener(
+    "click",
+    () => {
+
+      resetStudentPhoto();
+
+      openAddStudentForm();
+
+    }
+  );
+
+}
+
+
+if (cancelButton) {
+
+  cancelButton.addEventListener(
+    "click",
+    () => {
+
+      resetStudentPhoto();
+
+      closeAddStudentForm();
+
+    }
+  );
+
+}
 
   if (form) {
     form.addEventListener("submit", handleStudentFormSubmit);
