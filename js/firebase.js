@@ -783,6 +783,62 @@ async function getInstituteProfileFromFirestore() {
 
 }
 
+
+
+
+/* ------------------------------------------------
+   LOAD INSTITUTE PROFILE
+   ------------------------------------------------ */
+
+async function getInstituteProfileFromFirestore() {
+
+  try {
+
+    const profileDocRef =
+      doc(
+        db,
+        "app_settings",
+        "institute_profile"
+      );
+
+
+    const profileSnapshot =
+      await getDoc(
+        profileDocRef
+      );
+
+
+    if (
+      !profileSnapshot.exists()
+    ) {
+
+      return null;
+
+    }
+
+
+    return {
+
+      firestoreId:
+        profileSnapshot.id,
+
+      ...profileSnapshot.data()
+
+    };
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load institute profile:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
 /* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
@@ -834,6 +890,8 @@ window.saveInstituteProfileToFirestore =
 
 window.getInstituteProfileFromFirestore =
   getInstituteProfileFromFirestore;
+
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
