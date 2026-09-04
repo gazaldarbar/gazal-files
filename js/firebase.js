@@ -661,6 +661,111 @@ async function deleteNoteFromFirestore(
 }
 
 /* ================================================================
+   INSTITUTE PROFILE FIRESTORE FUNCTIONS
+   ================================================================ */
+
+const INSTITUTE_PROFILE_COLLECTION =
+  "app_settings";
+
+const INSTITUTE_PROFILE_DOCUMENT =
+  "institute_profile";
+
+
+/* ------------------------------------------------
+   SAVE INSTITUTE PROFILE
+   ------------------------------------------------ */
+
+async function saveInstituteProfileToFirestore(
+  profile
+) {
+
+  try {
+
+    const profileDocRef =
+      doc(
+        db,
+        INSTITUTE_PROFILE_COLLECTION,
+        INSTITUTE_PROFILE_DOCUMENT
+      );
+
+
+    await setDoc(
+      profileDocRef,
+      profile,
+      {
+        merge: true
+      }
+    );
+
+
+    console.log(
+      "Institute profile saved to Firestore."
+    );
+
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to save institute profile:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* ------------------------------------------------
+   LOAD INSTITUTE PROFILE
+   ------------------------------------------------ */
+
+async function getInstituteProfileFromFirestore() {
+
+  try {
+
+    const profileDocRef =
+      doc(
+        db,
+        INSTITUTE_PROFILE_COLLECTION,
+        INSTITUTE_PROFILE_DOCUMENT
+      );
+
+
+    const profileSnapshot =
+      await getDoc(
+        profileDocRef
+      );
+
+
+    if (
+      !profileSnapshot.exists()
+    ) {
+
+      return null;
+
+    }
+
+
+    return profileSnapshot.data();
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load institute profile:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -706,6 +811,11 @@ window.getNotesFromFirestore =
 window.deleteNoteFromFirestore =
   deleteNoteFromFirestore;
 
+window.saveInstituteProfileToFirestore =
+  saveInstituteProfileToFirestore;
+
+window.getInstituteProfileFromFirestore =
+  getInstituteProfileFromFirestore;
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
@@ -726,5 +836,7 @@ export {
   saveSharedPinHash,
   saveNoteToFirestore,
   getNotesFromFirestore,
-  deleteNoteFromFirestore
+  deleteNoteFromFirestore,
+  saveInstituteProfileToFirestore,
+  getInstituteProfileFromFirestore
 };
