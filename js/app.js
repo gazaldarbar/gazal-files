@@ -5262,24 +5262,45 @@ backButton.style.display =
 
     <div class="student-card-top">
 
-      <div>
+  <div class="student-card-profile">
 
-        <h3>
-          ${student.studentName}
-        </h3>
+    ${
+      student.photoData
+        ? `
+          <img
+            class="student-card-photo"
+            src="${student.photoData}"
+            alt="${student.studentName}"
+          >
+        `
+        : `
+          <div class="student-card-photo-placeholder">
+            👤
+          </div>
+        `
+    }
 
-        <p class="student-card-id">
-          ${student.id}
-        </p>
 
-      </div>
+    <div>
 
+      <h3>
+        ${student.studentName}
+      </h3>
 
-      <span class="student-course-badge">
-        ${student.course}
-      </span>
+      <p class="student-card-id">
+        ${student.id}
+      </p>
 
     </div>
+
+  </div>
+
+
+  <span class="student-course-badge">
+    ${student.course}
+  </span>
+
+</div>
 
 
     <div class="student-details">
