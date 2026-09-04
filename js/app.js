@@ -1807,6 +1807,242 @@ if (
   );
 
 }
+
+  /* ================================================================
+   INSTITUTE PROFILE EDIT / SAVE
+   ================================================================ */
+
+const editInstituteProfileButton =
+  document.getElementById(
+    "edit-institute-profile-button"
+  );
+
+
+const instituteProfileFields = [
+  "profile-institute-name",
+  "profile-tagline",
+  "profile-established",
+  "profile-legacy",
+  "profile-address",
+  "profile-district",
+  "profile-state",
+  "profile-pin-code",
+  "profile-phone",
+  "profile-whatsapp",
+  "profile-email",
+  "profile-website",
+  "profile-founder",
+  "profile-designation"
+];
+
+
+let instituteProfileEditMode =
+  false;
+
+
+/* ------------------------------------------------
+   EDIT / SAVE BUTTON
+   ------------------------------------------------ */
+
+if (
+  editInstituteProfileButton
+) {
+
+  editInstituteProfileButton.addEventListener(
+    "click",
+    async () => {
+
+      /*
+        ENTER EDIT MODE
+      */
+
+      if (
+        !instituteProfileEditMode
+      ) {
+
+        instituteProfileFields.forEach(
+          (fieldId) => {
+
+            const field =
+              document.getElementById(
+                fieldId
+              );
+
+
+            if (
+              !field
+            ) {
+
+              return;
+
+            }
+
+
+            const currentValue =
+              field.textContent.trim();
+
+
+            const input =
+              document.createElement(
+                "input"
+              );
+
+
+            input.type =
+              "text";
+
+
+            input.value =
+              currentValue;
+
+
+            input.className =
+              "institute-profile-edit-input";
+
+
+            input.dataset.fieldId =
+              fieldId;
+
+
+            field.replaceWith(
+              input
+            );
+
+          }
+        );
+
+
+        editInstituteProfileButton.textContent =
+          "Save Institute Profile";
+
+
+        instituteProfileEditMode =
+          true;
+
+
+        return;
+
+      }
+
+
+      /*
+        SAVE PROFILE
+      */
+
+      const profile = {};
+
+
+      instituteProfileFields.forEach(
+        (fieldId) => {
+
+          const input =
+            document.querySelector(
+              `[data-field-id="${fieldId}"]`
+            );
+
+
+          if (
+            !input
+          ) {
+
+            return;
+
+          }
+
+
+          profile[
+            fieldId
+          ] =
+            input.value.trim();
+
+        }
+      );
+
+
+      try {
+
+        if (
+          window.saveInstituteProfileToFirestore
+        ) {
+
+          await window
+            .saveInstituteProfileToFirestore(
+              profile
+            );
+
+        }
+
+
+        instituteProfileFields.forEach(
+          (fieldId) => {
+
+            const input =
+              document.querySelector(
+                `[data-field-id="${fieldId}"]`
+              );
+
+
+            if (
+              !input
+            ) {
+
+              return;
+
+            }
+
+
+            const strong =
+              document.createElement(
+                "strong"
+              );
+
+
+            strong.id =
+              fieldId;
+
+
+            strong.textContent =
+              input.value.trim();
+
+
+            input.replaceWith(
+              strong
+            );
+
+          }
+        );
+
+
+        editInstituteProfileButton.textContent =
+          "Edit Institute Profile";
+
+
+        instituteProfileEditMode =
+          false;
+
+
+        alert(
+          "Institute profile saved successfully!"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Failed to save institute profile:",
+          error
+        );
+
+
+        alert(
+          "Failed to save institute profile."
+        );
+
+      }
+
+    }
+  );
+
+}
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
