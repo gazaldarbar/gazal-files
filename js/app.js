@@ -1691,6 +1691,11 @@ if (
    INSTITUTE LOGO UPLOAD
    ================================================================ */
 
+/* ================================================================
+   INSTITUTE LOGO UPLOAD
+   FIRESTORE BASE64 VERSION
+   ================================================================ */
+
 const uploadInstituteLogoButton =
   document.getElementById(
     "upload-institute-logo-button"
@@ -1740,7 +1745,175 @@ if (
 
 
 /* ------------------------------------------------
-   SELECT + PREVIEW + UPLOAD LOGO
+   RESIZE + COMPRESS IMAGE
+   ------------------------------------------------ */
+
+function compressInstituteLogo(
+  file
+) {
+
+  return new Promise(
+    (
+      resolve,
+      reject
+    ) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        () => {
+
+          const image =
+            new Image();
+
+
+          image.onload =
+            () => {
+
+              const maxSize =
+                500;
+
+
+              let width =
+                image.width;
+
+
+              let height =
+                image.height;
+
+
+              /*
+                Keep image proportions.
+              */
+
+              if (
+                width > height &&
+                width > maxSize
+              ) {
+
+                height =
+                  Math.round(
+                    height *
+                    (
+                      maxSize /
+                      width
+                    )
+                  );
+
+                width =
+                  maxSize;
+
+              } else if (
+                height > maxSize
+              ) {
+
+                width =
+                  Math.round(
+                    width *
+                    (
+                      maxSize /
+                      height
+                    )
+                  );
+
+                height =
+                  maxSize;
+
+              }
+
+
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
+
+
+              canvas.width =
+                width;
+
+
+              canvas.height =
+                height;
+
+
+              const context =
+                canvas.getContext(
+                  "2d"
+                );
+
+
+              context.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+              );
+
+
+              /*
+                Convert compressed image
+                to JPEG Base64.
+              */
+
+              const compressedImage =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  0.85
+                );
+
+
+              resolve(
+                compressedImage
+              );
+
+            };
+
+
+          image.onerror =
+            () => {
+
+              reject(
+                new Error(
+                  "Failed to process image."
+                )
+              );
+
+            };
+
+
+          image.src =
+            reader.result;
+
+        };
+
+
+      reader.onerror =
+        () => {
+
+          reject(
+            new Error(
+              "Failed to read image."
+            )
+          );
+
+        };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SELECT + PREVIEW + SAVE TO FIRESTORE
    ------------------------------------------------ */
 
 if (
@@ -1769,112 +1942,57 @@ if (
 
       try {
 
-        /*
-          Show uploading status.
-        */
-
         uploadInstituteLogoButton.textContent =
-          "Uploading...";
+          "Saving...";
+
 
         uploadInstituteLogoButton.disabled =
           true;
 
 
         /*
-          Show preview immediately.
+          Compress image and convert
+          to Base64.
         */
 
-        const reader =
-          new FileReader();
-
-
-        reader.onload =
-          () => {
-
-            if (
-              instituteLogoImage
-            ) {
-
-              instituteLogoImage.src =
-                reader.result;
-
-              instituteLogoImage.style.display =
-                "block";
-
-            }
-
-
-            if (
-              instituteLogoPlaceholder
-            ) {
-
-              instituteLogoPlaceholder.style.display =
-                "none";
-
-            }
-
-          };
-
-
-        reader.readAsDataURL(
-          file
-        );
-
-
-        /*
-          Check Firebase function.
-        */
-
-        if (
-          !window.uploadInstituteLogoToFirebase
-        ) {
-
-          throw new Error(
-            "Firebase Storage upload function is not available."
+        const logoData =
+          await compressInstituteLogo(
+            file
           );
 
-        }
+
+        /*
+          Show permanent preview.
+        */
+
+        instituteLogoImage.src =
+          logoData;
+
+
+        instituteLogoImage.style.display =
+          "block";
+
+
+        instituteLogoPlaceholder.style.display =
+          "none";
 
 
         /*
-          Upload selected file.
+          Save Base64 image inside
+          Institute Profile Firestore document.
         */
-
-        const logoUrl =
-          await window
-            .uploadInstituteLogoToFirebase(
-              file
-            );
-
-
-        /*
-          Save permanent logo URL
-          inside Institute Profile.
-        */
-
-        if (
-          !window.saveInstituteProfileToFirestore
-        ) {
-
-          throw new Error(
-            "Institute Profile save function is not available."
-          );
-
-        }
-
 
         await window
           .saveInstituteProfileToFirestore(
             {
-              logoUrl:
-                logoUrl
+              logoData:
+                logoData
             }
           );
 
 
         console.log(
-          "Institute logo uploaded and saved:",
-          logoUrl
+          "Institute logo saved to Firestore."
         );
 
 
@@ -1887,13 +2005,13 @@ if (
 
 
         alert(
-          "Institute logo uploaded successfully!"
+          "Institute logo saved successfully!"
         );
 
       } catch (error) {
 
         console.error(
-          "Institute logo upload failed:",
+          "Failed to save institute logo:",
           error
         );
 
@@ -1907,7 +2025,7 @@ if (
 
 
         alert(
-          "Failed to upload institute logo: " +
+          "Failed to save institute logo: " +
           error.message
         );
 
@@ -1916,8 +2034,8 @@ if (
     }
   );
 
-}
-
+        }
+     
 /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
    ================================================================ */
