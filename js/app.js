@@ -1177,8 +1177,302 @@ if (
     }
   );
 
-}                              
+}      
 
+/* ================================================================
+   STUDENT PHOTO SYSTEM
+   ================================================================ */
+
+const takeStudentPhotoButton =
+  document.getElementById(
+    "btn-take-student-photo"
+  );
+
+
+const uploadStudentPhotoButton =
+  document.getElementById(
+    "btn-upload-student-photo"
+  );
+
+
+const studentCameraInput =
+  document.getElementById(
+    "student-camera-input"
+  );
+
+
+const studentGalleryInput =
+  document.getElementById(
+    "student-gallery-input"
+  );
+
+
+const studentPhotoPreview =
+  document.getElementById(
+    "student-photo-preview"
+  );
+
+
+const studentPhotoImage =
+  document.getElementById(
+    "student-photo-image"
+  );
+
+
+const studentPhotoPlaceholder =
+  document.getElementById(
+    "student-photo-placeholder"
+  );
+
+
+/* ------------------------------------------------
+   TAKE PHOTO
+   ------------------------------------------------ */
+
+if (
+  takeStudentPhotoButton &&
+  studentCameraInput
+) {
+
+  takeStudentPhotoButton.addEventListener(
+    "click",
+    () => {
+
+      window.studentPhotoPickerOpen =
+        true;
+
+
+      studentCameraInput.value =
+        "";
+
+
+      studentCameraInput.click();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   UPLOAD PHOTO
+   ------------------------------------------------ */
+
+if (
+  uploadStudentPhotoButton &&
+  studentGalleryInput
+) {
+
+  uploadStudentPhotoButton.addEventListener(
+    "click",
+    () => {
+
+      window.studentPhotoPickerOpen =
+        true;
+
+
+      studentGalleryInput.value =
+        "";
+
+
+      studentGalleryInput.click();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   CAMERA PHOTO SELECTED
+   ------------------------------------------------ */
+
+if (
+  studentCameraInput
+) {
+
+  studentCameraInput.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        studentCameraInput.files[0];
+
+
+      if (
+        !file
+      ) {
+
+        window.studentPhotoPickerOpen =
+          false;
+
+        return;
+
+      }
+
+
+      showStudentPhoto(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   GALLERY PHOTO SELECTED
+   ------------------------------------------------ */
+
+if (
+  studentGalleryInput
+) {
+
+  studentGalleryInput.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        studentGalleryInput.files[0];
+
+
+      if (
+        !file
+      ) {
+
+        window.studentPhotoPickerOpen =
+          false;
+
+        return;
+
+      }
+
+
+      showStudentPhoto(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SHOW PHOTO PREVIEW
+   ------------------------------------------------ */
+
+function showStudentPhoto(
+  file
+) {
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    () => {
+
+      studentPhotoImage.src =
+        reader.result;
+
+
+      studentPhotoImage.style.display =
+        "block";
+
+
+      studentPhotoPlaceholder.style.display =
+        "none";
+
+
+      window.studentPhotoPickerOpen =
+        false;
+
+    };
+
+
+  reader.readAsDataURL(
+    file
+  );
+
+}
+
+
+/* ------------------------------------------------
+   WHEN APP RETURNS FROM CAMERA/GALLERY
+   ------------------------------------------------ */
+
+window.addEventListener(
+  "focus",
+  () => {
+
+    setTimeout(
+      () => {
+
+        window.studentPhotoPickerOpen =
+          false;
+
+      },
+      500
+    );
+
+  }
+);
+
+/* ================================================================
+   RESET STUDENT PHOTO
+   ================================================================ */
+
+function resetStudentPhoto() {
+
+  if (
+    studentPhotoImage
+  ) {
+
+    studentPhotoImage.src =
+      "";
+
+    studentPhotoImage.style.display =
+      "none";
+
+  }
+
+
+  if (
+    studentPhotoPlaceholder
+  ) {
+
+    studentPhotoPlaceholder.style.display =
+      "flex";
+
+  }
+
+
+  if (
+    studentCameraInput
+  ) {
+
+    studentCameraInput.value =
+      "";
+
+  }
+
+
+  if (
+    studentGalleryInput
+  ) {
+
+    studentGalleryInput.value =
+      "";
+
+  }
+
+
+  window.studentPhotoPickerOpen =
+    false;
+
+}
 /* ==========================================================================
    STUDENT LOCAL MEMORY FEATURE START
    Reversible: this section saves students in this device's localStorage.
