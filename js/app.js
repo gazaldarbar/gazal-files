@@ -2540,6 +2540,16 @@ let selectedStudentPhotoFile =
   null;
 
 
+/*
+  Compressed Base64 version
+  that will be saved permanently
+  in Firestore.
+*/
+
+let selectedStudentPhotoData =
+  null;
+
+
 /* ------------------------------------------------
    TAKE PHOTO
    ------------------------------------------------ */
@@ -2594,9 +2604,10 @@ if (
 }
 
 
-/* ------------------------------------------------
-   SHOW PHOTO
-   ------------------------------------------------ */
+/* ================================================================
+   preview student
+   ================================================================ */
+
 
 function previewStudentPhoto(
   file
@@ -2621,6 +2632,10 @@ function previewStudentPhoto(
     file;
 
 
+  /*
+    Preview original selected image.
+  */
+
   const reader =
     new FileReader();
 
@@ -2634,6 +2649,7 @@ function previewStudentPhoto(
 
         studentPhotoImage.src =
           reader.result;
+
 
         studentPhotoImage.style.display =
           "block";
@@ -2663,9 +2679,10 @@ function previewStudentPhoto(
 
 }
 
-/* ------------------------------------------------
+
+/* ================================================================
    COMPRESS STUDENT PHOTO
-   ------------------------------------------------ */
+   ================================================================ */
 
 function compressStudentPhoto(
   file
@@ -2692,7 +2709,10 @@ function compressStudentPhoto(
             () => {
 
               /*
-                Maximum student photo size.
+                Maximum image size.
+
+                Student photos do not need
+                to be extremely large.
               */
 
               const maxSize =
@@ -2708,7 +2728,7 @@ function compressStudentPhoto(
 
 
               /*
-                Keep proportions.
+                Keep original proportions.
               */
 
               if (
@@ -2750,10 +2770,6 @@ function compressStudentPhoto(
 
               }
 
-
-              /*
-                Create compression canvas.
-              */
 
               const canvas =
                 document.createElement(
@@ -2840,6 +2856,7 @@ function compressStudentPhoto(
   );
 
 }
+ 
 
 /* ------------------------------------------------
    CAMERA PHOTO SELECTED
@@ -2923,6 +2940,9 @@ function resetStudentPhoto() {
 
   selectedStudentPhotoFile =
     null;
+
+  selectedStudentPhotoData =
+  null;
 
 
   if (
@@ -3024,52 +3044,53 @@ async function handleStudentFormSubmit(event) {
   }
 
 
-  /*
-    GET FORM DATA
-  */
+/*
+  GET FORM DATA
+*/
 
-  const studentData = {
+const studentData = {
 
-    studentName:
-      document.getElementById(
-        "student-name"
-      ).value.trim(),
+  studentName:
+    document.getElementById(
+      "student-name"
+    ).value.trim(),
 
-    parentName:
-      document.getElementById(
-        "parent-name"
-      ).value.trim(),
+  parentName:
+    document.getElementById(
+      "parent-name"
+    ).value.trim(),
 
-    place:
-      document.getElementById(
-        "student-place"
-      ).value.trim(),
+  place:
+    document.getElementById(
+      "student-place"
+    ).value.trim(),
 
-    phone:
-      document.getElementById(
-        "student-phone"
-      ).value.trim(),
+  phone:
+    document.getElementById(
+      "student-phone"
+    ).value.trim(),
 
-    backupPhone:
-      document.getElementById(
-        "backup-phone"
-      ).value.trim(),
+  backupPhone:
+    document.getElementById(
+      "backup-phone"
+    ).value.trim(),
 
-    course:
-      document.getElementById(
-        "student-course"
-      ).value,
+  course:
+    document.getElementById(
+      "student-course"
+    ).value,
 
-    admissionDate:
-      document.getElementById(
-        "admission-date"
-      ).value
+  admissionDate:
+    document.getElementById(
+      "admission-date"
+    ).value
 
-  };
+};
 
-  /* ------------------------------------------------
-   COMPRESS SELECTED STUDENT PHOTO
-   ------------------------------------------------ */
+
+/* ================================================================
+   PROCESS STUDENT PHOTO
+   ================================================================ */
 
 if (
   selectedStudentPhotoFile
@@ -3082,40 +3103,32 @@ if (
     );
 
 
-    const studentPhotoData =
+    selectedStudentPhotoData =
       await compressStudentPhoto(
         selectedStudentPhotoFile
       );
 
 
     console.log(
-      "Student photo compressed."
+      "Student photo compressed successfully."
     );
 
 
     console.log(
-      "Student photo Base64 size:",
-      studentPhotoData.length
+      "Photo Base64 size:",
+      selectedStudentPhotoData.length
     );
-
-
-    /*
-      Add photo to student data.
-    */
-
-    studentData.photoData =
-      studentPhotoData;
 
   } catch (error) {
 
     console.error(
-      "Student photo processing failed:",
+      "Student photo compression failed:",
       error
     );
 
 
     alert(
-      "Failed to process student photo."
+      "Student photo could not be processed."
     );
 
 
@@ -3124,6 +3137,7 @@ if (
   }
 
 }
+
 
 
   let savedStudent = null;
@@ -3156,15 +3170,26 @@ if (
 
     savedStudent = {
 
-      ...students[studentIndex],
+  ...students[studentIndex],
 
-      ...studentData,
+  ...studentData,
 
-      updatedAt:
-        new Date().toISOString()
 
-    };
+  /*
+    Only replace existing photo
+    if the user selected a new one.
+  */
 
+  photoData:
+    selectedStudentPhotoData ||
+    students[studentIndex].photoData ||
+    null,
+
+
+  updatedAt:
+    new Date().toISOString()
+
+};
 
     /*
       Update Firestore first.
@@ -3214,15 +3239,25 @@ if (
 
     savedStudent = {
 
-      id:
-        await generateStudentId(),
+  id:
+    await generateStudentId(),
 
-      ...studentData,
+  ...studentData,
 
-      createdAt:
-        new Date().toISOString()
 
-    };
+  /*
+    Permanent compressed student photo.
+  */
+
+  photoData:
+    selectedStudentPhotoData ||
+    null,
+
+
+  createdAt:
+    new Date().toISOString()
+
+};
 
 
     /*
