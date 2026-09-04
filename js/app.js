@@ -264,6 +264,7 @@ function selectTab(key, btnEl) {
   "fees-panel",
   "more-panel",
   "change-password-panel",
+  "notes-panel",
   "placeholder-panel"
 ];
 
