@@ -515,6 +515,152 @@ async function saveSharedPinHash(
 }
 
 /* ================================================================
+   NOTES FIRESTORE FUNCTIONS
+   ================================================================ */
+
+
+/* ------------------------------------------------
+   SAVE NOTE
+   ------------------------------------------------ */
+
+async function saveNoteToFirestore(
+  note
+) {
+
+  try {
+
+    const noteDocRef =
+      doc(
+        db,
+        "notes",
+        note.id
+      );
+
+
+    await setDoc(
+      noteDocRef,
+      note,
+      {
+        merge: true
+      }
+    );
+
+
+    console.log(
+      "Note saved to Firestore:",
+      note.id
+    );
+
+
+    return note.id;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to save note:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* ------------------------------------------------
+   LOAD ALL NOTES
+   ------------------------------------------------ */
+
+async function getNotesFromFirestore() {
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "notes"
+        )
+      );
+
+
+    const notes =
+      [];
+
+
+    snapshot.forEach(
+      (noteDoc) => {
+
+        notes.push({
+          firestoreId:
+            noteDoc.id,
+
+          ...noteDoc.data()
+        });
+
+      }
+    );
+
+
+    return notes;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load notes:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* ------------------------------------------------
+   DELETE NOTE
+   ------------------------------------------------ */
+
+async function deleteNoteFromFirestore(
+  noteId
+) {
+
+  try {
+
+    const noteDocRef =
+      doc(
+        db,
+        "notes",
+        noteId
+      );
+
+
+    await deleteDoc(
+      noteDocRef
+    );
+
+
+    console.log(
+      "Note deleted from Firestore:",
+      noteId
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to delete note:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -551,6 +697,15 @@ window.getSharedPinHash =
 window.saveSharedPinHash =
   saveSharedPinHash;
 
+window.saveNoteToFirestore =
+  saveNoteToFirestore;
+
+window.getNotesFromFirestore =
+  getNotesFromFirestore;
+
+window.deleteNoteFromFirestore =
+  deleteNoteFromFirestore;
+
 /* ================================================================
    EXPORT FIRESTORE
    ================================================================ */
@@ -568,5 +723,8 @@ export {
   saveFeePaymentToFirestore,
   getFeePaymentsFromFirestore,
   getSharedPinHash,
-  saveSharedPinHash
+  saveSharedPinHash,
+  saveNoteToFirestore,
+  getNotesFromFirestore,
+  deleteNoteFromFirestore
 };
