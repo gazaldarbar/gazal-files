@@ -6710,9 +6710,6 @@ document.addEventListener(
   }
 );
 
-/* ================================================================
-   TODAY'S ATTENDANCE POPUP
-   ================================================================ */
 
 /* ================================================================
    TODAY'S ATTENDANCE POPUP
@@ -6720,46 +6717,64 @@ document.addEventListener(
 
 async function openTodayAttendancePopup() {
 
-  let attendanceRecords = [];
+  /* ------------------------------------------------
+   LOAD ATTENDANCE RECORDS
+
+   Firestore first.
+   Local backup fallback.
+   ------------------------------------------------ */
+
+let attendanceRecords =
+  [];
 
 
-  try {
+try {
 
-    if (
-      window.getAttendanceFromFirestore
-    ) {
-
-      attendanceRecords =
-        await window.getAttendanceFromFirestore();
-
-    } else {
-
-      attendanceRecords =
-        JSON.parse(
-          localStorage.getItem(
-            "gazal_attendance"
-          ) || "[]"
-        );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Failed to load today's attendance:",
-      error
-    );
-
+  if (
+    window.getAttendanceFromFirestore
+  ) {
 
     attendanceRecords =
-      JSON.parse(
-        localStorage.getItem(
-          "gazal_attendance"
-        ) || "[]"
-      );
+      await window
+        .getAttendanceFromFirestore();
 
   }
 
+} catch (error) {
+
+  console.error(
+    "Failed to load attendance from Firestore:",
+    error
+  );
+
+}
+
+
+/* ------------------------------------------------
+   LOCAL BACKUP FALLBACK
+   ------------------------------------------------ */
+
+if (
+  !Array.isArray(
+    attendanceRecords
+  ) ||
+  attendanceRecords.length === 0
+) {
+
+  attendanceRecords =
+    JSON.parse(
+      localStorage.getItem(
+        "gazal_attendance"
+      ) || "[]"
+    );
+
+}
+
+
+console.log(
+  "ATTENDANCE RECORDS LOADED:",
+  attendanceRecords
+);
 
   /* ------------------------------------------------
      GET LOCAL TODAY DATE
