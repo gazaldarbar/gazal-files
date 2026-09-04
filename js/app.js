@@ -6173,13 +6173,53 @@ const feeDue =
   !latestMonthPaid;
 
     card.innerHTML = `
+
   <div class="student-card-top">
-    <div>
-      <h3>${student.studentName}</h3>
-      <p class="student-card-id">${student.id}</p>
+
+    <!-- STUDENT PHOTO -->
+
+    <div class="student-card-photo">
+
+      ${
+        student.photoData
+          ? `
+            <img
+              src="${student.photoData}"
+              alt="${student.studentName}"
+              class="student-card-photo-image"
+            >
+          `
+          : `
+            <div class="student-card-photo-placeholder">
+              👤
+            </div>
+          `
+      }
+
     </div>
 
-    <span class="student-course-badge">${student.course}</span>
+
+    <!-- STUDENT NAME + ID -->
+
+    <div class="student-card-main-info">
+
+      <h3>
+        ${student.studentName}
+      </h3>
+
+      <p class="student-card-id">
+        ${student.id}
+      </p>
+
+    </div>
+
+
+    <!-- COURSE -->
+
+    <span class="student-course-badge">
+      ${student.course}
+    </span>
+
   </div>
 
   <div class="student-details">
