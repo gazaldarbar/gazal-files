@@ -5268,15 +5268,20 @@ backButton.style.display =
       student.photoData
         ? `
           <img
-            class="student-card-photo"
-            src="${student.photoData}"
-            alt="${student.studentName}"
-          >
+  class="student-card-photo student-details-photo"
+  src="${student.photoData}"
+  alt="${student.studentName}"
+>
         `
         : `
-          <div class="student-card-photo-placeholder">
-            👤
-          </div>
+          <div
+  class="
+    student-card-photo-placeholder
+    student-details-photo-placeholder
+  "
+>
+  👤
+</div>
         `
     }
 
