@@ -796,6 +796,73 @@ async function getInstituteProfileFromFirestore() {
 }
 
 /* ================================================================
+   INSTITUTE LOGO FIREBASE STORAGE FUNCTIONS
+   ================================================================ */
+
+
+/* ------------------------------------------------
+   UPLOAD INSTITUTE LOGO
+   ------------------------------------------------ */
+
+async function uploadInstituteLogoToFirebase(
+  file
+) {
+
+  try {
+
+    /*
+      Create a permanent Storage reference.
+    */
+
+    const logoStorageRef =
+      ref(
+        storage,
+        "institute_branding/logo"
+      );
+
+
+    /*
+      Upload image file.
+    */
+
+    await uploadBytes(
+      logoStorageRef,
+      file
+    );
+
+
+    /*
+      Get permanent download URL.
+    */
+
+    const logoUrl =
+      await getDownloadURL(
+        logoStorageRef
+      );
+
+
+    console.log(
+      "Institute logo uploaded successfully:",
+      logoUrl
+    );
+
+
+    return logoUrl;
+
+  } catch (error) {
+
+    console.error(
+      "Failed to upload institute logo:",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+/* ================================================================
    MAKE FIRESTORE FUNCTIONS AVAILABLE TO APP.JS
    ================================================================ */
 
@@ -847,6 +914,9 @@ window.saveInstituteProfileToFirestore =
 window.getInstituteProfileFromFirestore =
   getInstituteProfileFromFirestore;
 
+window.uploadInstituteLogoToFirebase =
+  uploadInstituteLogoToFirebase;
+
 
 /* ================================================================
    EXPORT FIRESTORE
@@ -870,5 +940,7 @@ export {
   getNotesFromFirestore,
   deleteNoteFromFirestore,
   saveInstituteProfileToFirestore,
-  getInstituteProfileFromFirestore
+  getInstituteProfileFromFirestore,
+  uploadInstituteLogoToFirebase
+  
 };
