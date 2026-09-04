@@ -451,6 +451,7 @@ if (attendanceCourse) {
 }
 
 function openAddStudentForm() {
+  resetStudentPhoto();
   document.getElementById("home-panel").style.display = "none";
   document.getElementById("placeholder-panel").style.display = "none";
   document.getElementById("add-student-panel").style.display = "block";
@@ -472,6 +473,9 @@ function closeAddStudentForm() {
   if (form) {
     form.reset();
   }
+
+   // Clear student photo.
+  resetStudentPhoto();
 
   // Exit Edit mode.
   editingStudentId = null;
