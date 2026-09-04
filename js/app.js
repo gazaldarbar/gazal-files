@@ -6714,24 +6714,32 @@ document.addEventListener(
    TODAY'S ATTENDANCE POPUP
    ================================================================ */
 
+/* ================================================================
+   TODAY'S ATTENDANCE POPUP
+   ================================================================ */
+
 async function openTodayAttendancePopup() {
 
   let attendanceRecords = [];
 
+
   try {
 
-    if (window.getAttendanceFromFirestore) {
+    if (
+      window.getAttendanceFromFirestore
+    ) {
 
       attendanceRecords =
         await window.getAttendanceFromFirestore();
 
     } else {
 
-      attendanceRecords = JSON.parse(
-        localStorage.getItem(
-          "gazal_attendance"
-        ) || "[]"
-      );
+      attendanceRecords =
+        JSON.parse(
+          localStorage.getItem(
+            "gazal_attendance"
+          ) || "[]"
+        );
 
     }
 
@@ -6742,62 +6750,258 @@ async function openTodayAttendancePopup() {
       error
     );
 
-    attendanceRecords = JSON.parse(
-      localStorage.getItem(
-        "gazal_attendance"
-      ) || "[]"
-    );
+
+    attendanceRecords =
+      JSON.parse(
+        localStorage.getItem(
+          "gazal_attendance"
+        ) || "[]"
+      );
 
   }
 
 
-  /*
-    Get today's date.
-  */
+  /* ------------------------------------------------
+     GET LOCAL TODAY DATE
 
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
+     Do not use toISOString() directly because it
+     uses UTC and can create date mismatches.
+     ------------------------------------------------ */
+
+  const now =
+    new Date();
 
 
-  /*
-    Get only today's attendance records.
-  */
+  const year =
+    now.getFullYear();
 
-  const todaysRecords =
-    attendanceRecords.filter(
-      (record) =>
-        record.date === today
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(
+      2,
+      "0"
     );
 
 
-  /*
-    Overall totals.
-  */
+  const day =
+    String(
+      now.getDate()
+    ).padStart(
+      2,
+      "0"
+    );
 
-  let totalPresent = 0;
 
-  let totalAbsent = 0;
+  const today =
+    `${year}-${month}-${day}`;
 
 
-  /*
-    Course-wise summaries.
-  */
+  console.log(
+    "TODAY:",
+    today
+  );
 
-  const courseAttendance = {};
+
+  console.log(
+    "ALL ATTENDANCE RECORDS:",
+    attendanceRecords
+  );
+
+
+  /* ------------------------------------------------
+     NORMALIZE DATE
+
+     Supports:
+     - YYYY-MM-DD
+     - Date objects
+     - Firestore Timestamp objects
+     - ISO date strings
+     ------------------------------------------------ */
+
+  function normalizeAttendanceDate(
+    dateValue
+  ) {
+
+    if (
+      !dateValue
+    ) {
+
+      return "";
+
+    }
+
+
+    /*
+      Already YYYY-MM-DD
+    */
+
+    if (
+      typeof dateValue ===
+      "string"
+    ) {
+
+      return dateValue
+        .split(
+          "T"
+        )[0];
+
+    }
+
+
+    /*
+      Firestore Timestamp
+    */
+
+    if (
+      typeof dateValue.toDate ===
+      "function"
+    ) {
+
+      const date =
+        dateValue.toDate();
+
+
+      const y =
+        date.getFullYear();
+
+
+      const m =
+        String(
+          date.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const d =
+        String(
+          date.getDate()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      return `${y}-${m}-${d}`;
+
+    }
+
+
+    /*
+      JavaScript Date
+    */
+
+    if (
+      dateValue instanceof Date
+    ) {
+
+      const y =
+        dateValue.getFullYear();
+
+
+      const m =
+        String(
+          dateValue.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const d =
+        String(
+          dateValue.getDate()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      return `${y}-${m}-${d}`;
+
+    }
+
+
+    return "";
+
+  }
+
+
+  /* ------------------------------------------------
+     GET ONLY TODAY'S RECORDS
+     ------------------------------------------------ */
+
+  const todaysRecords =
+    attendanceRecords.filter(
+      (record) => {
+
+        const recordDate =
+          normalizeAttendanceDate(
+            record.date
+          );
+
+
+        return (
+          recordDate ===
+          today
+        );
+
+      }
+    );
+
+
+  console.log(
+    "TODAY'S RECORDS:",
+    todaysRecords
+  );
+
+
+  /* ------------------------------------------------
+     OVERALL TOTALS
+     ------------------------------------------------ */
+
+  let totalPresent =
+    0;
+
+
+  let totalAbsent =
+    0;
+
+
+  /* ------------------------------------------------
+     COURSE-WISE SUMMARY
+     ------------------------------------------------ */
+
+  const courseAttendance =
+    {};
 
 
   todaysRecords.forEach(
     (record) => {
 
-      let present = 0;
+      let present =
+        0;
 
-      let absent = 0;
+
+      let absent =
+        0;
 
 
-      record.students.forEach(
-        (attendanceStudent) => {
+      const students =
+        Array.isArray(
+          record.students
+        )
+          ? record.students
+          : [];
+
+
+      students.forEach(
+        (
+          attendanceStudent
+        ) => {
 
           if (
             attendanceStudent.status ===
@@ -6805,6 +7009,7 @@ async function openTodayAttendancePopup() {
           ) {
 
             present++;
+
             totalPresent++;
 
           }
@@ -6816,6 +7021,7 @@ async function openTodayAttendancePopup() {
           ) {
 
             absent++;
+
             totalAbsent++;
 
           }
@@ -6824,61 +7030,80 @@ async function openTodayAttendancePopup() {
       );
 
 
-      const total =
-        present + absent;
-
-
       /*
-        Add this class record to its course.
+        Add course if it doesn't exist.
       */
 
-      if (!courseAttendance[record.course]) {
+      const courseName =
+        record.course ||
+        "Unknown Course";
+
+
+      if (
+        !courseAttendance[
+          courseName
+        ]
+      ) {
 
         courseAttendance[
-          record.course
+          courseName
         ] = {
-          present: 0,
-          absent: 0
+
+          present:
+            0,
+
+          absent:
+            0
+
         };
 
       }
 
 
       courseAttendance[
-        record.course
-      ].present += present;
+        courseName
+      ].present +=
+        present;
 
 
       courseAttendance[
-        record.course
-      ].absent += absent;
+        courseName
+      ].absent +=
+        absent;
 
     }
   );
 
 
-  /*
-    Overall percentage.
-  */
+  /* ------------------------------------------------
+     OVERALL PERCENTAGE
+     ------------------------------------------------ */
 
   const totalMarked =
-    totalPresent + totalAbsent;
+    totalPresent +
+    totalAbsent;
 
 
   const attendancePercentage =
     totalMarked > 0
       ? Math.round(
-          (totalPresent / totalMarked) * 100
+          (
+            totalPresent /
+            totalMarked
+          ) * 100
         )
       : 0;
 
 
-  /*
-    Create popup.
-  */
+  /* ------------------------------------------------
+     CREATE POPUP
+     ------------------------------------------------ */
 
   const overlay =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   overlay.className =
     "today-attendance-overlay";
@@ -6992,14 +7217,18 @@ async function openTodayAttendancePopup() {
           ).length === 0
 
             ? `
+
               <div
                 class="
                   today-attendance-empty
                 "
               >
+
                 ഇന്നത്തെ ഹാജർ രേഖകൾ
                 ലഭ്യമല്ല.
+
               </div>
+
             `
 
             : Object.entries(
@@ -7007,7 +7236,10 @@ async function openTodayAttendancePopup() {
               )
                 .map(
                   (
-                    [course, data]
+                    [
+                      course,
+                      data
+                    ]
                   ) => {
 
                     const total =
@@ -7045,25 +7277,31 @@ async function openTodayAttendancePopup() {
                           "
                         >
 
-                          <span>
-                            ഹാജർ:
-                            <strong>
-                              ${data.present}
-                            </strong>
-                          </span>
+                            <span>
+
+                              ഹാജർ:
+
+                              <strong>
+                                ${data.present}
+                              </strong>
+
+                            </span>
 
 
-                          <span>
-                            ഹാജരായില്ല:
-                            <strong>
-                              ${data.absent}
-                            </strong>
-                          </span>
+                            <span>
+
+                              ഹാജരായില്ല:
+
+                              <strong>
+                                ${data.absent}
+                              </strong>
+
+                            </span>
 
 
-                          <span>
-                            ${percentage}%
-                          </span>
+                            <span>
+                              ${percentage}%
+                            </span>
 
                         </div>
 
@@ -7073,7 +7311,9 @@ async function openTodayAttendancePopup() {
 
                   }
                 )
-                .join("")
+                .join(
+                  ""
+                )
         }
 
       </div>
@@ -7088,9 +7328,9 @@ async function openTodayAttendancePopup() {
   );
 
 
-  /*
-    Close button.
-  */
+  /* ------------------------------------------------
+     CLOSE BUTTON
+     ------------------------------------------------ */
 
   const closeButton =
     overlay.querySelector(
@@ -7098,28 +7338,33 @@ async function openTodayAttendancePopup() {
     );
 
 
-  if (closeButton) {
+  if (
+    closeButton
+  ) {
 
     closeButton.addEventListener(
       "click",
       () => {
+
         overlay.remove();
+
       }
     );
 
   }
 
 
-  /*
-    Close outside popup.
-  */
+  /* ------------------------------------------------
+     CLOSE OUTSIDE POPUP
+     ------------------------------------------------ */
 
   overlay.addEventListener(
     "click",
     (event) => {
 
       if (
-        event.target === overlay
+        event.target ===
+        overlay
       ) {
 
         overlay.remove();
@@ -7130,7 +7375,7 @@ async function openTodayAttendancePopup() {
   );
 
 }
-   
+
 /* ================================================================
    QR POPUP FEATURE
    ================================================================ */
