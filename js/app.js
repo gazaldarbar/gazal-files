@@ -1738,9 +1738,8 @@ if (
 
 }
 
-
 /* ------------------------------------------------
-   SHOW LOGO PREVIEW
+   UPLOAD LOGO + SHOW PREVIEW
    ------------------------------------------------ */
 
 if (
@@ -1749,7 +1748,7 @@ if (
 
   instituteLogoInput.addEventListener(
     "change",
-    () => {
+    async () => {
 
       const file =
         instituteLogoInput.files[0];
@@ -1767,47 +1766,124 @@ if (
       }
 
 
-      const reader =
-        new FileReader();
+      try {
+
+        /*
+          Show local preview immediately.
+        */
+
+        const reader =
+          new FileReader();
 
 
-      reader.onload =
-        () => {
+        reader.onload =
+          () => {
 
-          if (
-            instituteLogoImage
-          ) {
+            if (
+              instituteLogoImage
+            ) {
 
-            instituteLogoImage.src =
-              reader.result;
+              instituteLogoImage.src =
+                reader.result;
 
+              instituteLogoImage.style.display =
+                "block";
 
-            instituteLogoImage.style.display =
-              "block";
-
-          }
-
-
-          if (
-            instituteLogoPlaceholder
-          ) {
-
-            instituteLogoPlaceholder.style.display =
-              "none";
-
-          }
-
-        };
+            }
 
 
-      reader.readAsDataURL(
-        file
-      );
+            if (
+              instituteLogoPlaceholder
+            ) {
+
+              instituteLogoPlaceholder.style.display =
+                "none";
+
+            }
+
+          };
+
+
+        reader.readAsDataURL(
+          file
+        );
+
+
+        /*
+          Upload logo to Firebase Storage.
+        */
+
+        if (
+          !window.uploadInstituteLogoToFirebase
+        ) {
+
+          throw new Error(
+            "Firebase logo upload function is not available."
+          );
+
+        }
+
+
+        const logoUrl =
+          await window
+            .uploadInstituteLogoToFirebase(
+              file
+            );
+
+
+        /*
+          Save logo URL inside
+          Institute Profile document.
+        */
+
+        if (
+          !window.saveInstituteProfileToFirestore
+        ) {
+
+          throw new Error(
+            "Institute profile save function is not available."
+          );
+
+        }
+
+
+        await window
+          .saveInstituteProfileToFirestore(
+            {
+              logoUrl:
+                logoUrl
+            }
+          );
+
+
+        console.log(
+          "Institute logo saved successfully."
+        );
+
+
+        alert(
+          "Institute logo uploaded successfully!"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Institute logo upload failed:",
+          error
+        );
+
+
+        alert(
+          "Failed to upload institute logo."
+        );
+
+      }
 
     }
   );
 
 }
+
 
   /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
