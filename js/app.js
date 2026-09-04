@@ -1687,9 +1687,6 @@ if (
 
 }
 
-/* ================================================================
-   INSTITUTE LOGO UPLOAD
-   ================================================================ */
 
 /* ================================================================
    INSTITUTE LOGO UPLOAD
@@ -1940,47 +1937,53 @@ if (
       }
 
 
+      // 👇 REPLACE YOUR OLD TRY/CATCH HERE
       try {
 
-        uploadInstituteLogoButton.textContent =
-          "Saving...";
+        console.log(
+          "STEP 1: Image selected:",
+          file.name
+        );
 
+        uploadInstituteLogoButton.textContent =
+          "Compressing...";
 
         uploadInstituteLogoButton.disabled =
           true;
 
-
-        /*
-          Compress image and convert
-          to Base64.
-        */
+        console.log(
+          "STEP 2: Starting image compression"
+        );
 
         const logoData =
           await compressInstituteLogo(
             file
           );
 
+        console.log(
+          "STEP 3: Compression completed"
+        );
 
-        /*
-          Show permanent preview.
-        */
+        console.log(
+          "Logo Base64 size:",
+          logoData.length
+        );
+
+        uploadInstituteLogoButton.textContent =
+          "Saving...";
 
         instituteLogoImage.src =
           logoData;
 
-
         instituteLogoImage.style.display =
           "block";
-
 
         instituteLogoPlaceholder.style.display =
           "none";
 
-
-        /*
-          Save Base64 image inside
-          Institute Profile Firestore document.
-        */
+        console.log(
+          "STEP 4: Starting Firestore save"
+        );
 
         await window
           .saveInstituteProfileToFirestore(
@@ -1990,19 +1993,15 @@ if (
             }
           );
 
-
         console.log(
-          "Institute logo saved to Firestore."
+          "STEP 5: Firestore save completed"
         );
-
 
         uploadInstituteLogoButton.textContent =
           "Change Logo";
 
-
         uploadInstituteLogoButton.disabled =
           false;
-
 
         alert(
           "Institute logo saved successfully!"
@@ -2015,14 +2014,11 @@ if (
           error
         );
 
-
         uploadInstituteLogoButton.textContent =
           "Upload Logo";
 
-
         uploadInstituteLogoButton.disabled =
           false;
-
 
         alert(
           "Failed to save institute logo: " +
@@ -2034,8 +2030,8 @@ if (
     }
   );
 
-        }
-     
+}
+        
 /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
    ================================================================ */
