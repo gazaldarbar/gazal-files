@@ -768,19 +768,20 @@ const PinLock = (() => {
 
 
     document.addEventListener(
-      "visibilitychange",
-      () => {
+  "visibilitychange",
+  () => {
 
-        if (
-          document.hidden
-        ) {
+    if (
+      document.hidden &&
+      !window.studentPhotoPickerOpen
+    ) {
 
-          lock();
+      lock();
 
-        }
+    }
 
-      }
-    );
+  }
+);
 
 
     [
