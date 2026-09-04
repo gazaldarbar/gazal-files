@@ -678,6 +678,7 @@ async function deleteNoteFromFirestore(
 
 }
 
+   
 /* ================================================================
    INSTITUTE PROFILE FIRESTORE FUNCTIONS
    ================================================================ */
@@ -709,7 +710,13 @@ async function saveInstituteProfileToFirestore(
 
     await setDoc(
       profileDocRef,
-      profile,
+      {
+        ...profile,
+
+        updatedAt:
+          new Date()
+            .toISOString()
+      },
       {
         merge: true
       }
@@ -768,62 +775,11 @@ async function getInstituteProfileFromFirestore() {
     }
 
 
-    return profileSnapshot.data();
-
-  } catch (error) {
-
-    console.error(
-      "Failed to load institute profile:",
-      error
-    );
-
-    throw error;
-
-  }
-
-}
-
-
-
-
-/* ------------------------------------------------
-   LOAD INSTITUTE PROFILE
-   ------------------------------------------------ */
-
-async function getInstituteProfileFromFirestore() {
-
-  try {
-
-    const profileDocRef =
-      doc(
-        db,
-        "app_settings",
-        "institute_profile"
-      );
-
-
-    const profileSnapshot =
-      await getDoc(
-        profileDocRef
-      );
-
-
-    if (
-      !profileSnapshot.exists()
-    ) {
-
-      return null;
-
-    }
-
-
     return {
-
       firestoreId:
         profileSnapshot.id,
 
       ...profileSnapshot.data()
-
     };
 
   } catch (error) {
