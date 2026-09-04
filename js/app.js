@@ -742,9 +742,7 @@ if (
 
 }
 
-/* ================================================================
-   NOTES — SAVE / DISPLAY / DELETE
-   ================================================================ */
+
 
 /* ================================================================
    NOTES — FIRESTORE + LOCAL BACKUP
@@ -974,22 +972,59 @@ function renderNotes() {
    LOAD NOTES FROM FIRESTORE
    ------------------------------------------------ */
 
+/* ------------------------------------------------
+   LOAD NOTES FROM FIRESTORE
+   ------------------------------------------------ */
+
 async function loadNotesFromCloud() {
 
-  try {
+  /*
+    WAIT UNTIL FIREBASE NOTES
+    FUNCTION BECOMES AVAILABLE
+  */
 
-    if (
-      !window.getNotesFromFirestore
-    ) {
+  await new Promise(
+    (resolve) => {
 
-      return;
+      const checkFirebase =
+        () => {
+
+          if (
+            window.getNotesFromFirestore
+          ) {
+
+            resolve();
+
+            return;
+
+          }
+
+
+          setTimeout(
+            checkFirebase,
+            100
+          );
+
+        };
+
+
+      checkFirebase();
 
     }
+  );
 
+
+  try {
 
     const cloudNotes =
       await window
         .getNotesFromFirestore();
+
+
+    console.log(
+      "NOTES LOADED FROM FIRESTORE:",
+      cloudNotes
+    );
 
 
     if (
@@ -1004,8 +1039,8 @@ async function loadNotesFromCloud() {
 
 
     /*
-      SAVE CLOUD DATA
-      AS LOCAL BACKUP
+      SAVE CLOUD NOTES
+      TO LOCAL STORAGE
     */
 
     saveNotes(
@@ -1013,7 +1048,12 @@ async function loadNotesFromCloud() {
     );
 
 
+    /*
+      DISPLAY NOTES
+    */
+
     renderNotes();
+
 
   } catch (error) {
 
@@ -1024,8 +1064,7 @@ async function loadNotesFromCloud() {
 
 
     /*
-      LOCAL NOTES
-      WILL CONTINUE TO WORK
+      LOCAL NOTES STILL WORK
     */
 
     renderNotes();
