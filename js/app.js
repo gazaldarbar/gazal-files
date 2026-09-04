@@ -1686,6 +1686,127 @@ if (
 
 }
 
+/* ================================================================
+   INSTITUTE LOGO UPLOAD
+   ================================================================ */
+
+const uploadInstituteLogoButton =
+  document.getElementById(
+    "upload-institute-logo-button"
+  );
+
+
+const instituteLogoInput =
+  document.getElementById(
+    "institute-logo-input"
+  );
+
+
+const instituteLogoImage =
+  document.getElementById(
+    "institute-logo-image"
+  );
+
+
+const instituteLogoPlaceholder =
+  document.getElementById(
+    "institute-logo-placeholder"
+  );
+
+
+/* ------------------------------------------------
+   OPEN IMAGE PICKER
+   ------------------------------------------------ */
+
+if (
+  uploadInstituteLogoButton &&
+  instituteLogoInput
+) {
+
+  uploadInstituteLogoButton.addEventListener(
+    "click",
+    () => {
+
+      instituteLogoInput.value =
+        "";
+
+      instituteLogoInput.click();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SHOW LOGO PREVIEW
+   ------------------------------------------------ */
+
+if (
+  instituteLogoInput
+) {
+
+  instituteLogoInput.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        instituteLogoInput.files[0];
+
+
+      if (
+        !file ||
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        () => {
+
+          if (
+            instituteLogoImage
+          ) {
+
+            instituteLogoImage.src =
+              reader.result;
+
+
+            instituteLogoImage.style.display =
+              "block";
+
+          }
+
+
+          if (
+            instituteLogoPlaceholder
+          ) {
+
+            instituteLogoPlaceholder.style.display =
+              "none";
+
+          }
+
+        };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
 /* ==========================================================================
    STUDENT ID GENERATOR START
    ========================================================================== */
