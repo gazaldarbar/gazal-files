@@ -1606,8 +1606,8 @@ if (
 ) {
 
   instituteProfileButton.addEventListener(
-    "click",
-    () => {
+  "click",
+  async () => {
 
       /*
         Hide More panel.
@@ -1627,6 +1627,7 @@ if (
         "institute-profile-panel"
       ).style.display =
         "block";
+    await loadInstituteProfile();
 
 
       /*
@@ -2039,6 +2040,117 @@ if (
 
 }
 
+
+/* ================================================================
+   LOAD INSTITUTE PROFILE FROM FIREBASE
+   ================================================================ */
+
+async function loadInstituteProfile() {
+
+  try {
+
+    if (
+      !window.getInstituteProfileFromFirestore
+    ) {
+
+      console.error(
+        "Institute profile load function not available."
+      );
+
+      return;
+
+    }
+
+
+    const profile =
+      await window
+        .getInstituteProfileFromFirestore();
+
+
+    /*
+      No saved profile yet.
+    */
+
+    if (
+      !profile
+    ) {
+
+      console.log(
+        "No saved institute profile found."
+      );
+
+      return;
+
+    }
+
+
+    const profileRows =
+      document.querySelectorAll(
+        "#institute-profile-panel .profile-info-row"
+      );
+
+
+    profileRows.forEach(
+      (row, index) => {
+
+        const key =
+          instituteProfileFieldKeys[
+            index
+          ];
+
+
+        const value =
+          profile[key];
+
+
+        /*
+          Only replace fields that exist
+          in Firestore.
+        */
+
+        if (
+          value === undefined ||
+          value === null
+        ) {
+
+          return;
+
+        }
+
+
+        const valueElement =
+          row.querySelector(
+            "strong"
+          );
+
+
+        if (
+          valueElement
+        ) {
+
+          valueElement.textContent =
+            value;
+
+        }
+
+      }
+    );
+
+
+    console.log(
+      "Institute profile loaded successfully."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load institute profile:",
+      error
+    );
+
+  }
+
+}
       
 /* ==========================================================================
    STUDENT ID GENERATOR START
