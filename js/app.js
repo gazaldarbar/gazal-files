@@ -6954,24 +6954,34 @@ function getStudentSearchMatches(query) {
 
 /* STUDENT SEARCH FEATURE END */
 
-/* ==========================================================================
-   STUDENT DELETE FEATURE START
-   Reversible: remove this block to remove student deletion.
-   ========================================================================== */
-async function deleteStudent(studentId) {
 
-  let student = null;
+  /* ==========================================================================
+   STUDENT DELETE / TRASH FEATURE
+   ========================================================================== */
+
+async function deleteStudent(
+  studentId
+) {
+
+  let student =
+    null;
+
+
+  /*
+    LOAD STUDENT
+  */
 
   try {
 
-    /* Load student from Firestore */
-
-    if (window.getStudentFromFirestore) {
+    if (
+      window.getStudentFromFirestore
+    ) {
 
       student =
-        await window.getStudentFromFirestore(
-          studentId
-        );
+        await window
+          .getStudentFromFirestore(
+            studentId
+          );
 
     }
 
@@ -6985,24 +6995,40 @@ async function deleteStudent(studentId) {
   }
 
 
-  /* Fallback to localStorage */
+  /*
+    FALLBACK TO LOCAL STORAGE
+  */
 
-  if (!student) {
+  if (
+    !student
+  ) {
 
-    const students = JSON.parse(
-      localStorage.getItem(
-        "gazal_students"
-      ) || "[]"
-    );
+    const students =
+      JSON.parse(
 
-    student = students.find(
-      (item) => item.id === studentId
-    );
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+
+      );
+
+
+    student =
+      students.find(
+        (item) =>
+          item.id === studentId
+      );
 
   }
 
 
-  if (!student) {
+  /*
+    STUDENT NOT FOUND
+  */
+
+  if (
+    !student
+  ) {
 
     alert(
       "Student could not be found."
@@ -7013,21 +7039,71 @@ async function deleteStudent(studentId) {
   }
 
 
-  const confirmed = confirm(
-    `Delete ${student.studentName}?\n\nThis action cannot be undone.`
-  );
+  /*
+    CONFIRM MOVE TO TRASH
+  */
 
-  if (!confirmed) return;
+  const confirmed =
+    confirm(
+
+      `Move ${student.studentName} to Recently Deleted?\n\nYou can restore the student later from the Trash.`
+
+    );
+
+
+  if (
+    !confirmed
+  ) {
+
+    return;
+
+  }
 
 
   try {
 
-    /* Delete from Firestore */
+    /*
+      STEP 1:
+      SAVE STUDENT TO TRASH FIRST
+    */
 
-    if (window.deleteStudentFromFirestore) {
+    if (
+      window.moveStudentToTrashInFirestore
+    ) {
 
-      await window.deleteStudentFromFirestore(
-        studentId
+      await window
+        .moveStudentToTrashInFirestore(
+          student
+        );
+
+    } else {
+
+      throw new Error(
+        "Trash system is not available."
+      );
+
+    }
+
+
+    /*
+      STEP 2:
+      ONLY AFTER TRASH SAVE SUCCEEDS,
+      DELETE ACTIVE STUDENT
+    */
+
+    if (
+      window.deleteStudentFromFirestore
+    ) {
+
+      await window
+        .deleteStudentFromFirestore(
+          studentId
+        );
+
+    } else {
+
+      throw new Error(
+        "Student delete function is not available."
       );
 
     }
@@ -7035,12 +7111,13 @@ async function deleteStudent(studentId) {
   } catch (error) {
 
     console.error(
-      "Failed to delete student from Firestore:",
+      "Failed to move student to trash:",
       error
     );
 
+
     alert(
-      "Failed to delete student from cloud."
+      "Failed to move student to Recently Deleted.\n\nThe original student was not intentionally removed."
     );
 
     return;
@@ -7048,33 +7125,54 @@ async function deleteStudent(studentId) {
   }
 
 
-  /* Also remove local backup */
+  /*
+    REMOVE FROM LOCAL ACTIVE STUDENTS
+  */
 
-  const localStudents = JSON.parse(
-    localStorage.getItem(
-      "gazal_students"
-    ) || "[]"
-  );
+  const localStudents =
+    JSON.parse(
+
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+
+    );
+
 
   const updatedStudents =
     localStudents.filter(
-      (item) => item.id !== studentId
+      (item) =>
+        item.id !== studentId
     );
 
+
   localStorage.setItem(
+
     "gazal_students",
-    JSON.stringify(updatedStudents)
+
+    JSON.stringify(
+      updatedStudents
+    )
+
   );
 
 
-  /* Refresh student list */
+  /*
+    REFRESH ACTIVE STUDENT LIST
+  */
 
   await renderStudentsList();
+
+
+  alert(
+    "Student moved to Recently Deleted."
+  );
 
 }
 
 
-/* STUDENT DELETE FEATURE END */
+/* STUDENT DELETE / TRASH FEATURE END */
+
 
 /* ==========================================================================
    STUDENT EDIT FEATURE START
