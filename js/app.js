@@ -2681,12 +2681,14 @@ async function loadInstituteProfile() {
       }
     );
 
-    /* ============================================
+   /* ================================================================
        LOAD INSTITUTE LOGO
-       ============================================ */
+       ================================================================ */
 
     if (
-      profile.logoData
+      profile.logoData &&
+      instituteLogoImage &&
+      instituteLogoPlaceholder
     ) {
 
       instituteLogoImage.src =
@@ -2701,44 +2703,17 @@ async function loadInstituteProfile() {
         "none";
 
 
-      console.log(
-        "Institute logo loaded from Firestore."
-      );
+      if (
+        uploadInstituteLogoButton
+      ) {
 
-    } else {
+        uploadInstituteLogoButton.textContent =
+          "Change Logo";
 
-      /*
-        No logo saved.
-        Show default placeholder.
-      */
-
-      instituteLogoImage.src =
-        "";
-
-
-      instituteLogoImage.style.display =
-        "none";
-
-
-      instituteLogoPlaceholder.style.display =
-        "flex";
+      }
 
     }
     
-    console.log(
-      "Institute profile loaded successfully."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Failed to load institute profile:",
-      error
-    );
-
-  }
-
-}
 
 /* ================================================================
        LOAD INSTITUTE SEAL
