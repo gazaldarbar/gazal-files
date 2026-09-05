@@ -2741,53 +2741,85 @@ async function loadInstituteProfile() {
 }
 
 /* ================================================================
-   LOAD INSTITUTE SEAL
-   ================================================================ */
+       LOAD INSTITUTE SEAL
+       ================================================================ */
 
-if (
-  profile.sealData
-) {
+    if (
+      profile.sealData &&
+      instituteSealImage &&
+      instituteSealPlaceholder
+    ) {
 
-  instituteSealImage.src =
-    profile.sealData;
-
-
-  instituteSealImage.style.display =
-    "block";
+      instituteSealImage.src =
+        profile.sealData;
 
 
-  instituteSealPlaceholder.style.display =
-    "none";
+      instituteSealImage.style.display =
+        "block";
 
 
-  uploadInstituteSealButton.textContent =
-    "Change Seal";
-
-}
+      instituteSealPlaceholder.style.display =
+        "none";
 
 
-/* ================================================================
-   LOAD AUTHORISED SIGNATURE
-   ================================================================ */
+      if (
+        uploadInstituteSealButton
+      ) {
 
-if (
-  profile.signatureData
-) {
+        uploadInstituteSealButton.textContent =
+          "Change Seal";
 
-  authorisedSignatureImage.src =
-    profile.signatureData;
+      }
 
-
-  authorisedSignatureImage.style.display =
-    "block";
+    }
 
 
-  authorisedSignaturePlaceholder.style.display =
-    "none";
+    /* ================================================================
+       LOAD AUTHORISED SIGNATURE
+       ================================================================ */
+
+    if (
+      profile.signatureData &&
+      authorisedSignatureImage &&
+      authorisedSignaturePlaceholder
+    ) {
+
+      authorisedSignatureImage.src =
+        profile.signatureData;
 
 
-  uploadAuthorisedSignatureButton.textContent =
-    "Change Signature";
+      authorisedSignatureImage.style.display =
+        "block";
+
+
+      authorisedSignaturePlaceholder.style.display =
+        "none";
+
+
+      if (
+        uploadAuthorisedSignatureButton
+      ) {
+
+        uploadAuthorisedSignatureButton.textContent =
+          "Change Signature";
+
+      }
+
+    }
+
+
+    console.log(
+      "Institute profile loaded successfully."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load institute profile:",
+      error
+    );
+
+  }
 
 }
       
