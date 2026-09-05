@@ -2031,7 +2031,332 @@ if (
   );
 
 }
-        
+
+/* ================================================================
+   INSTITUTE SEAL UPLOAD
+   FIRESTORE BASE64 VERSION
+   ================================================================ */
+
+const uploadInstituteSealButton =
+  document.getElementById(
+    "upload-institute-seal-button"
+  );
+
+
+const instituteSealInput =
+  document.getElementById(
+    "institute-seal-input"
+  );
+
+
+const instituteSealImage =
+  document.getElementById(
+    "institute-seal-image"
+  );
+
+
+const instituteSealPlaceholder =
+  document.getElementById(
+    "institute-seal-placeholder"
+  );
+
+
+/* ------------------------------------------------
+   OPEN SEAL PICKER
+   ------------------------------------------------ */
+
+if (
+  uploadInstituteSealButton &&
+  instituteSealInput
+) {
+
+  uploadInstituteSealButton.addEventListener(
+    "click",
+    () => {
+
+      instituteSealInput.value =
+        "";
+
+      instituteSealInput.click();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SELECT + COMPRESS + SAVE SEAL
+   ------------------------------------------------ */
+
+if (
+  instituteSealInput
+) {
+
+  instituteSealInput.addEventListener(
+    "change",
+    async () => {
+
+      const file =
+        instituteSealInput.files[0];
+
+
+      if (
+        !file ||
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        uploadInstituteSealButton.textContent =
+          "Compressing...";
+
+
+        uploadInstituteSealButton.disabled =
+          true;
+
+
+        const sealData =
+          await compressInstituteLogo(
+            file
+          );
+
+
+        uploadInstituteSealButton.textContent =
+          "Saving...";
+
+
+        instituteSealImage.src =
+          sealData;
+
+
+        instituteSealImage.style.display =
+          "block";
+
+
+        instituteSealPlaceholder.style.display =
+          "none";
+
+
+        await window
+          .saveInstituteProfileToFirestore(
+            {
+              sealData:
+                sealData
+            }
+          );
+
+
+        uploadInstituteSealButton.textContent =
+          "Change Seal";
+
+
+        uploadInstituteSealButton.disabled =
+          false;
+
+
+        alert(
+          "Institute seal saved successfully!"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Failed to save institute seal:",
+          error
+        );
+
+
+        uploadInstituteSealButton.textContent =
+          "Upload Seal";
+
+
+        uploadInstituteSealButton.disabled =
+          false;
+
+
+        alert(
+          "Failed to save institute seal: " +
+          error.message
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================================================================
+   AUTHORISED SIGNATURE UPLOAD
+   FIRESTORE BASE64 VERSION
+   ================================================================ */
+
+const uploadAuthorisedSignatureButton =
+  document.getElementById(
+    "upload-authorised-signature-button"
+  );
+
+
+const authorisedSignatureInput =
+  document.getElementById(
+    "authorised-signature-input"
+  );
+
+
+const authorisedSignatureImage =
+  document.getElementById(
+    "authorised-signature-image"
+  );
+
+
+const authorisedSignaturePlaceholder =
+  document.getElementById(
+    "authorised-signature-placeholder"
+  );
+
+
+/* ------------------------------------------------
+   OPEN SIGNATURE PICKER
+   ------------------------------------------------ */
+
+if (
+  uploadAuthorisedSignatureButton &&
+  authorisedSignatureInput
+) {
+
+  uploadAuthorisedSignatureButton.addEventListener(
+    "click",
+    () => {
+
+      authorisedSignatureInput.value =
+        "";
+
+      authorisedSignatureInput.click();
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   SELECT + COMPRESS + SAVE SIGNATURE
+   ------------------------------------------------ */
+
+if (
+  authorisedSignatureInput
+) {
+
+  authorisedSignatureInput.addEventListener(
+    "change",
+    async () => {
+
+      const file =
+        authorisedSignatureInput.files[0];
+
+
+      if (
+        !file ||
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        uploadAuthorisedSignatureButton.textContent =
+          "Compressing...";
+
+
+        uploadAuthorisedSignatureButton.disabled =
+          true;
+
+
+        const signatureData =
+          await compressInstituteLogo(
+            file
+          );
+
+
+        uploadAuthorisedSignatureButton.textContent =
+          "Saving...";
+
+
+        authorisedSignatureImage.src =
+          signatureData;
+
+
+        authorisedSignatureImage.style.display =
+          "block";
+
+
+        authorisedSignaturePlaceholder.style.display =
+          "none";
+
+
+        await window
+          .saveInstituteProfileToFirestore(
+            {
+              signatureData:
+                signatureData
+            }
+          );
+
+
+        uploadAuthorisedSignatureButton.textContent =
+          "Change Signature";
+
+
+        uploadAuthorisedSignatureButton.disabled =
+          false;
+
+
+        alert(
+          "Authorised signature saved successfully!"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Failed to save authorised signature:",
+          error
+        );
+
+
+        uploadAuthorisedSignatureButton.textContent =
+          "Upload Signature";
+
+
+        uploadAuthorisedSignatureButton.disabled =
+          false;
+
+
+        alert(
+          "Failed to save authorised signature: " +
+          error.message
+        );
+
+      }
+
+    }
+  );
+
+}
+
 /* ================================================================
    INSTITUTE PROFILE EDIT / SAVE
    ================================================================ */
@@ -2412,6 +2737,57 @@ async function loadInstituteProfile() {
     );
 
   }
+
+}
+
+/* ================================================================
+   LOAD INSTITUTE SEAL
+   ================================================================ */
+
+if (
+  profile.sealData
+) {
+
+  instituteSealImage.src =
+    profile.sealData;
+
+
+  instituteSealImage.style.display =
+    "block";
+
+
+  instituteSealPlaceholder.style.display =
+    "none";
+
+
+  uploadInstituteSealButton.textContent =
+    "Change Seal";
+
+}
+
+
+/* ================================================================
+   LOAD AUTHORISED SIGNATURE
+   ================================================================ */
+
+if (
+  profile.signatureData
+) {
+
+  authorisedSignatureImage.src =
+    profile.signatureData;
+
+
+  authorisedSignatureImage.style.display =
+    "block";
+
+
+  authorisedSignaturePlaceholder.style.display =
+    "none";
+
+
+  uploadAuthorisedSignatureButton.textContent =
+    "Change Signature";
 
 }
       
