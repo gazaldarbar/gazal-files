@@ -255,6 +255,208 @@ async function deleteStudentFromFirestore(studentId) {
 }
 
 /* ================================================================
+   SAVE STUDENT TO TRASH
+   ================================================================ */
+
+async function moveStudentToTrashInFirestore(
+  student
+) {
+
+  if (
+    !student ||
+    !student.id
+  ) {
+
+    throw new Error(
+      "Invalid student data for trash."
+    );
+
+  }
+
+
+  const deletedStudent = {
+
+    ...student,
+
+    deletedAt:
+      new Date().toISOString()
+
+  };
+
+
+  await setDoc(
+
+    doc(
+      db,
+      "deleted_students",
+      student.id
+    ),
+
+    deletedStudent
+
+  );
+
+}
+
+
+/* ================================================================
+   GET ALL DELETED STUDENTS
+   ================================================================ */
+
+async function getDeletedStudentsFromFirestore() {
+
+  const snapshot =
+    await getDocs(
+
+      collection(
+        db,
+        "deleted_students"
+      )
+
+    );
+
+
+  const students = [];
+
+
+  snapshot.forEach(
+    (documentSnapshot) => {
+
+      students.push(
+        documentSnapshot.data()
+      );
+
+    }
+  );
+
+
+  return students;
+
+}
+
+
+/* ================================================================
+   GET ONE DELETED STUDENT
+   ================================================================ */
+
+async function getDeletedStudentFromFirestore(
+  studentId
+) {
+
+  const snapshot =
+    await getDoc(
+
+      doc(
+        db,
+        "deleted_students",
+        studentId
+      )
+
+    );
+
+
+  if (
+    !snapshot.exists()
+  ) {
+
+    return null;
+
+  }
+
+
+  return snapshot.data();
+
+}
+
+
+/* ================================================================
+   RESTORE STUDENT FROM TRASH
+   ================================================================ */
+
+async function restoreStudentFromTrashInFirestore(
+  studentId
+) {
+
+  const student =
+    await getDeletedStudentFromFirestore(
+      studentId
+    );
+
+
+  if (
+    !student
+  ) {
+
+    throw new Error(
+      "Deleted student not found."
+    );
+
+  }
+
+
+  /*
+    Remove trash-only information.
+  */
+
+  delete student.deletedAt;
+
+
+  /*
+    Restore to active students.
+  */
+
+  await setDoc(
+
+    doc(
+      db,
+      "students",
+      studentId
+    ),
+
+    student
+
+  );
+
+
+  /*
+    Only delete from Trash after
+    active student was restored.
+  */
+
+  await deleteDoc(
+
+    doc(
+      db,
+      "deleted_students",
+      studentId
+    )
+
+  );
+
+}
+
+
+/* ================================================================
+   PERMANENTLY DELETE STUDENT FROM TRASH
+   ================================================================ */
+
+async function permanentlyDeleteStudentFromTrash(
+  studentId
+) {
+
+  await deleteDoc(
+
+    doc(
+      db,
+      "deleted_students",
+      studentId
+    )
+
+  );
+
+}
+
+/* ================================================================
    ATTENDANCE FIRESTORE FUNCTIONS
    ================================================================ */
 
@@ -917,6 +1119,24 @@ window.getInstituteProfileFromFirestore =
 window.uploadInstituteLogoToFirebase =
   uploadInstituteLogoToFirebase;
 
+window.moveStudentToTrashInFirestore =
+  moveStudentToTrashInFirestore;
+
+
+window.getDeletedStudentsFromFirestore =
+  getDeletedStudentsFromFirestore;
+
+
+window.getDeletedStudentFromFirestore =
+  getDeletedStudentFromFirestore;
+
+
+window.restoreStudentFromTrashInFirestore =
+  restoreStudentFromTrashInFirestore;
+
+
+window.permanentlyDeleteStudentFromTrash =
+  permanentlyDeleteStudentFromTrash;
 
 /* ================================================================
    EXPORT FIRESTORE
@@ -941,6 +1161,11 @@ export {
   deleteNoteFromFirestore,
   saveInstituteProfileToFirestore,
   getInstituteProfileFromFirestore,
-  uploadInstituteLogoToFirebase
+  uploadInstituteLogoToFirebase,
+  moveStudentToTrashInFirestore,
+  getDeletedStudentsFromFirestore,
+  getDeletedStudentFromFirestore,
+  restoreStudentFromTrashInFirestore,
+  permanentlyDeleteStudentFromTrash
   
 };
