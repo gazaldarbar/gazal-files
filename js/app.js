@@ -5770,7 +5770,10 @@ function openAttendanceRecordDetails(record) {
     return;
   }
 
-  course.textContent = record.course;
+  course.textContent =
+  getCurrentCourseName(
+    record.course
+  );
   date.textContent = record.date;
 
   const presentCount =
