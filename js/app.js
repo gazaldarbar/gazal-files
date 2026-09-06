@@ -5615,8 +5615,10 @@ function openAttendanceHistory() {
 
             <div>
               <h3 class="attendance-history-course">
-                ${record.course}
-              </h3>
+  ${getCurrentCourseName(
+    record.course
+  )}
+</h3>
 
               <span class="attendance-history-date">
                 ${record.date}
