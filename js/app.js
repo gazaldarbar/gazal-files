@@ -6598,7 +6598,11 @@ backButton.style.display =
         </span>
 
         <span class="student-detail-value">
-          ${student.course}
+          ${
+  getCurrentCourseName(
+    student.course
+  )
+}
         </span>
 
       </div>
