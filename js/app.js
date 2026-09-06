@@ -6024,7 +6024,7 @@ function renderStudentsCourseList() {
         course;
 
 
-      courseButton.addEventListener(
+courseButton.addEventListener(
   "click",
   (event) => {
 
@@ -6032,17 +6032,43 @@ function renderStudentsCourseList() {
 
     event.stopPropagation();
 
+
+    console.log(
+      "Opening Students course:",
+      course
+    );
+
+
+    /*
+      Make absolutely sure the
+      Students panel remains visible.
+    */
+
+    const studentsPanel =
+      document.getElementById(
+        "students-panel"
+      );
+
+    if (studentsPanel) {
+
+      studentsPanel.style.display =
+        "block";
+
+    }
+
+
     selectedStudentsCourse =
       course;
 
     studentsView =
       "course-students";
 
+
     renderStudentsByCourse(
-  getCurrentCourseName(
-    course
-  )
-);
+      getCurrentCourseName(
+        course
+      )
+    );
 
   }
 );
