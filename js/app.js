@@ -6874,6 +6874,19 @@ async function renderStudentAttendance(studentId) {
 
 
   /*
+    Save the currently opened
+    student and attendance history
+    for the PDF generator.
+  */
+
+  window.currentAttendancePdfStudent =
+    student;
+
+
+  window.currentAttendancePdfRecords =
+    studentAttendance;
+
+  /*
     Empty state.
   */
 
