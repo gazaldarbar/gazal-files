@@ -11139,63 +11139,61 @@ const studentPhoto =
 
       <!-- STUDENT PHOTO -->
 
-      <div
-        style="
-          width:95px;
-          height:95px;
-          border-radius:50%;
-          overflow:hidden;
-          background:#E3E8E5;
-          flex-shrink:0;
-        "
-      >
+<div
+  style="
+    width:95px;
+    height:95px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#E3E8E5;
+    flex-shrink:0;
+  "
+>
 
-        ${
-          student.photo ||
-          student.photoUrl ||
-          student.profilePhoto ||
-          student.profileImage ||
-          student.image ||
-          student.imageUrl
-            ? `
-              <img
-                src="${
-                  student.photo ||
-                  student.photoUrl ||
-                  student.profilePhoto ||
-                  student.profileImage ||
-                  student.image ||
-                  student.imageUrl
-                }"
-                style="
-                  width:100%;
-                  height:100%;
-                  object-fit:cover;
-                "
-              >
-            `
-            : `
-              <div
-                style="
-                  width:100%;
-                  height:100%;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  font-size:36px;
-                  color:#0B4D3B;
-                "
-              >
-                👤
-              </div>
-            `
-        }
+  ${
+    student.photoData ||
+    student.photo ||
+    student.photoUrl ||
+    student.profilePhoto ||
+    student.profileImage ||
+    student.image ||
+    student.imageUrl
+      ? `
+        <img
+          src="${
+            student.photoData ||
+            student.photo ||
+            student.photoUrl ||
+            student.profilePhoto ||
+            student.profileImage ||
+            student.image ||
+            student.imageUrl
+          }"
+          style="
+            width:100%;
+            height:100%;
+            object-fit:cover;
+          "
+        >
+      `
+      : `
+        <div
+          style="
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:36px;
+            color:#0B4D3B;
+          "
+        >
+          👤
+        </div>
+      `
+  }
 
-      </div>
-
-    </div>
-
-    `;
+</div>
 
   /*
     ================================================================
