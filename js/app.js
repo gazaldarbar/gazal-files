@@ -5126,11 +5126,13 @@ selectedCourse
   // Find saved attendance for same course and date.
 
   const savedAttendance =
-    attendanceRecords.find(
-      (record) =>
-        record.course === selectedCourse &&
-        record.date === dateInput.value
-    );
+  attendanceRecords.find(
+    (record) =>
+      getCurrentCourseName(
+        record.course
+      ) === selectedCourse &&
+      record.date === dateInput.value
+  );
 
 
   // Update popup details.
