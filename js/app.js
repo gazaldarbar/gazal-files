@@ -8145,9 +8145,11 @@ async function editStudent(studentId) {
     student.backupPhone || "";
 
   document.getElementById(
-    "student-course"
-  ).value =
-    student.course || "";
+  "student-course"
+).value =
+  getCurrentCourseName(
+    student.course
+  ) || "";
 
     document.getElementById(
     "admission-date"
