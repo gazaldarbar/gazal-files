@@ -10611,8 +10611,74 @@ function setupQrPopup() {
 }
 
 /* ==========================================================================
-   GENERATE STUDENT ATTENDANCE PDF
+   LOAD IMAGE FOR PDF
    ========================================================================== */
+
+async function loadImageForPdf(
+  imageUrl
+) {
+
+  if (
+    !imageUrl
+  ) {
+    return null;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        imageUrl
+      );
+
+
+    const blob =
+      await response.blob();
+
+
+    return await new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          () => resolve(
+            reader.result
+          );
+
+
+        reader.onerror =
+          reject;
+
+
+        reader.readAsDataURL(
+          blob
+        );
+
+      }
+    );
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Unable to load student image:",
+      error
+    );
+
+
+    return null;
+
+  }
+
+}
+
 
 /* ==========================================================================
    GENERATE STUDENT ATTENDANCE PDF
@@ -10677,6 +10743,27 @@ async function generateStudentAttendancePdf() {
     jsPDF
   } =
     window.jspdf;
+
+  /*
+  ================================================================
+  LOAD STUDENT PHOTO
+  ================================================================
+*/
+
+const studentPhotoUrl =
+  student.photo ||
+  student.photoUrl ||
+  student.profilePhoto ||
+  student.profileImage ||
+  student.image ||
+  student.imageUrl ||
+  null;
+
+
+const studentPhoto =
+  await loadImageForPdf(
+    studentPhotoUrl
+  );
 
 
   /*
