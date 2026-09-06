@@ -7499,9 +7499,15 @@ const feeDue =
 
     <!-- COURSE -->
 
-    <span class="student-course-badge">
-      ${student.course}
-    </span>
+    <!-- COURSE -->
+
+<span class="student-course-badge">
+  ${
+    getCurrentCourseName(
+      student.course
+    )
+  }
+</span>
 
   </div>
 
