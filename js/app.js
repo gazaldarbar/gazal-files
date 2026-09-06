@@ -4507,6 +4507,48 @@ const GAZAL_COURSES = [
   "ലളിതഗാനം"
 ];
 
+/* ==========================================================================
+   COURSE NAME COMPATIBILITY
+   ========================================================================== */
+
+const COURSE_NAME_ALIASES = {
+
+  /*
+    Old course name:
+    Current official course name
+  */
+
+  "വയലിൻ":
+    "വയലിൻ ( വെസ്റ്റേൺ )",
+
+
+  "ഹാർമോണിയം":
+    "ഹാർമോണിയം ( ഹിന്ദുസ്ഥാനി )"
+
+};
+
+
+/*
+  Returns the current official course name.
+
+  This temporarily allows old saved
+  student and attendance records to
+  remain compatible with renamed courses.
+*/
+
+function getCurrentCourseName(
+  course
+) {
+
+  return (
+    COURSE_NAME_ALIASES[
+      course
+    ] ||
+    course
+  );
+
+}
+
 function loadCourseOptions() {
   const studentCourseSelect =
     document.getElementById("student-course");
