@@ -2584,7 +2584,477 @@ if (
   );
 
 }
+/* ================================================================
+   RECENTLY DELETED NAVIGATION
+   ================================================================ */
 
+const recentlyDeletedButton =
+  document.getElementById(
+    "recently-deleted-button"
+  );
+
+
+const recentlyDeletedBackButton =
+  document.getElementById(
+    "recently-deleted-back-button"
+  );
+
+
+/* ------------------------------------------------
+   OPEN RECENTLY DELETED
+   ------------------------------------------------ */
+
+if (
+  recentlyDeletedButton
+) {
+
+  recentlyDeletedButton.addEventListener(
+    "click",
+    async () => {
+
+      /*
+        Hide More panel.
+      */
+
+      document.getElementById(
+        "more-panel"
+      ).style.display =
+        "none";
+
+
+      /*
+        Show Recently Deleted panel.
+      */
+
+      document.getElementById(
+        "recently-deleted-panel"
+      ).style.display =
+        "block";
+
+
+      /*
+        Load deleted students.
+      */
+
+      await renderDeletedStudents();
+
+
+      /*
+        Scroll to top.
+      */
+
+      document.getElementById(
+        "main-content"
+      ).scrollTop =
+        0;
+
+    }
+  );
+
+}
+
+
+/* ------------------------------------------------
+   BACK TO MORE
+   ------------------------------------------------ */
+
+if (
+  recentlyDeletedBackButton
+) {
+
+  recentlyDeletedBackButton.addEventListener(
+    "click",
+    () => {
+
+      /*
+        Hide Recently Deleted panel.
+      */
+
+      document.getElementById(
+        "recently-deleted-panel"
+      ).style.display =
+        "none";
+
+
+      /*
+        Return to More panel.
+      */
+
+      document.getElementById(
+        "more-panel"
+      ).style.display =
+        "block";
+
+
+      /*
+        Scroll to top.
+      */
+
+      document.getElementById(
+        "main-content"
+      ).scrollTop =
+        0;
+
+    }
+  );
+
+}
+
+/* ================================================================
+   RENDER DELETED STUDENTS
+   ================================================================ */
+
+async function renderDeletedStudents() {
+
+  const list =
+    document.getElementById(
+      "deleted-students-list"
+    );
+
+
+  const empty =
+    document.getElementById(
+      "deleted-students-empty"
+    );
+
+
+  if (
+    !list ||
+    !empty
+  ) {
+
+    console.error(
+      "Deleted students UI elements not found."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Clear previous cards.
+  */
+
+  list.innerHTML =
+    "";
+
+
+  try {
+
+    /*
+      Load deleted students
+      from Firestore.
+    */
+
+    if (
+      !window.getDeletedStudentsFromFirestore
+    ) {
+
+      throw new Error(
+        "Deleted students Firestore function is not available."
+      );
+
+    }
+
+
+    const deletedStudents =
+      await window
+        .getDeletedStudentsFromFirestore();
+
+
+    /*
+      Empty trash.
+    */
+
+    if (
+      !deletedStudents ||
+      deletedStudents.length === 0
+    ) {
+
+      empty.style.display =
+        "block";
+
+      return;
+
+    }
+
+
+    empty.style.display =
+      "none";
+
+
+    /*
+      Create a card for
+      every deleted student.
+    */
+
+    deletedStudents.forEach(
+      (student) => {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "student-card";
+
+
+        /*
+          Deleted date.
+        */
+
+        let deletedDate =
+          "-";
+
+
+        if (
+          student.deletedAt
+        ) {
+
+          try {
+
+            const date =
+              new Date(
+                student.deletedAt
+              );
+
+
+            deletedDate =
+              date.toLocaleDateString();
+
+          } catch (error) {
+
+            console.error(
+              "Could not format deleted date:",
+              error
+            );
+
+          }
+
+        }
+
+
+        /*
+          Student photo.
+        */
+
+        const photoHTML =
+          student.photoData
+            ? `
+              <div class="student-detail-photo">
+                <img
+                  src="${student.photoData}"
+                  alt="${student.studentName}"
+                >
+              </div>
+            `
+            : "";
+
+
+        card.innerHTML = `
+
+          ${photoHTML}
+
+
+          <div class="student-card-top">
+
+            <div>
+
+              <h3>
+                ${student.studentName || "Unknown Student"}
+              </h3>
+
+
+              <p class="student-card-id">
+                ${student.id || "-"}
+              </p>
+
+            </div>
+
+
+            <span
+              class="student-course-badge"
+            >
+              ${student.course || "-"}
+            </span>
+
+          </div>
+
+
+          <div
+            class="student-details"
+          >
+
+            <div
+              class="student-detail-row"
+            >
+
+              <span
+                class="student-detail-label"
+              >
+                Deleted On
+              </span>
+
+
+              <span
+                class="student-detail-value"
+              >
+                ${deletedDate}
+              </span>
+
+            </div>
+
+
+            <div
+              class="student-detail-row"
+            >
+
+              <span
+                class="student-detail-label"
+              >
+                Parent
+              </span>
+
+
+              <span
+                class="student-detail-value"
+              >
+                ${student.parentName || "-"}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="student-card-actions"
+          >
+
+            <button
+              class="student-restore-btn"
+              type="button"
+            >
+
+              <span
+                class="student-action-icon"
+              >
+                ↩
+              </span>
+
+
+              <span>
+                Restore
+              </span>
+
+            </button>
+
+
+            <button
+              class="student-permanent-delete-btn"
+              type="button"
+            >
+
+              <span
+                class="student-action-icon"
+              >
+                🗑️
+              </span>
+
+
+              <span>
+                Delete Forever
+              </span>
+
+            </button>
+
+          </div>
+
+        `;
+
+
+        list.appendChild(
+          card
+        );
+
+
+        /*
+          Restore button.
+        */
+
+        const restoreButton =
+          card.querySelector(
+            ".student-restore-btn"
+          );
+
+
+        if (
+          restoreButton
+        ) {
+
+          restoreButton.addEventListener(
+            "click",
+            async () => {
+
+              await restoreDeletedStudent(
+                student.id
+              );
+
+            }
+          );
+
+        }
+
+
+        /*
+          Permanently delete button.
+        */
+
+        const permanentDeleteButton =
+          card.querySelector(
+            ".student-permanent-delete-btn"
+          );
+
+
+        if (
+          permanentDeleteButton
+        ) {
+
+          permanentDeleteButton.addEventListener(
+            "click",
+            async () => {
+
+              await permanentlyDeleteDeletedStudent(
+                student.id
+              );
+
+            }
+          );
+
+        }
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load deleted students:",
+      error
+    );
+
+
+    alert(
+      "Could not load Recently Deleted students."
+    );
+
+  }
+
+}
 
 /* ================================================================
    LOAD INSTITUTE PROFILE FROM FIREBASE
