@@ -4540,15 +4540,29 @@ function getCurrentCourseName(
   course
 ) {
 
+  if (
+    !course
+  ) {
+
+    return course;
+
+  }
+
+
+  const cleanCourse =
+    String(
+      course
+    ).trim();
+
+
   return (
     COURSE_NAME_ALIASES[
-      course
+      cleanCourse
     ] ||
-    course
+    cleanCourse
   );
 
 }
-
 function loadCourseOptions() {
   const studentCourseSelect =
     document.getElementById("student-course");
