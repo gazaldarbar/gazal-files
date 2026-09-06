@@ -5116,7 +5116,10 @@ async function renderAttendanceStudents() {
   const courseStudents =
     students.filter(
       (student) =>
-        student.course === selectedCourse
+        getCurrentCourseName(
+  student.course
+) ===
+selectedCourse
     );
 
 
