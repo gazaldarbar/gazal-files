@@ -6436,7 +6436,9 @@ backButton.style.display =
     student.studentName;
 
   subtitle.textContent =
-    student.course;
+  getCurrentCourseName(
+    student.course
+  );
 
   subtitle.style.display =
     "block";
