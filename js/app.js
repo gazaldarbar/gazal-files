@@ -11170,11 +11170,13 @@ const studentPhoto =
             student.imageUrl
           }"
           style="
-            width:100%;
-            height:100%;
-            object-fit:cover;
-          "
-        >
+    width:95px;
+    height:95px;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+  "
+>
       `
       : `
         <div
