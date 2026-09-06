@@ -11420,23 +11420,33 @@ async function generateStudentAttendancePdf() {
    DOWNLOAD ATTENDANCE PDF BUTTON
    ========================================================================== */
 
-const downloadAttendancePdfButton =
-  document.getElementById(
-    "download-attendance-pdf"
-  );
+document.addEventListener(
+  "click",
+  (
+    event
+  ) => {
+
+    const downloadButton =
+      event.target.closest(
+        "#download-attendance-pdf"
+      );
 
 
-if (
-  downloadAttendancePdfButton
-) {
+    if (
+      !downloadButton
+    ) {
 
-  downloadAttendancePdfButton.addEventListener(
-    "click",
-    () => {
-
-      generateStudentAttendancePdf();
+      return;
 
     }
-  );
 
-}
+
+    console.log(
+      "Download Attendance PDF clicked."
+    );
+
+
+    generateStudentAttendancePdf();
+
+  }
+);
