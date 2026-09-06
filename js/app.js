@@ -10253,8 +10253,11 @@ console.log(
       */
 
       const courseName =
-        record.course ||
-        "Unknown Course";
+  record.course
+    ? getCurrentCourseName(
+        record.course
+      )
+    : "Unknown Course";
 
 
       if (
