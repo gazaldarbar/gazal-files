@@ -266,6 +266,7 @@ function selectTab(key, btnEl) {
   "change-password-panel",
   "notes-panel",
   "institute-profile-panel",
+  "trash-panel",
   "placeholder-panel"
 ];
 
