@@ -10609,3 +10609,834 @@ function setupQrPopup() {
   }
 
 }
+
+/* ==========================================================================
+   GENERATE STUDENT ATTENDANCE PDF
+   ========================================================================== */
+
+async function generateStudentAttendancePdf() {
+
+  const student =
+    window.currentAttendancePdfStudent;
+
+
+  const attendanceRecords =
+    window.currentAttendancePdfRecords;
+
+
+  /*
+    Make sure a student is open.
+  */
+
+  if (
+    !student
+  ) {
+
+    alert(
+      "Student attendance data is not available."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Make sure jsPDF loaded.
+  */
+
+  if (
+    !window.jspdf
+  ) {
+
+    alert(
+      "PDF generator is not loaded."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    jsPDF
+  } =
+    window.jspdf;
+
+
+  /*
+    Create A4 PDF.
+  */
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+
+  const pageWidth =
+    pdf.internal.pageSize.getWidth();
+
+
+  const pageHeight =
+    pdf.internal.pageSize.getHeight();
+
+
+  let y =
+    20;
+
+
+  /*
+    ================================================================
+    PDF HEADER
+    ================================================================
+  */
+
+  pdf.setFillColor(
+    107,
+    37,
+    69
+  );
+
+
+  pdf.rect(
+    0,
+    0,
+    pageWidth,
+    42,
+    "F"
+  );
+
+
+  pdf.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  pdf.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  pdf.setFontSize(
+    22
+  );
+
+
+  pdf.text(
+    "GAZAL DARBAR",
+    pageWidth / 2,
+    17,
+    {
+      align: "center"
+    }
+  );
+
+
+  pdf.setFont(
+    "helvetica",
+    "normal"
+  );
+
+
+  pdf.setFontSize(
+    11
+  );
+
+
+  pdf.text(
+    "Music & Dance Academy",
+    pageWidth / 2,
+    25,
+    {
+      align: "center"
+    }
+  );
+
+
+  pdf.setFontSize(
+    8
+  );
+
+
+  pdf.text(
+    "Thazhe Chelari, Malappuram | +91 98473 10800",
+    pageWidth / 2,
+    33,
+    {
+      align: "center"
+    }
+  );
+
+
+  y =
+    55;
+
+
+  /*
+    ================================================================
+    DOCUMENT TITLE
+    ================================================================
+  */
+
+  pdf.setTextColor(
+    107,
+    37,
+    69
+  );
+
+
+  pdf.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  pdf.setFontSize(
+    16
+  );
+
+
+  pdf.text(
+    "STUDENT ATTENDANCE REPORT",
+    pageWidth / 2,
+    y,
+    {
+      align: "center"
+    }
+  );
+
+
+  y +=
+    15;
+
+
+  /*
+    ================================================================
+    STUDENT DETAILS
+    ================================================================
+  */
+
+  pdf.setFillColor(
+    247,
+    242,
+    231
+  );
+
+
+  pdf.roundedRect(
+    15,
+    y,
+    pageWidth - 30,
+    45,
+    3,
+    3,
+    "F"
+  );
+
+
+  y +=
+    9;
+
+
+  pdf.setTextColor(
+    40,
+    40,
+    40
+  );
+
+
+  pdf.setFontSize(
+    9
+  );
+
+
+  pdf.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  pdf.text(
+    "STUDENT DETAILS",
+    20,
+    y
+  );
+
+
+  y +=
+    8;
+
+
+  pdf.setFont(
+    "helvetica",
+    "normal"
+  );
+
+
+  pdf.text(
+    `Name: ${student.studentName || "-"}`,
+    20,
+    y
+  );
+
+
+  pdf.text(
+    `Student ID: ${student.id || "-"}`,
+    110,
+    y
+  );
+
+
+  y +=
+    8;
+
+
+  pdf.text(
+    `Parent: ${student.parentName || "-"}`,
+    20,
+    y
+  );
+
+
+  pdf.text(
+    `Course: ${student.course || "-"}`,
+    110,
+    y
+  );
+
+
+  y +=
+    8;
+
+
+  pdf.text(
+    `Phone: ${student.phone || student.studentPhone || "-"}`,
+    20,
+    y
+  );
+
+
+  pdf.text(
+    `Admission Date: ${student.admissionDate || "-"}`,
+    110,
+    y
+  );
+
+
+  y +=
+    22;
+
+
+  /*
+    ================================================================
+    ATTENDANCE SUMMARY
+    ================================================================
+  */
+
+  const total =
+    attendanceRecords.length;
+
+
+  const present =
+    attendanceRecords.filter(
+      (record) =>
+        record.status ===
+        "present"
+    ).length;
+
+
+  const absent =
+    attendanceRecords.filter(
+      (record) =>
+        record.status ===
+        "absent"
+    ).length;
+
+
+  const percentage =
+    total > 0
+      ? (
+          present /
+          total *
+          100
+        ).toFixed(1)
+      : "0";
+
+
+  pdf.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  pdf.setFontSize(
+    13
+  );
+
+
+  pdf.setTextColor(
+    107,
+    37,
+    69
+  );
+
+
+  pdf.text(
+    "Attendance Summary",
+    15,
+    y
+  );
+
+
+  y +=
+    10;
+
+
+  pdf.setFontSize(
+    10
+  );
+
+
+  pdf.setTextColor(
+    40,
+    40,
+    40
+  );
+
+
+  pdf.text(
+    `Total Classes: ${total}`,
+    20,
+    y
+  );
+
+
+  pdf.text(
+    `Present: ${present}`,
+    70,
+    y
+  );
+
+
+  pdf.text(
+    `Absent: ${absent}`,
+    115,
+    y
+  );
+
+
+  pdf.text(
+    `Attendance: ${percentage}%`,
+    155,
+    y
+  );
+
+
+  y +=
+    15;
+
+
+  /*
+    ================================================================
+    ATTENDANCE TABLE
+    ================================================================
+  */
+
+  pdf.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  pdf.setFontSize(
+    13
+  );
+
+
+  pdf.setTextColor(
+    107,
+    37,
+    69
+  );
+
+
+  pdf.text(
+    "Attendance History",
+    15,
+    y
+  );
+
+
+  y +=
+    8;
+
+
+  /*
+    Table header.
+  */
+
+  pdf.setFillColor(
+    107,
+    37,
+    69
+  );
+
+
+  pdf.rect(
+    15,
+    y,
+    pageWidth - 30,
+    9,
+    "F"
+  );
+
+
+  pdf.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  pdf.setFontSize(
+    9
+  );
+
+
+  pdf.text(
+    "Date",
+    20,
+    y + 6
+  );
+
+
+  pdf.text(
+    "Course",
+    75,
+    y + 6
+  );
+
+
+  pdf.text(
+    "Status",
+    155,
+    y + 6
+  );
+
+
+  y +=
+    9;
+
+
+  /*
+    Attendance rows.
+  */
+
+  attendanceRecords.forEach(
+    (
+      record,
+      index
+    ) => {
+
+      /*
+        New page when needed.
+      */
+
+      if (
+        y >
+        pageHeight - 25
+      ) {
+
+        pdf.addPage();
+
+
+        y =
+          20;
+
+
+        /*
+          Repeat table header.
+        */
+
+        pdf.setFillColor(
+          107,
+          37,
+          69
+        );
+
+
+        pdf.rect(
+          15,
+          y,
+          pageWidth - 30,
+          9,
+          "F"
+        );
+
+
+        pdf.setTextColor(
+          255,
+          255,
+          255
+        );
+
+
+        pdf.setFontSize(
+          9
+        );
+
+
+        pdf.text(
+          "Date",
+          20,
+          y + 6
+        );
+
+
+        pdf.text(
+          "Course",
+          75,
+          y + 6
+        );
+
+
+        pdf.text(
+          "Status",
+          155,
+          y + 6
+        );
+
+
+        y +=
+          9;
+
+      }
+
+
+      /*
+        Alternate row background.
+      */
+
+      if (
+        index %
+        2 ===
+        0
+      ) {
+
+        pdf.setFillColor(
+          247,
+          247,
+          247
+        );
+
+
+        pdf.rect(
+          15,
+          y,
+          pageWidth - 30,
+          8,
+          "F"
+        );
+
+      }
+
+
+      const formattedDate =
+        new Date(
+          record.date +
+          "T00:00:00"
+        ).toLocaleDateString(
+          "en-IN",
+          {
+            day:
+              "2-digit",
+
+            month:
+              "short",
+
+            year:
+              "numeric"
+          }
+        );
+
+
+      pdf.setTextColor(
+        40,
+        40,
+        40
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+
+      pdf.setFontSize(
+        8
+      );
+
+
+      pdf.text(
+        formattedDate,
+        20,
+        y + 5
+      );
+
+
+      pdf.text(
+        String(
+          record.course ||
+          "-"
+        ).substring(
+          0,
+          25
+        ),
+        75,
+        y + 5
+      );
+
+
+      /*
+        Status.
+      */
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+
+      pdf.text(
+        record.status ===
+        "present"
+          ? "PRESENT"
+          : "ABSENT",
+        155,
+        y + 5
+      );
+
+
+      y +=
+        8;
+
+    }
+  );
+
+
+  /*
+    ================================================================
+    FOOTER
+    ================================================================
+  */
+
+  const totalPages =
+    pdf.internal.getNumberOfPages();
+
+
+  for (
+    let page =
+      1;
+
+    page <=
+    totalPages;
+
+    page++
+  ) {
+
+    pdf.setPage(
+      page
+    );
+
+
+    pdf.setFontSize(
+      7
+    );
+
+
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
+
+
+    pdf.setTextColor(
+      100,
+      100,
+      100
+    );
+
+
+    pdf.text(
+      "Generated by Gazal Files",
+      15,
+      pageHeight - 10
+    );
+
+
+    pdf.text(
+      `Page ${page} of ${totalPages}`,
+      pageWidth - 15,
+      pageHeight - 10,
+      {
+        align: "right"
+      }
+    );
+
+  }
+
+
+  /*
+    ================================================================
+    DOWNLOAD PDF
+    ================================================================
+  */
+
+  const safeName =
+    (
+      student.studentName ||
+      "Student"
+    )
+      .replace(
+        /[^a-z0-9]/gi,
+        "_"
+      );
+
+
+  pdf.save(
+    `${safeName}_Attendance_Report.pdf`
+  );
+
+}
+
+/* ==========================================================================
+   DOWNLOAD ATTENDANCE PDF BUTTON
+   ========================================================================== */
+
+const downloadAttendancePdfButton =
+  document.getElementById(
+    "download-attendance-pdf"
+  );
+
+
+if (
+  downloadAttendancePdfButton
+) {
+
+  downloadAttendancePdfButton.addEventListener(
+    "click",
+    () => {
+
+      generateStudentAttendancePdf();
+
+    }
+  );
+
+}
