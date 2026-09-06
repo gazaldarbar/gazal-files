@@ -6260,99 +6260,95 @@ function renderStudentsCourseList() {
    ================================================================ */
 
 function coursesMatch(
-  studentCourse,
-  selectedCourse
+  courseA,
+  courseB
 ) {
 
   if (
-    !studentCourse ||
-    !selectedCourse
+    !courseA ||
+    !courseB
   ) {
+
     return false;
+
   }
 
 
   /*
-    Convert both values to
-    clean comparable text.
+    Normalize a course name.
+
+    This removes differences in:
+    - extra spaces
+    - spaces around brackets
+    - old/new course names
   */
 
-  const studentCourseName =
-    String(studentCourse)
-      .trim()
-      .toLowerCase();
-
-
-  const selectedCourseName =
-    String(selectedCourse)
-      .trim()
-      .toLowerCase();
-
-
-  /*
-    Direct match.
-  */
-
-  if (
-    studentCourseName ===
-    selectedCourseName
+  function normalizeCourseName(
+    course
   ) {
-    return true;
-  }
 
+    let cleanCourse =
+      String(
+        course
+      )
+        .trim()
+        .replace(
+          /\s+/g,
+          " "
+        );
 
-  /*
-    Check renamed courses.
-
-    Add old → new course names here
-    if existing students were saved
-    under the previous course name.
-  */
-
-  const courseAliases = {
 
     /*
-      Example:
-
-      "old course name":
-        "new course name",
-
-      "new course name":
-        "old course name",
+      Convert old course name
+      to current official name.
     */
 
-  };
+    cleanCourse =
+      getCurrentCourseName(
+        cleanCourse
+      );
 
 
-  const studentAlias =
-    courseAliases[
-      studentCourseName
-    ];
+    /*
+      Remove all spaces for
+      comparison purposes.
 
+      Example:
 
-  const selectedAlias =
-    courseAliases[
-      selectedCourseName
-    ];
+      "വയലിൻ ( വെസ്റ്റേൺ )"
 
+      and
 
-  if (
-    studentAlias ===
-    selectedCourseName
-  ) {
-    return true;
+      "വയലിൻ(വെസ്റ്റേൺ)"
+
+      will match.
+    */
+
+    return cleanCourse
+      .replace(
+        /\s/g,
+        ""
+      );
+
   }
 
 
-  if (
-    selectedAlias ===
-    studentCourseName
-  ) {
-    return true;
-  }
+  const normalizedA =
+    normalizeCourseName(
+      courseA
+    );
 
 
-  return false;
+  const normalizedB =
+    normalizeCourseName(
+      courseB
+    );
+
+
+  return (
+    normalizedA ===
+    normalizedB
+  );
 
 }
 
@@ -6541,7 +6537,19 @@ async function renderStudentsByCourse(course) {
 
   }
 
+console.log(
+  "SELECTED COURSE:",
+  course
+);
 
+console.log(
+  "ALL SAVED STUDENT COURSES:",
+  students.map(
+    (student) => student.course
+  )
+);
+
+  
   /*
     Filter students for selected course.
   */
