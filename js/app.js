@@ -6109,6 +6109,106 @@ function renderStudentsCourseList() {
 
 }
 
+/* ================================================================
+   COURSE NAME MATCHING
+   ================================================================ */
+
+function coursesMatch(
+  studentCourse,
+  selectedCourse
+) {
+
+  if (
+    !studentCourse ||
+    !selectedCourse
+  ) {
+    return false;
+  }
+
+
+  /*
+    Convert both values to
+    clean comparable text.
+  */
+
+  const studentCourseName =
+    String(studentCourse)
+      .trim()
+      .toLowerCase();
+
+
+  const selectedCourseName =
+    String(selectedCourse)
+      .trim()
+      .toLowerCase();
+
+
+  /*
+    Direct match.
+  */
+
+  if (
+    studentCourseName ===
+    selectedCourseName
+  ) {
+    return true;
+  }
+
+
+  /*
+    Check renamed courses.
+
+    Add old → new course names here
+    if existing students were saved
+    under the previous course name.
+  */
+
+  const courseAliases = {
+
+    /*
+      Example:
+
+      "old course name":
+        "new course name",
+
+      "new course name":
+        "old course name",
+    */
+
+  };
+
+
+  const studentAlias =
+    courseAliases[
+      studentCourseName
+    ];
+
+
+  const selectedAlias =
+    courseAliases[
+      selectedCourseName
+    ];
+
+
+  if (
+    studentAlias ===
+    selectedCourseName
+  ) {
+    return true;
+  }
+
+
+  if (
+    selectedAlias ===
+    studentCourseName
+  ) {
+    return true;
+  }
+
+
+  return false;
+
+}
 
 /* ==========================================================================
    STUDENTS — SELECTED COURSE STUDENTS VIEW
