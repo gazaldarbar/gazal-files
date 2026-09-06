@@ -3229,6 +3229,110 @@ async function restoreDeletedStudent(
 }
 
 /* ================================================================
+   PERMANENTLY DELETE DELETED STUDENT
+   ================================================================ */
+
+async function permanentlyDeleteDeletedStudent(
+  studentId
+) {
+
+  /*
+    First confirmation.
+  */
+
+  const firstConfirmation =
+    confirm(
+      "Permanently delete this student?\n\n" +
+      "This action cannot be undone."
+    );
+
+
+  if (
+    !firstConfirmation
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+    Second safety confirmation.
+  */
+
+  const secondConfirmation =
+    confirm(
+      "Are you absolutely sure?\n\n" +
+      "All student information and photo will be permanently deleted forever."
+    );
+
+
+  if (
+    !secondConfirmation
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    /*
+      Check Firestore function.
+    */
+
+    if (
+      !window.permanentlyDeleteStudentFromTrash
+    ) {
+
+      throw new Error(
+        "Permanent delete function is not available."
+      );
+
+    }
+
+
+    /*
+      Permanently delete from Firestore.
+    */
+
+    await window
+      .permanentlyDeleteStudentFromTrash(
+        studentId
+      );
+
+
+    /*
+      Refresh Recently Deleted list.
+    */
+
+    await renderDeletedStudents();
+
+
+    alert(
+      "Student permanently deleted."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Failed to permanently delete student:",
+      error
+    );
+
+
+    alert(
+      "Student could not be permanently deleted.\n\n" +
+      error.message
+    );
+
+  }
+
+}
+
+/* ================================================================
    LOAD INSTITUTE PROFILE FROM FIREBASE
    ================================================================ */
 
