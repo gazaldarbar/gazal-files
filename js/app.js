@@ -6026,22 +6026,31 @@ function renderStudentsCourseList() {
 
 courseButton.addEventListener(
   "click",
-  (event) => {
+  async (event) => {
 
     event.preventDefault();
 
     event.stopPropagation();
 
 
+    /*
+      Get the current course name.
+    */
+
+    const selectedCourse =
+      getCurrentCourseName(
+        course
+      );
+
+
     console.log(
       "Opening Students course:",
-      course
+      selectedCourse
     );
 
 
     /*
-      Make absolutely sure the
-      Students panel remains visible.
+      Keep Students panel visible.
     */
 
     const studentsPanel =
@@ -6057,17 +6066,20 @@ courseButton.addEventListener(
     }
 
 
+    /*
+      Save the same course value
+      that we use for rendering.
+    */
+
     selectedStudentsCourse =
-      course;
+      selectedCourse;
 
     studentsView =
       "course-students";
 
 
-    renderStudentsByCourse(
-      getCurrentCourseName(
-        course
-      )
+    await renderStudentsByCourse(
+      selectedCourse
     );
 
   }
