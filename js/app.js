@@ -7314,9 +7314,14 @@ attendanceRecords.forEach((record) => {
     studentAttendance.status === "present"
   ) {
     presentClasses.push({
-      date: record.date,
-      course: record.course
-    });
+  date:
+    record.date,
+
+  course:
+    getCurrentCourseName(
+      record.course
+    )
+});
   }
 });
 
