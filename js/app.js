@@ -7560,7 +7560,11 @@ const feeDue =
     <div class="student-detail-row">
       <span class="student-detail-label">കോഴ്സ്</span>
       <span class="student-detail-value">
-        ${student.course}
+        ${
+  getCurrentCourseName(
+    student.course
+  )
+}
       </span>
     </div>
 
