@@ -4531,9 +4531,9 @@ const COURSE_NAME_ALIASES = {
 /*
   Returns the current official course name.
 
-  This temporarily allows old saved
-  student and attendance records to
-  remain compatible with renamed courses.
+  This allows old saved student
+  and attendance records to remain
+  compatible with renamed courses.
 */
 
 function getCurrentCourseName(
@@ -4563,12 +4563,158 @@ function getCurrentCourseName(
   );
 
 }
+
+
+/*
+  COURSE MATCHING
+
+  Checks whether two course names
+  are actually the same course,
+  including old names and newly
+  renamed official names.
+*/
+
+function coursesMatch(
+  courseA,
+  courseB
+) {
+
+  if (
+    !courseA ||
+    !courseB
+  ) {
+
+    return false;
+
+  }
+
+
+  /*
+    Clean both course names.
+  */
+
+  const cleanA =
+    String(
+      courseA
+    ).trim();
+
+
+  const cleanB =
+    String(
+      courseB
+    ).trim();
+
+
+  /*
+    Direct match.
+  */
+
+  if (
+    cleanA === cleanB
+  ) {
+
+    return true;
+
+  }
+
+
+  /*
+    Convert old names to their
+    current official names.
+  */
+
+  const currentA =
+    getCurrentCourseName(
+      cleanA
+    );
+
+
+  const currentB =
+    getCurrentCourseName(
+      cleanB
+    );
+
+
+  /*
+    Compare official names.
+  */
+
+  if (
+    currentA === currentB
+  ) {
+
+    return true;
+
+  }
+
+
+  /*
+    Reverse compatibility check.
+
+    This allows a saved old name
+    to match when the selected
+    course uses the new name.
+  */
+
+  const oldNameForA =
+    Object.keys(
+      COURSE_NAME_ALIASES
+    ).find(
+      (oldName) =>
+        COURSE_NAME_ALIASES[
+          oldName
+        ] === cleanA
+    );
+
+
+  const oldNameForB =
+    Object.keys(
+      COURSE_NAME_ALIASES
+    ).find(
+      (oldName) =>
+        COURSE_NAME_ALIASES[
+          oldName
+        ] === cleanB
+    );
+
+
+  if (
+    oldNameForA &&
+    oldNameForA === cleanB
+  ) {
+
+    return true;
+
+  }
+
+
+  if (
+    oldNameForB &&
+    oldNameForB === cleanA
+  ) {
+
+    return true;
+
+  }
+
+
+  return false;
+
+}
+
+
 function loadCourseOptions() {
+
   const studentCourseSelect =
-    document.getElementById("student-course");
+    document.getElementById(
+      "student-course"
+    );
 
   const attendanceCourseSelect =
-    document.getElementById("attendance-course");
+    document.getElementById(
+      "attendance-course"
+    );
+
 
   // ------------------------------------------------
   // ADD STUDENT COURSE DROPDOWN
