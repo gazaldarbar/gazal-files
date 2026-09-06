@@ -6098,25 +6098,6 @@ courseButton.addEventListener(
 
 async function renderStudentsByCourse(course) {
 
-
-  /*
-    Make sure the Students panel
-    remains visible.
-  */
-
-  const studentsPanel =
-    document.getElementById(
-      "students-panel"
-    );
-
-  if (studentsPanel) {
-
-    studentsPanel.style.display =
-      "block";
-
-  }
-
-
   let students = [];
 
 
