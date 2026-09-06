@@ -6084,11 +6084,13 @@ async function renderStudentsByCourse(course) {
   */
 
   const courseStudents =
-    students.filter(
-      (student) =>
-        student.course === course
-    );
-
+  students.filter(
+    (student) =>
+      coursesMatch(
+        student.course,
+        course
+      )
+  );
 
   /*
     Get interface elements.
