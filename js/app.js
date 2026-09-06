@@ -4764,10 +4764,13 @@ async function openCourseStudentsPopup(courseName) {
   */
 
   const courseStudents =
-    students.filter(
-      (student) =>
-        student.course === courseName
-    );
+  students.filter(
+    (student) =>
+      coursesMatch(
+        student.course,
+        courseName
+      )
+  );
 
 
   /*
