@@ -5961,11 +5961,14 @@ function renderStudentsCourseList() {
     Set navigation state.
   */
 
-  studentsView = "courses";
+  studentsView =
+    "courses";
 
-  selectedStudentsCourse = null;
+  selectedStudentsCourse =
+    null;
 
-  selectedStudentId = null;
+  selectedStudentId =
+    null;
 
 
   /*
@@ -5989,7 +5992,8 @@ function renderStudentsCourseList() {
     Clear old student cards.
   */
 
-  list.innerHTML = "";
+  list.innerHTML =
+    "";
 
   empty.style.display =
     "none";
@@ -6000,7 +6004,9 @@ function renderStudentsCourseList() {
   */
 
   const coursesGrid =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   coursesGrid.className =
     "students-courses-grid";
@@ -6024,67 +6030,78 @@ function renderStudentsCourseList() {
         course;
 
 
-courseButton.addEventListener(
-  "click",
-  async (event) => {
+      /*
+        Open selected course.
+      */
 
-    event.preventDefault();
+      courseButton.addEventListener(
+        "click",
+        async (event) => {
 
-    event.stopPropagation();
+          event.preventDefault();
+
+          event.stopPropagation();
 
 
-    /*
-      Get the current course name.
-    */
+          /*
+            Get current course name.
+          */
 
-    const selectedCourse =
-      getCurrentCourseName(
-        course
+          const selectedCourse =
+            getCurrentCourseName(
+              course
+            );
+
+
+          console.log(
+            "Opening Students course:",
+            selectedCourse
+          );
+
+
+          /*
+            Keep Students panel visible.
+          */
+
+          const studentsPanel =
+            document.getElementById(
+              "students-panel"
+            );
+
+          if (studentsPanel) {
+
+            studentsPanel.style.display =
+              "block";
+
+          }
+
+
+          /*
+            Update navigation state.
+          */
+
+          selectedStudentsCourse =
+            selectedCourse;
+
+          studentsView =
+            "course-students";
+
+
+          /*
+            Render selected course students.
+          */
+
+          await renderStudentsByCourse(
+            selectedCourse
+          );
+
+        }
       );
 
 
-    console.log(
-      "Opening Students course:",
-      selectedCourse
-    );
-
-
-    /*
-      Keep Students panel visible.
-    */
-
-    const studentsPanel =
-      document.getElementById(
-        "students-panel"
-      );
-
-    if (studentsPanel) {
-
-      studentsPanel.style.display =
-        "block";
-
-    }
-
-
-    /*
-      Save the same course value
-      that we use for rendering.
-    */
-
-    selectedStudentsCourse =
-      selectedCourse;
-
-    studentsView =
-      "course-students";
-
-
-    await renderStudentsByCourse(
-      selectedCourse
-    );
-
-  }
-);
-
+      /*
+        Add course button to grid.
+      */
 
       coursesGrid.appendChild(
         courseButton
@@ -6094,12 +6111,15 @@ courseButton.addEventListener(
   );
 
 
+  /*
+    Add grid to Students section.
+  */
+
   list.appendChild(
     coursesGrid
   );
 
 }
-
 
 /* ==========================================================================
    STUDENTS — SELECTED COURSE STUDENTS VIEW
