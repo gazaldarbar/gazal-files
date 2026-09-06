@@ -6301,33 +6301,13 @@ async function renderStudentsByCourse(course) {
   */
 
   const courseStudents =
-    students.filter(
-      (student) => {
-
-        if (
-          typeof coursesMatch ===
-          "function"
-        ) {
-
-          return coursesMatch(
-            student.course,
-            course
-          );
-
-        }
-
-
-        /*
-          Fallback matching.
-        */
-
-        return (
-          student.course ===
-          course
-        );
-
-      }
-    );
+  students.filter(
+    (student) =>
+      coursesMatch(
+        student.course,
+        course
+      )
+  );
 
 
   /*
