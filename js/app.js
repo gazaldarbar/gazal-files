@@ -6917,7 +6917,9 @@ async function renderStudentAttendance(studentId) {
           record.date,
 
         course:
-          record.course,
+  getCurrentCourseName(
+    record.course
+  ),
 
         status:
           attendanceEntry.status
