@@ -3057,6 +3057,177 @@ async function renderDeletedStudents() {
 }
 
 /* ================================================================
+   RESTORE DELETED STUDENT
+   ================================================================ */
+
+async function restoreDeletedStudent(
+  studentId
+) {
+
+  const confirmed =
+    confirm(
+      "Restore this student?\n\n" +
+      "The student will be moved back to the active Students list."
+    );
+
+
+  if (
+    !confirmed
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    /*
+      Check Firestore function exists.
+    */
+
+    if (
+      !window.restoreStudentFromTrashInFirestore
+    ) {
+
+      throw new Error(
+        "Restore function is not available."
+      );
+
+    }
+
+
+    /*
+      Disable duplicate actions
+      while restoring.
+    */
+
+    console.log(
+      "Restoring student:",
+      studentId
+    );
+
+
+    /*
+      Move student from
+      deleted_students → students.
+    */
+
+    await window
+      .restoreStudentFromTrashInFirestore(
+        studentId
+      );
+
+
+    /*
+      Remove old localStorage copy
+      if necessary before syncing.
+    */
+
+    const localStudents =
+      JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+
+    /*
+      Reload the active student
+      from Firestore after restore.
+    */
+
+    let restoredStudent =
+      null;
+
+
+    if (
+      window.getStudentFromFirestore
+    ) {
+
+      restoredStudent =
+        await window
+          .getStudentFromFirestore(
+            studentId
+          );
+
+    }
+
+
+    /*
+      Update local backup.
+    */
+
+    if (
+      restoredStudent
+    ) {
+
+      const existingIndex =
+        localStudents.findIndex(
+          (student) =>
+            student.id ===
+            studentId
+        );
+
+
+      if (
+        existingIndex === -1
+      ) {
+
+        localStudents.push(
+          restoredStudent
+        );
+
+      } else {
+
+        localStudents[
+          existingIndex
+        ] =
+          restoredStudent;
+
+      }
+
+
+      localStorage.setItem(
+        "gazal_students",
+        JSON.stringify(
+          localStudents
+        )
+      );
+
+    }
+
+
+    alert(
+      "Student restored successfully!"
+    );
+
+
+    /*
+      Refresh Trash.
+    */
+
+    await renderDeletedStudents();
+
+
+  } catch (error) {
+
+    console.error(
+      "Failed to restore student:",
+      error
+    );
+
+
+    alert(
+      "Student could not be restored.\n\n" +
+      error.message
+    );
+
+  }
+
+}
+
+/* ================================================================
    LOAD INSTITUTE PROFILE FROM FIREBASE
    ================================================================ */
 
