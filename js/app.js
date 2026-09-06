@@ -10614,6 +10614,10 @@ function setupQrPopup() {
    GENERATE STUDENT ATTENDANCE PDF
    ========================================================================== */
 
+/* ==========================================================================
+   GENERATE STUDENT ATTENDANCE PDF
+   ========================================================================== */
+
 async function generateStudentAttendancePdf() {
 
   const student =
@@ -10625,12 +10629,10 @@ async function generateStudentAttendancePdf() {
 
 
   /*
-    Make sure a student is open.
+    Make sure student data exists.
   */
 
-  if (
-    !student
-  ) {
+  if (!student) {
 
     alert(
       "Student attendance data is not available."
@@ -10642,15 +10644,28 @@ async function generateStudentAttendancePdf() {
 
 
   /*
-    Make sure jsPDF loaded.
+    Make sure PDF generator exists.
   */
 
-  if (
-    !window.jspdf
-  ) {
+  if (!window.jspdf) {
 
     alert(
       "PDF generator is not loaded."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Make sure HTML renderer exists.
+  */
+
+  if (!window.html2canvas) {
+
+    alert(
+      "PDF renderer is not loaded."
     );
 
     return;
@@ -10665,7 +10680,855 @@ async function generateStudentAttendancePdf() {
 
 
   /*
-    Create A4 PDF.
+    ================================================================
+    CALCULATE ATTENDANCE SUMMARY
+    ================================================================
+  */
+
+  const total =
+    attendanceRecords.length;
+
+
+  const present =
+    attendanceRecords.filter(
+      record =>
+        record.status === "present"
+    ).length;
+
+
+  const absent =
+    attendanceRecords.filter(
+      record =>
+        record.status === "absent"
+    ).length;
+
+
+  const percentage =
+    total > 0
+      ? (
+          present /
+          total *
+          100
+        ).toFixed(1)
+      : "0.0";
+
+
+  /*
+    ================================================================
+    SORT NEWEST FIRST
+    ================================================================
+  */
+
+  const sortedRecords =
+    [
+      ...attendanceRecords
+    ].sort(
+      (a, b) =>
+        new Date(
+          b.date +
+          "T00:00:00"
+        )
+        -
+        new Date(
+          a.date +
+          "T00:00:00"
+        )
+    );
+
+
+  /*
+    ================================================================
+    GROUP RECORDS BY MONTH
+    ================================================================
+  */
+
+  const groupedAttendance =
+    {};
+
+
+  sortedRecords.forEach(
+    record => {
+
+      const date =
+        new Date(
+          record.date +
+          "T00:00:00"
+        );
+
+
+      const monthName =
+        date.toLocaleDateString(
+          "en-US",
+          {
+            month:
+              "long",
+            year:
+              "numeric"
+          }
+        );
+
+
+      if (
+        !groupedAttendance[
+          monthName
+        ]
+      ) {
+
+        groupedAttendance[
+          monthName
+        ] =
+          [];
+
+      }
+
+
+      groupedAttendance[
+        monthName
+      ].push(
+        record
+      );
+
+    }
+  );
+
+
+  /*
+    ================================================================
+    CREATE TEMPORARY REPORT
+    ================================================================
+  */
+
+  const report =
+    document.createElement(
+      "div"
+    );
+
+
+  report.style.width =
+    "794px";
+
+
+  report.style.background =
+    "#ffffff";
+
+
+  report.style.color =
+    "#1f2937";
+
+
+  report.style.fontFamily =
+    "'Noto Sans Malayalam', Arial, sans-serif";
+
+
+  report.style.position =
+    "fixed";
+
+
+  report.style.left =
+    "-10000px";
+
+
+  report.style.top =
+    "0";
+
+
+  report.style.padding =
+    "0";
+
+
+  report.style.boxSizing =
+    "border-box";
+
+
+  /*
+    ================================================================
+    LOGO
+    ================================================================
+  */
+
+  const logoUrl =
+    "icons/gazal-logo.png";
+
+
+  /*
+    ================================================================
+    HEADER
+    Same green colour as the app.
+    ================================================================
+  */
+
+  const headerHtml =
+    `
+
+    <div
+      style="
+        background:#0B4D3B;
+        color:white;
+        height:150px;
+        display:flex;
+        align-items:center;
+        padding:0 55px;
+        box-sizing:border-box;
+      "
+    >
+
+      <div
+        style="
+          width:85px;
+          height:85px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          margin-right:25px;
+          background:rgba(255,255,255,0.08);
+          border-radius:12px;
+          overflow:hidden;
+        "
+      >
+
+        <img
+          src="${logoUrl}"
+          style="
+            max-width:70px;
+            max-height:70px;
+            object-fit:contain;
+          "
+        >
+
+      </div>
+
+
+      <div>
+
+        <div
+          style="
+            font-size:28px;
+            font-weight:700;
+            letter-spacing:2px;
+          "
+        >
+          GAZAL DARBAR
+        </div>
+
+
+        <div
+          style="
+            font-size:14px;
+            margin-top:7px;
+            opacity:0.9;
+          "
+        >
+          Music & Dance Academy
+        </div>
+
+
+        <div
+          style="
+            font-size:10px;
+            margin-top:10px;
+            opacity:0.75;
+          "
+        >
+          Thazhe Chelari, Malappuram | +91 98473 10800
+        </div>
+
+      </div>
+
+    </div>
+
+    `;
+
+
+  /*
+    ================================================================
+    STUDENT DETAILS
+    ================================================================
+  */
+
+  const studentDetailsHtml =
+    `
+
+    <div
+      style="
+        margin:35px 50px 0;
+      "
+    >
+
+      <h1
+        style="
+          text-align:center;
+          color:#0B4D3B;
+          font-size:22px;
+          letter-spacing:1px;
+          margin-bottom:30px;
+        "
+      >
+        STUDENT ATTENDANCE REPORT
+      </h1>
+
+
+      <div
+        style="
+          background:#F3F5F3;
+          border-radius:14px;
+          padding:22px;
+        "
+      >
+
+        <div
+          style="
+            font-size:11px;
+            font-weight:700;
+            color:#0B4D3B;
+            margin-bottom:18px;
+          "
+        >
+          STUDENT DETAILS
+        </div>
+
+
+        <div
+          style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px 30px;
+            font-size:11px;
+          "
+        >
+
+          <div>
+            <strong>Name:</strong>
+            ${student.studentName || "-"}
+          </div>
+
+
+          <div>
+            <strong>Student ID:</strong>
+            ${student.id || "-"}
+          </div>
+
+
+          <div>
+            <strong>Parent:</strong>
+            ${student.parentName || "-"}
+          </div>
+
+
+          <div>
+            <strong>Course:</strong>
+            ${student.course || "-"}
+          </div>
+
+
+          <div>
+            <strong>Phone:</strong>
+            ${
+              student.phone ||
+              student.studentPhone ||
+              "-"
+            }
+          </div>
+
+
+          <div>
+            <strong>Admission Date:</strong>
+            ${student.admissionDate || "-"}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    `;
+
+
+  /*
+    ================================================================
+    SUMMARY
+    ================================================================
+  */
+
+  const summaryHtml =
+    `
+
+    <div
+      style="
+        margin:30px 50px 0;
+      "
+    >
+
+      <h2
+        style="
+          color:#0B4D3B;
+          font-size:18px;
+          margin-bottom:18px;
+        "
+      >
+        Attendance Summary
+      </h2>
+
+
+      <div
+        style="
+          display:grid;
+          grid-template-columns:
+            repeat(4,1fr);
+          gap:12px;
+        "
+      >
+
+        <div
+          style="
+            background:#F3F5F3;
+            padding:15px;
+            border-radius:10px;
+          "
+        >
+
+          <div
+            style="
+              font-size:10px;
+              color:#666;
+            "
+          >
+            Total Classes
+          </div>
+
+          <strong
+            style="
+              font-size:18px;
+              color:#0B4D3B;
+            "
+          >
+            ${total}
+          </strong>
+
+        </div>
+
+
+        <div
+          style="
+            background:#F3F5F3;
+            padding:15px;
+            border-radius:10px;
+          "
+        >
+
+          <div
+            style="
+              font-size:10px;
+              color:#666;
+            "
+          >
+            Present
+          </div>
+
+          <strong
+            style="
+              font-size:18px;
+              color:#0B4D3B;
+            "
+          >
+            ${present}
+          </strong>
+
+        </div>
+
+
+        <div
+          style="
+            background:#F3F5F3;
+            padding:15px;
+            border-radius:10px;
+          "
+        >
+
+          <div
+            style="
+              font-size:10px;
+              color:#666;
+            "
+          >
+            Absent
+          </div>
+
+          <strong
+            style="
+              font-size:18px;
+              color:#B91C1C;
+            "
+          >
+            ${absent}
+          </strong>
+
+        </div>
+
+
+        <div
+          style="
+            background:#F3F5F3;
+            padding:15px;
+            border-radius:10px;
+          "
+        >
+
+          <div
+            style="
+              font-size:10px;
+              color:#666;
+            "
+          >
+            Attendance
+          </div>
+
+          <strong
+            style="
+              font-size:18px;
+              color:#0B4D3B;
+            "
+          >
+            ${percentage}%
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    `;
+
+
+  /*
+    ================================================================
+    ATTENDANCE HISTORY
+    GROUPED BY MONTH
+    ================================================================
+  */
+
+  let historyHtml =
+    `
+
+    <div
+      style="
+        margin:30px 50px 0;
+      "
+    >
+
+      <h2
+        style="
+          color:#0B4D3B;
+          font-size:18px;
+          margin-bottom:20px;
+        "
+      >
+        Attendance History
+      </h2>
+
+    `;
+
+
+  Object.entries(
+    groupedAttendance
+  ).forEach(
+    (
+      [
+        month,
+        records
+      ]
+    ) => {
+
+
+      historyHtml +=
+        `
+
+        <div
+          style="
+            margin-bottom:28px;
+          "
+        >
+
+          <div
+            style="
+              background:#0B4D3B;
+              color:white;
+              padding:12px 16px;
+              font-weight:700;
+              font-size:15px;
+              border-radius:9px 9px 0 0;
+            "
+          >
+            ${month}
+          </div>
+
+
+          <table
+            style="
+              width:100%;
+              border-collapse:collapse;
+              font-size:10px;
+            "
+          >
+
+            <thead>
+
+              <tr
+                style="
+                  background:#E7EEE9;
+                  color:#0B4D3B;
+                "
+              >
+
+                <th
+                  style="
+                    padding:10px;
+                    text-align:left;
+                  "
+                >
+                  Date
+                </th>
+
+
+                <th
+                  style="
+                    padding:10px;
+                    text-align:left;
+                  "
+                >
+                  Course
+                </th>
+
+
+                <th
+                  style="
+                    padding:10px;
+                    text-align:center;
+                  "
+                >
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+        `;
+
+
+      records.forEach(
+        record => {
+
+
+          const formattedDate =
+            new Date(
+              record.date +
+              "T00:00:00"
+            ).toLocaleDateString(
+              "en-IN",
+              {
+                day:
+                  "2-digit",
+
+                month:
+                  "long",
+
+                year:
+                  "numeric"
+              }
+            );
+
+
+          const isPresent =
+            record.status ===
+            "present";
+
+
+          historyHtml +=
+            `
+
+            <tr>
+
+              <td
+                style="
+                  padding:10px;
+                  border-bottom:
+                    1px solid #E5E7EB;
+                "
+              >
+                ${formattedDate}
+              </td>
+
+
+              <td
+                style="
+                  padding:10px;
+                  border-bottom:
+                    1px solid #E5E7EB;
+                "
+              >
+                ${
+                  record.course ||
+                  "-"
+                }
+              </td>
+
+
+              <td
+                style="
+                  padding:10px;
+                  border-bottom:
+                    1px solid #E5E7EB;
+                  text-align:center;
+                  font-weight:700;
+                  color:
+                    ${
+                      isPresent
+                        ? "#0B4D3B"
+                        : "#B91C1C"
+                    };
+                "
+              >
+                ${
+                  isPresent
+                    ? "PRESENT"
+                    : "ABSENT"
+                }
+              </td>
+
+            </tr>
+
+            `;
+
+        }
+      );
+
+
+      historyHtml +=
+        `
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        `;
+
+    }
+  );
+
+
+  historyHtml +=
+    `
+
+    </div>
+
+    `;
+
+
+  /*
+    ================================================================
+    FOOTER
+    ================================================================
+  */
+
+  const footerHtml =
+    `
+
+    <div
+      style="
+        margin-top:45px;
+        padding:20px 50px;
+        background:#F3F5F3;
+        font-size:9px;
+        color:#666;
+        display:flex;
+        justify-content:space-between;
+      "
+    >
+
+      <span>
+        Generated by Gazal Files
+      </span>
+
+
+      <span>
+        Gazal Darbar Music & Dance Academy
+      </span>
+
+    </div>
+
+    `;
+
+
+  /*
+    Build report.
+  */
+
+  report.innerHTML =
+    headerHtml +
+    studentDetailsHtml +
+    summaryHtml +
+    historyHtml +
+    footerHtml;
+
+
+  document.body.appendChild(
+    report
+  );
+
+
+  /*
+    Wait for logo rendering.
+  */
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        500
+      )
+  );
+
+
+  /*
+    Convert HTML to canvas.
+  */
+
+  const canvas =
+    await window.html2canvas(
+      report,
+      {
+        scale:
+          2,
+
+        useCORS:
+          true,
+
+        backgroundColor:
+          "#ffffff"
+      }
+    );
+
+
+  /*
+    Remove temporary report.
+  */
+
+  document.body.removeChild(
+    report
+  );
+
+
+  /*
+    ================================================================
+    CREATE PDF
+    ================================================================
   */
 
   const pdf =
@@ -10684,725 +11547,97 @@ async function generateStudentAttendancePdf() {
     pdf.internal.pageSize.getHeight();
 
 
-  let y =
-    20;
+  const margin =
+    0;
 
 
-  /*
-    ================================================================
-    PDF HEADER
-    ================================================================
-  */
+  const imageWidth =
+    pageWidth;
 
-  pdf.setFillColor(
-    107,
-    37,
-    69
-  );
 
-
-  pdf.rect(
-    0,
-    0,
-    pageWidth,
-    42,
-    "F"
-  );
-
-
-  pdf.setTextColor(
-    255,
-    255,
-    255
-  );
-
-
-  pdf.setFont(
-    "helvetica",
-    "bold"
-  );
-
-
-  pdf.setFontSize(
-    22
-  );
-
-
-  pdf.text(
-    "GAZAL DARBAR",
-    pageWidth / 2,
-    17,
-    {
-      align: "center"
-    }
-  );
-
-
-  pdf.setFont(
-    "helvetica",
-    "normal"
-  );
-
-
-  pdf.setFontSize(
-    11
-  );
-
-
-  pdf.text(
-    "Music & Dance Academy",
-    pageWidth / 2,
-    25,
-    {
-      align: "center"
-    }
-  );
-
-
-  pdf.setFontSize(
-    8
-  );
-
-
-  pdf.text(
-    "Thazhe Chelari, Malappuram | +91 98473 10800",
-    pageWidth / 2,
-    33,
-    {
-      align: "center"
-    }
-  );
-
-
-  y =
-    55;
-
-
-  /*
-    ================================================================
-    DOCUMENT TITLE
-    ================================================================
-  */
-
-  pdf.setTextColor(
-    107,
-    37,
-    69
-  );
-
-
-  pdf.setFont(
-    "helvetica",
-    "bold"
-  );
-
-
-  pdf.setFontSize(
-    16
-  );
-
-
-  pdf.text(
-    "STUDENT ATTENDANCE REPORT",
-    pageWidth / 2,
-    y,
-    {
-      align: "center"
-    }
-  );
-
-
-  y +=
-    15;
-
-
-  /*
-    ================================================================
-    STUDENT DETAILS
-    ================================================================
-  */
-
-  pdf.setFillColor(
-    247,
-    242,
-    231
-  );
-
-
-  pdf.roundedRect(
-    15,
-    y,
-    pageWidth - 30,
-    45,
-    3,
-    3,
-    "F"
-  );
-
-
-  y +=
-    9;
-
-
-  pdf.setTextColor(
-    40,
-    40,
-    40
-  );
-
-
-  pdf.setFontSize(
-    9
-  );
-
-
-  pdf.setFont(
-    "helvetica",
-    "bold"
-  );
-
-
-  pdf.text(
-    "STUDENT DETAILS",
-    20,
-    y
-  );
-
-
-  y +=
-    8;
-
-
-  pdf.setFont(
-    "helvetica",
-    "normal"
-  );
-
-
-  pdf.text(
-    `Name: ${student.studentName || "-"}`,
-    20,
-    y
-  );
-
-
-  pdf.text(
-    `Student ID: ${student.id || "-"}`,
-    110,
-    y
-  );
-
-
-  y +=
-    8;
-
-
-  pdf.text(
-    `Parent: ${student.parentName || "-"}`,
-    20,
-    y
-  );
-
-
-  pdf.text(
-    `Course: ${student.course || "-"}`,
-    110,
-    y
-  );
-
-
-  y +=
-    8;
-
-
-  pdf.text(
-    `Phone: ${student.phone || student.studentPhone || "-"}`,
-    20,
-    y
-  );
-
-
-  pdf.text(
-    `Admission Date: ${student.admissionDate || "-"}`,
-    110,
-    y
-  );
-
-
-  y +=
-    22;
-
-
-  /*
-    ================================================================
-    ATTENDANCE SUMMARY
-    ================================================================
-  */
-
-  const total =
-    attendanceRecords.length;
-
-
-  const present =
-    attendanceRecords.filter(
-      (record) =>
-        record.status ===
-        "present"
-    ).length;
-
-
-  const absent =
-    attendanceRecords.filter(
-      (record) =>
-        record.status ===
-        "absent"
-    ).length;
-
-
-  const percentage =
-    total > 0
-      ? (
-          present /
-          total *
-          100
-        ).toFixed(1)
-      : "0";
-
-
-  pdf.setFont(
-    "helvetica",
-    "bold"
-  );
-
-
-  pdf.setFontSize(
-    13
-  );
-
-
-  pdf.setTextColor(
-    107,
-    37,
-    69
-  );
-
-
-  pdf.text(
-    "Attendance Summary",
-    15,
-    y
-  );
-
-
-  y +=
-    10;
-
-
-  pdf.setFontSize(
-    10
-  );
-
-
-  pdf.setTextColor(
-    40,
-    40,
-    40
-  );
-
-
-  pdf.text(
-    `Total Classes: ${total}`,
-    20,
-    y
-  );
-
-
-  pdf.text(
-    `Present: ${present}`,
-    70,
-    y
-  );
-
-
-  pdf.text(
-    `Absent: ${absent}`,
-    115,
-    y
-  );
-
-
-  pdf.text(
-    `Attendance: ${percentage}%`,
-    155,
-    y
-  );
-
-
-  y +=
-    15;
-
-
-  /*
-    ================================================================
-    ATTENDANCE TABLE
-    ================================================================
-  */
-
-  pdf.setFont(
-    "helvetica",
-    "bold"
-  );
-
-
-  pdf.setFontSize(
-    13
-  );
-
-
-  pdf.setTextColor(
-    107,
-    37,
-    69
-  );
-
-
-  pdf.text(
-    "Attendance History",
-    15,
-    y
-  );
-
-
-  y +=
-    8;
-
-
-  /*
-    Table header.
-  */
-
-  pdf.setFillColor(
-    107,
-    37,
-    69
-  );
-
-
-  pdf.rect(
-    15,
-    y,
-    pageWidth - 30,
-    9,
-    "F"
-  );
-
-
-  pdf.setTextColor(
-    255,
-    255,
-    255
-  );
-
-
-  pdf.setFontSize(
-    9
-  );
-
-
-  pdf.text(
-    "Date",
-    20,
-    y + 6
-  );
-
-
-  pdf.text(
-    "Course",
-    75,
-    y + 6
-  );
-
-
-  pdf.text(
-    "Status",
-    155,
-    y + 6
-  );
-
-
-  y +=
-    9;
-
-
-  /*
-    Attendance rows.
-  */
-
-  attendanceRecords.forEach(
+  const imageHeight =
     (
-      record,
-      index
-    ) => {
-
-      /*
-        New page when needed.
-      */
-
-      if (
-        y >
-        pageHeight - 25
-      ) {
-
-        pdf.addPage();
-
-
-        y =
-          20;
-
-
-        /*
-          Repeat table header.
-        */
-
-        pdf.setFillColor(
-          107,
-          37,
-          69
-        );
-
-
-        pdf.rect(
-          15,
-          y,
-          pageWidth - 30,
-          9,
-          "F"
-        );
-
-
-        pdf.setTextColor(
-          255,
-          255,
-          255
-        );
-
-
-        pdf.setFontSize(
-          9
-        );
-
-
-        pdf.text(
-          "Date",
-          20,
-          y + 6
-        );
-
-
-        pdf.text(
-          "Course",
-          75,
-          y + 6
-        );
-
-
-        pdf.text(
-          "Status",
-          155,
-          y + 6
-        );
-
-
-        y +=
-          9;
-
-      }
-
-
-      /*
-        Alternate row background.
-      */
-
-      if (
-        index %
-        2 ===
-        0
-      ) {
-
-        pdf.setFillColor(
-          247,
-          247,
-          247
-        );
-
-
-        pdf.rect(
-          15,
-          y,
-          pageWidth - 30,
-          8,
-          "F"
-        );
-
-      }
-
-
-      const formattedDate =
-        new Date(
-          record.date +
-          "T00:00:00"
-        ).toLocaleDateString(
-          "en-IN",
-          {
-            day:
-              "2-digit",
-
-            month:
-              "short",
-
-            year:
-              "numeric"
-          }
-        );
-
-
-      pdf.setTextColor(
-        40,
-        40,
-        40
-      );
-
-
-      pdf.setFont(
-        "helvetica",
-        "normal"
-      );
-
-
-      pdf.setFontSize(
-        8
-      );
-
-
-      pdf.text(
-        formattedDate,
-        20,
-        y + 5
-      );
-
-
-      pdf.text(
-        String(
-          record.course ||
-          "-"
-        ).substring(
-          0,
-          25
-        ),
-        75,
-        y + 5
-      );
-
-
-      /*
-        Status.
-      */
-
-      pdf.setFont(
-        "helvetica",
-        "bold"
-      );
-
-
-      pdf.text(
-        record.status ===
-        "present"
-          ? "PRESENT"
-          : "ABSENT",
-        155,
-        y + 5
-      );
-
-
-      y +=
-        8;
-
-    }
-  );
+      canvas.height *
+      imageWidth
+    ) /
+    canvas.width;
 
 
   /*
-    ================================================================
-    FOOTER
-    ================================================================
+    Create image.
   */
 
-  const totalPages =
-    pdf.internal.getNumberOfPages();
+  const imageData =
+    canvas.toDataURL(
+      "image/png"
+    );
 
 
-  for (
-    let page =
-      1;
+  /*
+    Multi-page support.
+  */
 
-    page <=
-    totalPages;
+  let heightLeft =
+    imageHeight;
 
-    page++
+
+  let position =
+    0;
+
+
+  pdf.addImage(
+    imageData,
+    "PNG",
+    margin,
+    position,
+    imageWidth,
+    imageHeight
+  );
+
+
+  heightLeft -=
+    pageHeight;
+
+
+  while (
+    heightLeft >
+    0
   ) {
 
-    pdf.setPage(
-      page
+    pdf.addPage();
+
+
+    position =
+      heightLeft -
+      imageHeight;
+
+
+    pdf.addImage(
+      imageData,
+      "PNG",
+      margin,
+      position,
+      imageWidth,
+      imageHeight
     );
 
 
-    pdf.setFontSize(
-      7
-    );
-
-
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
-
-
-    pdf.setTextColor(
-      100,
-      100,
-      100
-    );
-
-
-    pdf.text(
-      "Generated by Gazal Files",
-      15,
-      pageHeight - 10
-    );
-
-
-    pdf.text(
-      `Page ${page} of ${totalPages}`,
-      pageWidth - 15,
-      pageHeight - 10,
-      {
-        align: "right"
-      }
-    );
+    heightLeft -=
+      pageHeight;
 
   }
 
 
   /*
     ================================================================
-    DOWNLOAD PDF
+    DOWNLOAD
     ================================================================
   */
 
-  const safeName =
-    (
+  const safeStudentName =
+    String(
       student.studentName ||
-      "Student"
+      "student"
     )
       .replace(
         /[^a-z0-9]/gi,
@@ -11411,7 +11646,7 @@ async function generateStudentAttendancePdf() {
 
 
   pdf.save(
-    `${safeName}_Attendance_Report.pdf`
+    `${safeStudentName}_Attendance_Report.pdf`
   );
 
 }
