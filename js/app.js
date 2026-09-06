@@ -5502,13 +5502,17 @@ try {
 
 
   const updatedRecords =
-    attendanceRecords.filter(
-      (record) =>
-        !(
-          record.course === course &&
-          record.date === date
-        )
-    );
+  attendanceRecords.filter(
+    (record) =>
+      !(
+        getCurrentCourseName(
+          record.course
+        ) === getCurrentCourseName(
+          course
+        ) &&
+        record.date === date
+      )
+  );
 
 
   updatedRecords.push(
