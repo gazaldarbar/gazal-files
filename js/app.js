@@ -11427,9 +11427,9 @@ document.addEventListener(
   ) => {
 
     const downloadButton =
-      event.target.closest(
-        "#download-attendance-pdf"
-      );
+  event.target.closest(
+    "#download-student-attendance-pdf"
+  );
 
 
     if (
