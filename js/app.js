@@ -11608,9 +11608,12 @@ const studentPhoto =
                 "
               >
                 ${
-                  record.course ||
-                  "-"
-                }
+  record.course
+    ? getCurrentCourseName(
+        record.course
+      )
+    : "-"
+}
               </td>
 
 
