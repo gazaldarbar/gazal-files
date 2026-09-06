@@ -6025,21 +6025,27 @@ function renderStudentsCourseList() {
 
 
       courseButton.addEventListener(
-        "click",
-        () => {
+  "click",
+  (event) => {
 
-          selectedStudentsCourse =
-            course;
+    event.preventDefault();
 
-          studentsView =
-            "course-students";
+    event.stopPropagation();
 
-          renderStudentsByCourse(
-            course
-          );
+    selectedStudentsCourse =
+      course;
 
-        }
-      );
+    studentsView =
+      "course-students";
+
+    renderStudentsByCourse(
+  getCurrentCourseName(
+    course
+  )
+);
+
+  }
+);
 
 
       coursesGrid.appendChild(
