@@ -6035,69 +6035,57 @@ function renderStudentsCourseList() {
       */
 
       courseButton.addEventListener(
-        "click",
-        async (event) => {
+  "click",
+  async (event) => {
 
-          event.preventDefault();
-
-          event.stopPropagation();
-
-
-          /*
-            Get current course name.
-          */
-
-          const selectedCourse =
-            getCurrentCourseName(
-              course
-            );
+    event.preventDefault();
+    event.stopPropagation();
 
 
-          console.log(
-            "Opening Students course:",
-            selectedCourse
-          );
+    console.log(
+      "COURSE BUTTON CLICKED:",
+      course
+    );
 
 
-          /*
-            Keep Students panel visible.
-          */
+    /*
+      Keep Students panel visible.
+    */
 
-          const studentsPanel =
-            document.getElementById(
-              "students-panel"
-            );
-
-          if (studentsPanel) {
-
-            studentsPanel.style.display =
-              "block";
-
-          }
-
-
-          /*
-            Update navigation state.
-          */
-
-          selectedStudentsCourse =
-            selectedCourse;
-
-          studentsView =
-            "course-students";
-
-
-          /*
-            Render selected course students.
-          */
-
-          await renderStudentsByCourse(
-            selectedCourse
-          );
-
-        }
+    const studentsPanel =
+      document.getElementById(
+        "students-panel"
       );
 
+    if (studentsPanel) {
+
+      studentsPanel.style.display =
+        "block";
+
+    }
+
+
+    /*
+      Update navigation state.
+    */
+
+    selectedStudentsCourse =
+      course;
+
+    studentsView =
+      "course-students";
+
+
+    /*
+      Open course directly.
+    */
+
+    await renderStudentsByCourse(
+      course
+    );
+
+  }
+);
 
       /*
         Add course button to grid.
