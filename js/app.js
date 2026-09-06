@@ -6092,10 +6092,80 @@ courseButton.addEventListener(
    STUDENTS — SELECTED COURSE STUDENTS VIEW
    ========================================================================== */
 
+/* ==========================================================================
+   STUDENTS — SELECTED COURSE STUDENTS VIEW
+   ========================================================================== */
+
 async function renderStudentsByCourse(course) {
+
+
+  /*
+    Make sure the Students panel
+    remains visible.
+  */
+
+  const studentsPanel =
+    document.getElementById(
+      "students-panel"
+    );
+
+  if (studentsPanel) {
+
+    studentsPanel.style.display =
+      "block";
+
+  }
+
 
   let students = [];
 
+
+  try {
+
+    if (window.getStudentsFromFirestore) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students = JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students:",
+      error
+    );
+
+    students = JSON.parse(
+      localStorage.getItem(
+        "gazal_students"
+      ) || "[]"
+    );
+
+  }
+
+
+  /*
+    Get only students enrolled in
+    the selected course.
+  */
+
+  const courseStudents =
+    students.filter(
+      (student) =>
+        coursesMatch(
+          student.course,
+          course
+        )
+    );
   try {
 
     if (window.getStudentsFromFirestore) {
