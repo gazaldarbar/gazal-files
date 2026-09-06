@@ -6109,13 +6109,20 @@ function renderStudentsCourseList() {
 
 }
 
+
 /* ==========================================================================
    STUDENTS — SELECTED COURSE STUDENTS VIEW
    ========================================================================== */
 
 async function renderStudentsByCourse(course) {
 
-/*
+  console.log(
+    "renderStudentsByCourse started:",
+    course
+  );
+
+
+  /*
     Make sure the Students panel
     remains visible.
   */
@@ -6131,60 +6138,10 @@ async function renderStudentsByCourse(course) {
       "block";
 
   }
-  
-  let students = [];
-
-
-  try {
-
-    if (window.getStudentsFromFirestore) {
-
-      students =
-        await window.getStudentsFromFirestore();
-
-    } else {
-
-      students = JSON.parse(
-        localStorage.getItem(
-          "gazal_students"
-        ) || "[]"
-      );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Failed to load students:",
-      error
-    );
-
-    students = JSON.parse(
-      localStorage.getItem(
-        "gazal_students"
-      ) || "[]"
-    );
-
-  }
 
 
   /*
-    Get only students enrolled in
-    the selected course.
-  */
-
-  const courseStudents =
-    students.filter(
-      (student) =>
-        coursesMatch(
-          student.course,
-          course
-        )
-    );
-  
-
-  /*
-    Get interface elements.
+    Get interface elements first.
   */
 
   const list =
@@ -6219,7 +6176,7 @@ async function renderStudentsByCourse(course) {
 
 
   /*
-    Update navigation state.
+    Update navigation state immediately.
   */
 
   studentsView =
@@ -6233,42 +6190,164 @@ async function renderStudentsByCourse(course) {
 
 
   /*
-    Update header.
+    Update header immediately.
   */
 
-  title.textContent =
-    course;
+  if (title) {
 
-  subtitle.textContent =
-    `${courseStudents.length} വിദ്യാർത്ഥികൾ`;
+    title.textContent =
+      course;
 
-  subtitle.style.display =
-    "block";
+  }
 
-  count.textContent =
-  courseStudents.length;
 
-count.style.display =
-  "inline-flex";
+  if (subtitle) {
 
-backButton.style.display =
-  "inline-flex";
+    subtitle.textContent =
+      "Loading...";
 
-title.style.display =
-  "block";
+    subtitle.style.display =
+      "block";
 
-subtitle.style.display =
-  "block";
+  }
 
-  backButton.style.display =
-    "inline-flex";
+
+  if (count) {
+
+    count.textContent =
+      "—";
+
+    count.style.display =
+      "inline-flex";
+
+  }
+
+
+  if (backButton) {
+
+    backButton.style.display =
+      "inline-flex";
+
+  }
 
 
   /*
     Clear previous content.
   */
 
-  list.innerHTML = "";
+  if (list) {
+
+    list.innerHTML =
+      "";
+
+  }
+
+
+  if (empty) {
+
+    empty.style.display =
+      "none";
+
+  }
+
+
+  /*
+    Load students.
+  */
+
+  let students =
+    [];
+
+
+  try {
+
+    if (
+      window.getStudentsFromFirestore
+    ) {
+
+      students =
+        await window.getStudentsFromFirestore();
+
+    } else {
+
+      students =
+        JSON.parse(
+          localStorage.getItem(
+            "gazal_students"
+          ) || "[]"
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load students:",
+      error
+    );
+
+    students =
+      JSON.parse(
+        localStorage.getItem(
+          "gazal_students"
+        ) || "[]"
+      );
+
+  }
+
+
+  /*
+    Filter students for selected course.
+  */
+
+  const courseStudents =
+    students.filter(
+      (student) => {
+
+        if (
+          typeof coursesMatch ===
+          "function"
+        ) {
+
+          return coursesMatch(
+            student.course,
+            course
+          );
+
+        }
+
+
+        /*
+          Fallback matching.
+        */
+
+        return (
+          student.course ===
+          course
+        );
+
+      }
+    );
+
+
+  /*
+    Update student count.
+  */
+
+  if (subtitle) {
+
+    subtitle.textContent =
+      `${courseStudents.length} വിദ്യാർത്ഥികൾ`;
+
+  }
+
+
+  if (count) {
+
+    count.textContent =
+      courseStudents.length;
+
+  }
 
 
   /*
@@ -6276,22 +6355,23 @@ subtitle.style.display =
   */
 
   if (
-    courseStudents.length === 0
+    courseStudents.length ===
+    0
   ) {
 
-    empty.style.display =
-      "block";
+    if (empty) {
 
-    empty.innerHTML =
-      "<p>ഈ കോഴ്സിൽ വിദ്യാർത്ഥികൾ ഇല്ല.</p>";
+      empty.style.display =
+        "block";
+
+      empty.innerHTML =
+        "<p>ഈ കോഴ്സിൽ വിദ്യാർത്ഥികൾ ഇല്ല.</p>";
+
+    }
 
     return;
 
   }
-
-
-  empty.style.display =
-    "none";
 
 
   /*
@@ -6340,8 +6420,7 @@ subtitle.style.display =
 
 
       /*
-        Open full student details.
-        We will create this next.
+        Open student details.
       */
 
       studentButton.addEventListener(
@@ -6370,9 +6449,17 @@ subtitle.style.display =
   );
 
 
-  list.appendChild(
-    studentsCourseList
-  );
+  /*
+    Show student list.
+  */
+
+  if (list) {
+
+    list.appendChild(
+      studentsCourseList
+    );
+
+  }
 
 }
 
