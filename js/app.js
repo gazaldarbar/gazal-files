@@ -9783,8 +9783,10 @@ if (
           </strong>
 
           <span>
-            ${record.course}
-          </span>
+  ${getCurrentCourseName(
+    record.course
+  )}
+</span>
 
         </div>
 
